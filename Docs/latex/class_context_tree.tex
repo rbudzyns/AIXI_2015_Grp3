@@ -1,0 +1,252 @@
+\section{Context\+Tree Class Reference}
+\label{class_context_tree}\index{Context\+Tree@{Context\+Tree}}
+
+
+{\ttfamily \#include $<$predict.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf Context\+Tree} (size\+\_\+t {\bf depth})
+\item 
+{\bf $\sim$\+Context\+Tree} (void)
+\item 
+void {\bf clear} (void)
+\item 
+void {\bf update} (const {\bf symbol\+\_\+t} sym)
+\item 
+void {\bf update} (const {\bf symbol\+\_\+list\+\_\+t} \&symbol\+\_\+list)
+\item 
+void {\bf update\+History} (const {\bf symbol\+\_\+list\+\_\+t} \&symbol\+\_\+list)
+\item 
+void {\bf update\+Log\+Probability} (void)
+\item 
+void {\bf revert} (void)
+\item 
+void {\bf revert\+History} (size\+\_\+t newsize)
+\item 
+double {\bf predict} ({\bf symbol\+\_\+t} sym)
+\item 
+double {\bf predict} ({\bf symbol\+\_\+list\+\_\+t} symbol\+\_\+list)
+\item 
+void {\bf gen\+Random\+Symbols} ({\bf symbol\+\_\+list\+\_\+t} \&symbols, size\+\_\+t bits)
+\item 
+void {\bf gen\+Random\+Symbols\+And\+Update} ({\bf symbol\+\_\+list\+\_\+t} \&symbols, size\+\_\+t bits)
+\item 
+double {\bf log\+Block\+Probability} (void)
+\item 
+const {\bf symbol\+\_\+t} $\ast$ {\bf nth\+History\+Symbol} (size\+\_\+t n) const 
+\item 
+size\+\_\+t {\bf depth} (void) const 
+\item 
+size\+\_\+t {\bf history\+Size} (void) const 
+\item 
+size\+\_\+t {\bf size} (void) const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 69 of file predict.\+hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Context\+Tree@{Context\+Tree}!Context\+Tree@{Context\+Tree}}
+\index{Context\+Tree@{Context\+Tree}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{Context\+Tree}]{\setlength{\rightskip}{0pt plus 5cm}Context\+Tree\+::\+Context\+Tree (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{depth}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_abc815458fcefac810580d9eb3d7831fa}
+
+
+Definition at line 53 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!````~Context\+Tree@{$\sim$\+Context\+Tree}}
+\index{````~Context\+Tree@{$\sim$\+Context\+Tree}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{$\sim$\+Context\+Tree}]{\setlength{\rightskip}{0pt plus 5cm}Context\+Tree\+::$\sim$\+Context\+Tree (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_abc17f665f29acb806de3980a4986a30f}
+
+
+Definition at line 59 of file predict.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\index{Context\+Tree@{Context\+Tree}!clear@{clear}}
+\index{clear@{clear}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::clear (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a0a3c136d70e092fc2251c81e331633f4}
+
+
+Definition at line 65 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!depth@{depth}}
+\index{depth@{depth}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{depth}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Context\+Tree\+::depth (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{class_context_tree_a3f77b7ccf862050a37914e559aea94de}
+
+
+Definition at line 116 of file predict.\+hpp.
+
+\index{Context\+Tree@{Context\+Tree}!gen\+Random\+Symbols@{gen\+Random\+Symbols}}
+\index{gen\+Random\+Symbols@{gen\+Random\+Symbols}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{gen\+Random\+Symbols}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::gen\+Random\+Symbols (
+\begin{DoxyParamCaption}
+\item[{{\bf symbol\+\_\+list\+\_\+t} \&}]{symbols, }
+\item[{size\+\_\+t}]{bits}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a4feda8f2ba7199b99f143a04cf46b761}
+
+
+Definition at line 108 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!gen\+Random\+Symbols\+And\+Update@{gen\+Random\+Symbols\+And\+Update}}
+\index{gen\+Random\+Symbols\+And\+Update@{gen\+Random\+Symbols\+And\+Update}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{gen\+Random\+Symbols\+And\+Update}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::gen\+Random\+Symbols\+And\+Update (
+\begin{DoxyParamCaption}
+\item[{{\bf symbol\+\_\+list\+\_\+t} \&}]{symbols, }
+\item[{size\+\_\+t}]{bits}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a6346a099b381623901fc0f3082e70501}
+
+
+Definition at line 120 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!history\+Size@{history\+Size}}
+\index{history\+Size@{history\+Size}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{history\+Size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Context\+Tree\+::history\+Size (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{class_context_tree_a20de2ce4a5380e31e37d772ebba0c063}
+
+
+Definition at line 119 of file predict.\+hpp.
+
+\index{Context\+Tree@{Context\+Tree}!log\+Block\+Probability@{log\+Block\+Probability}}
+\index{log\+Block\+Probability@{log\+Block\+Probability}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{log\+Block\+Probability}]{\setlength{\rightskip}{0pt plus 5cm}double Context\+Tree\+::log\+Block\+Probability (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_ae81ed9f61cd22890ecf5355283405283}
+
+
+Definition at line 126 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!nth\+History\+Symbol@{nth\+History\+Symbol}}
+\index{nth\+History\+Symbol@{nth\+History\+Symbol}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{nth\+History\+Symbol}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf symbol\+\_\+t} $\ast$ Context\+Tree\+::nth\+History\+Symbol (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{n}
+\end{DoxyParamCaption}
+) const}\label{class_context_tree_a77835b9aa2ff944a3cbe823c6af6a630}
+
+
+Definition at line 132 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!predict@{predict}}
+\index{predict@{predict}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{predict}]{\setlength{\rightskip}{0pt plus 5cm}double Context\+Tree\+::predict (
+\begin{DoxyParamCaption}
+\item[{{\bf symbol\+\_\+t}}]{sym}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_aaad4ba47127ef1021090859b5b2e4d07}
+\index{Context\+Tree@{Context\+Tree}!predict@{predict}}
+\index{predict@{predict}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{predict}]{\setlength{\rightskip}{0pt plus 5cm}double Context\+Tree\+::predict (
+\begin{DoxyParamCaption}
+\item[{{\bf symbol\+\_\+list\+\_\+t}}]{symbol\+\_\+list}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_afb3c0d7d401009bb5ad57a98f1171a79}
+\index{Context\+Tree@{Context\+Tree}!revert@{revert}}
+\index{revert@{revert}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{revert}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::revert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a2fc30e6f68a5b1d2df3d5ac786c0d943}
+
+
+Definition at line 92 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!revert\+History@{revert\+History}}
+\index{revert\+History@{revert\+History}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{revert\+History}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::revert\+History (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{newsize}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_adc6eeba995808bfe1bae4e46612cf05b}
+
+
+Definition at line 98 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!size@{size}}
+\index{size@{size}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Context\+Tree\+::size (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}\label{class_context_tree_a2fb583d155c915dd639d78783a3a1711}
+
+
+Definition at line 122 of file predict.\+hpp.
+
+\index{Context\+Tree@{Context\+Tree}!update@{update}}
+\index{update@{update}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{update}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::update (
+\begin{DoxyParamCaption}
+\item[{const {\bf symbol\+\_\+t}}]{sym}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a2b06e9c79afec1345a6cc2f86abaa58c}
+
+
+Definition at line 72 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!update@{update}}
+\index{update@{update}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{update}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::update (
+\begin{DoxyParamCaption}
+\item[{const {\bf symbol\+\_\+list\+\_\+t} \&}]{symbol\+\_\+list}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_af0a17028f238d31ce3f60bcbbeafa05e}
+
+
+Definition at line 77 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!update\+History@{update\+History}}
+\index{update\+History@{update\+History}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{update\+History}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::update\+History (
+\begin{DoxyParamCaption}
+\item[{const {\bf symbol\+\_\+list\+\_\+t} \&}]{symbol\+\_\+list}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_af00a5f156285750c82eee5db34904ada}
+
+
+Definition at line 83 of file predict.\+cpp.
+
+\index{Context\+Tree@{Context\+Tree}!update\+Log\+Probability@{update\+Log\+Probability}}
+\index{update\+Log\+Probability@{update\+Log\+Probability}!Context\+Tree@{Context\+Tree}}
+\subsubsection[{update\+Log\+Probability}]{\setlength{\rightskip}{0pt plus 5cm}void Context\+Tree\+::update\+Log\+Probability (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_context_tree_a431c33d37fa23ed3390f1abf20ca2aff}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+{\bf predict.\+hpp}\item 
+{\bf predict.\+cpp}\end{DoxyCompactItemize}

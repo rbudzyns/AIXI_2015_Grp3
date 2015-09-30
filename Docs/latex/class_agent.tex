@@ -1,0 +1,277 @@
+\section{Agent Class Reference}
+\label{class_agent}\index{Agent@{Agent}}
+
+
+{\ttfamily \#include $<$agent.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf Agent} ({\bf options\+\_\+t} \&options)
+\item 
+{\bf $\sim$\+Agent} (void)
+\item 
+{\bf lifetime\+\_\+t} {\bf lifetime} (void) const 
+\item 
+{\bf reward\+\_\+t} {\bf reward} (void) const 
+\item 
+{\bf reward\+\_\+t} {\bf average\+Reward} (void) const 
+\item 
+{\bf reward\+\_\+t} {\bf max\+Reward} (void) const 
+\item 
+{\bf reward\+\_\+t} {\bf min\+Reward} (void) const 
+\item 
+unsigned int {\bf num\+Actions} (void) const 
+\item 
+size\+\_\+t {\bf history\+Size} (void) const 
+\item 
+size\+\_\+t {\bf horizon} (void) const 
+\item 
+{\bf action\+\_\+t} {\bf gen\+Random\+Action} (void) const 
+\item 
+{\bf percept\+\_\+t} {\bf gen\+Percept} (void) const 
+\item 
+{\bf percept\+\_\+t} {\bf gen\+Percept\+And\+Update} (void)
+\item 
+void {\bf model\+Update} ({\bf percept\+\_\+t} observation, {\bf percept\+\_\+t} {\bf reward})
+\item 
+void {\bf model\+Update} ({\bf action\+\_\+t} action)
+\item 
+bool {\bf model\+Revert} (const {\bf Model\+Undo} \&mu)
+\item 
+void {\bf reset} (void)
+\item 
+double {\bf get\+Predicted\+Action\+Prob} ({\bf action\+\_\+t} action)
+\item 
+double {\bf percept\+Probability} ({\bf percept\+\_\+t} observation, {\bf percept\+\_\+t} {\bf reward}) const 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 12 of file agent.\+hpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Agent@{Agent}!Agent@{Agent}}
+\index{Agent@{Agent}!Agent@{Agent}}
+\subsubsection[{Agent}]{\setlength{\rightskip}{0pt plus 5cm}Agent\+::\+Agent (
+\begin{DoxyParamCaption}
+\item[{{\bf options\+\_\+t} \&}]{options}
+\end{DoxyParamCaption}
+)}\label{class_agent_adff68c3db34bad82474444fb31f44dd6}
+
+
+Definition at line 11 of file agent.\+cpp.
+
+\index{Agent@{Agent}!````~Agent@{$\sim$\+Agent}}
+\index{````~Agent@{$\sim$\+Agent}!Agent@{Agent}}
+\subsubsection[{$\sim$\+Agent}]{\setlength{\rightskip}{0pt plus 5cm}Agent\+::$\sim$\+Agent (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_agent_af247dac4f407e2839b61be6bd3887b39}
+
+
+Definition at line 31 of file agent.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\index{Agent@{Agent}!average\+Reward@{average\+Reward}}
+\index{average\+Reward@{average\+Reward}!Agent@{Agent}}
+\subsubsection[{average\+Reward}]{\setlength{\rightskip}{0pt plus 5cm}{\bf reward\+\_\+t} Agent\+::average\+Reward (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_ad446acc2e63ab6b84f30e277e874b9e9}
+
+
+Definition at line 48 of file agent.\+cpp.
+
+\index{Agent@{Agent}!gen\+Percept@{gen\+Percept}}
+\index{gen\+Percept@{gen\+Percept}!Agent@{Agent}}
+\subsubsection[{gen\+Percept}]{\setlength{\rightskip}{0pt plus 5cm}{\bf percept\+\_\+t} Agent\+::gen\+Percept (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_aa6bbf5ffb1e0b7337a906fec550e4170}
+
+
+Definition at line 89 of file agent.\+cpp.
+
+\index{Agent@{Agent}!gen\+Percept\+And\+Update@{gen\+Percept\+And\+Update}}
+\index{gen\+Percept\+And\+Update@{gen\+Percept\+And\+Update}!Agent@{Agent}}
+\subsubsection[{gen\+Percept\+And\+Update}]{\setlength{\rightskip}{0pt plus 5cm}{\bf percept\+\_\+t} Agent\+::gen\+Percept\+And\+Update (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_agent_a534c48a8a3514d302491e8b26d626d25}
+
+
+Definition at line 96 of file agent.\+cpp.
+
+\index{Agent@{Agent}!gen\+Random\+Action@{gen\+Random\+Action}}
+\index{gen\+Random\+Action@{gen\+Random\+Action}!Agent@{Agent}}
+\subsubsection[{gen\+Random\+Action}]{\setlength{\rightskip}{0pt plus 5cm}{\bf action\+\_\+t} Agent\+::gen\+Random\+Action (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a19866b32190009bec9b84da5fdd57a81}
+
+
+Definition at line 83 of file agent.\+cpp.
+
+\index{Agent@{Agent}!get\+Predicted\+Action\+Prob@{get\+Predicted\+Action\+Prob}}
+\index{get\+Predicted\+Action\+Prob@{get\+Predicted\+Action\+Prob}!Agent@{Agent}}
+\subsubsection[{get\+Predicted\+Action\+Prob}]{\setlength{\rightskip}{0pt plus 5cm}double Agent\+::get\+Predicted\+Action\+Prob (
+\begin{DoxyParamCaption}
+\item[{{\bf action\+\_\+t}}]{action}
+\end{DoxyParamCaption}
+)}\label{class_agent_a26f277b7001f56a48219c24d702d8c3e}
+
+
+Definition at line 150 of file agent.\+cpp.
+
+\index{Agent@{Agent}!history\+Size@{history\+Size}}
+\index{history\+Size@{history\+Size}!Agent@{Agent}}
+\subsubsection[{history\+Size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Agent\+::history\+Size (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a17eeeb76e57d9e68b4347c8925e694b9}
+
+
+Definition at line 71 of file agent.\+cpp.
+
+\index{Agent@{Agent}!horizon@{horizon}}
+\index{horizon@{horizon}!Agent@{Agent}}
+\subsubsection[{horizon}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t Agent\+::horizon (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a92113673549fdbaced90730a2a4a2dbc}
+
+
+Definition at line 77 of file agent.\+cpp.
+
+\index{Agent@{Agent}!lifetime@{lifetime}}
+\index{lifetime@{lifetime}!Agent@{Agent}}
+\subsubsection[{lifetime}]{\setlength{\rightskip}{0pt plus 5cm}{\bf lifetime\+\_\+t} Agent\+::lifetime (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_afdb4cb867f966a7f21fb9cee3e34c4e6}
+
+
+Definition at line 37 of file agent.\+cpp.
+
+\index{Agent@{Agent}!max\+Reward@{max\+Reward}}
+\index{max\+Reward@{max\+Reward}!Agent@{Agent}}
+\subsubsection[{max\+Reward}]{\setlength{\rightskip}{0pt plus 5cm}{\bf reward\+\_\+t} Agent\+::max\+Reward (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a73f54769a7f540a4396089936d24560a}
+
+
+Definition at line 53 of file agent.\+cpp.
+
+\index{Agent@{Agent}!min\+Reward@{min\+Reward}}
+\index{min\+Reward@{min\+Reward}!Agent@{Agent}}
+\subsubsection[{min\+Reward}]{\setlength{\rightskip}{0pt plus 5cm}{\bf reward\+\_\+t} Agent\+::min\+Reward (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_afec0171d8373d6b593d9e4f98145c8bf}
+
+
+Definition at line 59 of file agent.\+cpp.
+
+\index{Agent@{Agent}!model\+Revert@{model\+Revert}}
+\index{model\+Revert@{model\+Revert}!Agent@{Agent}}
+\subsubsection[{model\+Revert}]{\setlength{\rightskip}{0pt plus 5cm}bool Agent\+::model\+Revert (
+\begin{DoxyParamCaption}
+\item[{const {\bf Model\+Undo} \&}]{mu}
+\end{DoxyParamCaption}
+)}\label{class_agent_a746da73b541b526fe52f95d38da90a4f}
+
+
+Definition at line 135 of file agent.\+cpp.
+
+\index{Agent@{Agent}!model\+Update@{model\+Update}}
+\index{model\+Update@{model\+Update}!Agent@{Agent}}
+\subsubsection[{model\+Update}]{\setlength{\rightskip}{0pt plus 5cm}void Agent\+::model\+Update (
+\begin{DoxyParamCaption}
+\item[{{\bf percept\+\_\+t}}]{observation, }
+\item[{{\bf percept\+\_\+t}}]{reward}
+\end{DoxyParamCaption}
+)}\label{class_agent_a5d7e42a9677cc6c5a8bcb236f36ddb0a}
+
+
+Definition at line 102 of file agent.\+cpp.
+
+\index{Agent@{Agent}!model\+Update@{model\+Update}}
+\index{model\+Update@{model\+Update}!Agent@{Agent}}
+\subsubsection[{model\+Update}]{\setlength{\rightskip}{0pt plus 5cm}void Agent\+::model\+Update (
+\begin{DoxyParamCaption}
+\item[{{\bf action\+\_\+t}}]{action}
+\end{DoxyParamCaption}
+)}\label{class_agent_adf4845b694cd4e2f6b9b02270b2e6040}
+
+
+Definition at line 118 of file agent.\+cpp.
+
+\index{Agent@{Agent}!num\+Actions@{num\+Actions}}
+\index{num\+Actions@{num\+Actions}!Agent@{Agent}}
+\subsubsection[{num\+Actions}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Agent\+::num\+Actions (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a7dd4da88762585fee03dacb4530e2478}
+
+
+Definition at line 65 of file agent.\+cpp.
+
+\index{Agent@{Agent}!percept\+Probability@{percept\+Probability}}
+\index{percept\+Probability@{percept\+Probability}!Agent@{Agent}}
+\subsubsection[{percept\+Probability}]{\setlength{\rightskip}{0pt plus 5cm}double Agent\+::percept\+Probability (
+\begin{DoxyParamCaption}
+\item[{{\bf percept\+\_\+t}}]{observation, }
+\item[{{\bf percept\+\_\+t}}]{reward}
+\end{DoxyParamCaption}
+) const}\label{class_agent_af73c945cfc7f20619bbaea03c07c72be}
+
+
+Definition at line 156 of file agent.\+cpp.
+
+\index{Agent@{Agent}!reset@{reset}}
+\index{reset@{reset}!Agent@{Agent}}
+\subsubsection[{reset}]{\setlength{\rightskip}{0pt plus 5cm}void Agent\+::reset (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{class_agent_a5dc4ba18b66815d10359e458b0e5d867}
+
+
+Definition at line 140 of file agent.\+cpp.
+
+\index{Agent@{Agent}!reward@{reward}}
+\index{reward@{reward}!Agent@{Agent}}
+\subsubsection[{reward}]{\setlength{\rightskip}{0pt plus 5cm}{\bf reward\+\_\+t} Agent\+::reward (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}\label{class_agent_a426dcb9370f317dbc9aab10946a57eec}
+
+
+Definition at line 42 of file agent.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+{\bf agent.\+hpp}\item 
+{\bf agent.\+cpp}\end{DoxyCompactItemize}

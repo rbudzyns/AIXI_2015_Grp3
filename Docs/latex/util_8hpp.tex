@@ -1,0 +1,125 @@
+\section{util.\+hpp File Reference}
+\label{util_8hpp}\index{util.\+hpp@{util.\+hpp}}
+{\ttfamily \#include $<$fstream$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$sstream$>$}\\*
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include \char`\"{}main.\+hpp\char`\"{}}\\*
+Include dependency graph for util.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double {\bf rand01} ()
+\item 
+unsigned int {\bf rand\+Range} (unsigned int end)
+\item 
+int {\bf rand\+Range} (int start, int end)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void {\bf str\+Extract} (std\+::string \&str, T \&val)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T {\bf str\+Extract} (std\+::string \&str)
+\item 
+unsigned int {\bf decode} (const {\bf symbol\+\_\+list\+\_\+t} \&symlist, unsigned int bits)
+\item 
+void {\bf encode} ({\bf symbol\+\_\+list\+\_\+t} \&symlist, unsigned int value, unsigned int bits)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{util.\+hpp@{util.\+hpp}!decode@{decode}}
+\index{decode@{decode}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{decode}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int decode (
+\begin{DoxyParamCaption}
+\item[{const {\bf symbol\+\_\+list\+\_\+t} \&}]{symlist, }
+\item[{unsigned int}]{bits}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_aee63a302197282df8a64ef22d45329ba}
+
+
+Definition at line 31 of file util.\+cpp.
+
+\index{util.\+hpp@{util.\+hpp}!encode@{encode}}
+\index{encode@{encode}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{encode}]{\setlength{\rightskip}{0pt plus 5cm}void encode (
+\begin{DoxyParamCaption}
+\item[{{\bf symbol\+\_\+list\+\_\+t} \&}]{symlist, }
+\item[{unsigned int}]{value, }
+\item[{unsigned int}]{bits}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_aba6da77df3b0fd3edad6f454732d7d21}
+
+
+Definition at line 46 of file util.\+cpp.
+
+\index{util.\+hpp@{util.\+hpp}!rand01@{rand01}}
+\index{rand01@{rand01}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{rand01}]{\setlength{\rightskip}{0pt plus 5cm}double rand01 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_afcdd36ac06c749108e82f60508115f36}
+
+
+Definition at line 8 of file util.\+cpp.
+
+\index{util.\+hpp@{util.\+hpp}!rand\+Range@{rand\+Range}}
+\index{rand\+Range@{rand\+Range}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{rand\+Range}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int rand\+Range (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{end}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_abc56db15d93d5a6efdffd874e478e1a7}
+
+
+Definition at line 13 of file util.\+cpp.
+
+\index{util.\+hpp@{util.\+hpp}!rand\+Range@{rand\+Range}}
+\index{rand\+Range@{rand\+Range}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{rand\+Range}]{\setlength{\rightskip}{0pt plus 5cm}int rand\+Range (
+\begin{DoxyParamCaption}
+\item[{int}]{start, }
+\item[{int}]{end}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_a3a76408a2c720e5f95cdf70be23b3c55}
+
+
+Definition at line 24 of file util.\+cpp.
+
+\index{util.\+hpp@{util.\+hpp}!str\+Extract@{str\+Extract}}
+\index{str\+Extract@{str\+Extract}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{str\+Extract}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ void str\+Extract (
+\begin{DoxyParamCaption}
+\item[{std\+::string \&}]{str, }
+\item[{T \&}]{val}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_a3383816b8869c650b81fbf259ecc783e}
+
+
+Definition at line 22 of file util.\+hpp.
+
+\index{util.\+hpp@{util.\+hpp}!str\+Extract@{str\+Extract}}
+\index{str\+Extract@{str\+Extract}!util.\+hpp@{util.\+hpp}}
+\subsubsection[{str\+Extract}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ T str\+Extract (
+\begin{DoxyParamCaption}
+\item[{std\+::string \&}]{str}
+\end{DoxyParamCaption}
+)}\label{util_8hpp_a25a8eb09136f99e9c2a660a8d8996972}
+
+
+Definition at line 28 of file util.\+hpp.
+
