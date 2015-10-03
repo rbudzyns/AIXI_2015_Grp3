@@ -6,6 +6,6 @@
 class Agent;
 
 // determine the best action by searching ahead
-extern action_t search(Agent &agent);
+extern action_t search(Agent &agent, int timeout);
 
 #endif // __SEARCH_HPP__

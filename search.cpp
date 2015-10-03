@@ -72,10 +72,10 @@ extern action_t search(Agent &agent,int timeout) {
 	// initialise search tree
 	// TODO cache subtree between searches for efficiency
 
-	SearchNode root = new SearchNode(false);
+	SearchNode root = SearchNode(false);
 	clock_t startTime = clock();
 	do {
-		root.sample(agent,0);
+		root.sample(agent, 0u);
 	} while ((clock() - startTime) / (double) CLOCKS_PER_SEC  < timeout);
 	int N = agent.numActions();
 	double max_val = 0;
