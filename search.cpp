@@ -1,18 +1,20 @@
 #include "search.hpp"
 
-#include "agent.hpp"
-#include <ctime>
-#include <cassert>
+#include <sys/_types/_clock_t.h>
+#include <sys/_types/_size_t.h>
 #include <algorithm>
+#include <cassert>
+#include <ctime>
 
+#include "agent.hpp"
+#include "main.hpp"
 
 typedef unsigned long long visits_t;
 
-
 // search options
-static const visits_t     MinVisitsBeforeExpansion = 1;
-static const unsigned int MaxDistanceFromRoot  = 100;
-static size_t             MaxSearchNodes;
+static const visits_t MinVisitsBeforeExpansion = 1;
+static const unsigned int MaxDistanceFromRoot = 100;
+static size_t MaxSearchNodes;
 
 // contains information about a single "state"
 class SearchNode {
@@ -29,14 +31,39 @@ public:
 	action_t selectAction(Agent &agent) const; // TODO: implement
 
 	// determine the expected reward from this node
-	reward_t expectation(void) const { return m_mean; }
+	reward_t expectation(void) const {
+		return m_mean;
+	}
 
 	// perform a sample run through this node and it's children,
 	// returning the accumulated reward from this sample run
-	reward_t sample(Agent &agent, unsigned int dfr); // TODO: implement
+	reward_t sample(Agent &agent, unsigned int dfr) {
+
+		reward_t reward;
+		if (dfr == agent.m_horizon) {
+			return 0;
+		} else if (m_chance_node) {
+			percept_t o = agent.genObsAndUpdate(); // TODO fix
+			percept_t r = agent.genRewardAndUpdate();
+			SearchNode decision_node = SearchNode(false);
+			reward = r + decision_node.sample(agent, dfr + 1);
+		} else if (m_visits == 0) {
+			reward = playout(agent, agent.horizon() - dfr);
+		} else {
+			action_t a = selectAction(agent);
+			SearchNode chance_node = SearchNode(true);
+			reward = chance_node.sample(agent,dfr);
+		}
+		m_mean = (1.0/(m_visits+1))*(reward + m_visits * m_mean);
+		m_visits++;
+
+		return reward;
+	}
 
 	// number of times the search node has been visited
-	visits_t visits(void) const { return m_visits; }
+	visits_t visits(void) const {
+		return m_visits;
+	}
 
 	double getValueEstimate(void) const {
 		return m_mean;
@@ -68,33 +95,33 @@ static reward_t playout(Agent &agent, unsigned int playout_len) {
 }
 
 action_t bestAction(Agent &agent, SearchNode node) {
-		int N = agent.numActions();
-			double max_val = 0;
-			double val;
-			unsigned int j = N +1; // error handle
+	int N = agent.numActions();
+	double max_val = 0;
+	double val;
+	unsigned int j = N + 1; // error handle
 
-			// max action
-			for (int i = 0; i < N; i++) {
-				val = node.getChild(i).getValueEstimate();
-				max_val = std::max(max_val,val);
-				j = i;
-			}
-			assert(j <= N);
-			return j;
+	// max action
+	for (int i = 0; i < N; i++) {
+		val = node.getChild(i).getValueEstimate();
+		max_val = std::max(max_val, val);
+		j = i;
 	}
+	assert(j <= N);
+	return j;
+}
 
 // determine the best action by searching ahead using MCTS
-extern action_t search(Agent &agent,int timeout) {
+extern action_t search(Agent &agent, int timeout) {
 	// initialise search tree
 	// TODO cache subtree between searches for efficiency
-
+	// TODO make a copy of the agent model so we can update during search
 	SearchNode root = SearchNode(false);
 	clock_t startTime = clock();
 	do {
 		root.sample(agent, 0u);
-	} while ((clock() - startTime) / (double) CLOCKS_PER_SEC  < timeout);
-	 // TODO: implement
+	} while ((clock() - startTime) / (double) CLOCKS_PER_SEC < timeout);
+	// TODO: implement
 
-	return bestAction(agent,root);
+	return bestAction(agent, root);
 }
 
