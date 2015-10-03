@@ -67,6 +67,22 @@ static reward_t playout(Agent &agent, unsigned int playout_len) {
 	return 0; // TODO: implement
 }
 
+action_t bestAction(Agent &agent, SearchNode node) {
+		int N = agent.numActions();
+			double max_val = 0;
+			double val;
+			unsigned int j = N +1; // error handle
+
+			// max action
+			for (int i = 0; i < N; i++) {
+				val = node.getChild(i).getValueEstimate();
+				max_val = std::max(max_val,val);
+				j = i;
+			}
+			assert(j <= N);
+			return j;
+	}
+
 // determine the best action by searching ahead using MCTS
 extern action_t search(Agent &agent,int timeout) {
 	// initialise search tree
@@ -77,17 +93,8 @@ extern action_t search(Agent &agent,int timeout) {
 	do {
 		root.sample(agent, 0u);
 	} while ((clock() - startTime) / (double) CLOCKS_PER_SEC  < timeout);
-	int N = agent.numActions();
-	double max_val = 0;
-	double val;
-	unsigned int j = N +1; // error handle
-	for (int i = 0; i < N; i++) {
+	 // TODO: implement
 
-		val = root.getChild(i).getValueEstimate();
-		max_val = std::max(max_val,val);
-		j = i;
-	}
-	assert(j <= N);
-	return j; // TODO: implement
+	return bestAction(agent,root);
 }
 
