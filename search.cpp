@@ -15,6 +15,7 @@ typedef unsigned long long visits_t;
 static const visits_t MinVisitsBeforeExpansion = 1;
 static const unsigned int MaxDistanceFromRoot = 100;
 static size_t MaxSearchNodes;
+static const int MaxBranchFactor = 100;
 
 // contains information about a single "state"
 class SearchNode {
@@ -28,7 +29,10 @@ public:
 	}
 
 	// determine the next action to play
-	action_t selectAction(Agent &agent) const; // TODO: implement
+	action_t selectAction(Agent &agent) const {
+		// TODO: implement
+
+	}
 
 	// determine the expected reward from this node
 	reward_t expectation(void) const {
@@ -38,12 +42,11 @@ public:
 	// perform a sample run through this node and it's children,
 	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr) {
-
 		reward_t reward;
 		if (dfr == agent.m_horizon) {
 			return 0;
 		} else if (m_chance_node) {
-			percept_t o = agent.genObsAndUpdate(); // TODO fix
+			percept_t o = agent.genObsAndUpdate(); // TODO fix these up
 			percept_t r = agent.genRewardAndUpdate();
 			SearchNode decision_node = SearchNode(false);
 			reward = r + decision_node.sample(agent, dfr + 1);
@@ -76,16 +79,25 @@ public:
 	SearchNode getChild(int i) {
 		return m_children[i];
 	}
+	// actions
+	bool addChild(SearchNode child) {
+		if (m_num_children >= MaxBranchFactor) {
+			return false;
+		}
+		m_children[m_num_children] = *child;
+		m_num_children++;
+
+		return true;
+	}
 
 private:
 
 	bool m_chance_node; // true if this node is a chance node, false otherwise
 	double m_mean;      // the expected reward of this node
 	visits_t m_visits;  // number of times the search node has been visited
-	SearchNode *m_children[100]; // Array of children
+	SearchNode *m_children[MaxBranchFactor]; // Array of children
+	int m_num_children; // number of children
 
-	// TODO: decide how to reference child nodes
-	//  e.g. a fixed-size array
 };
 
 // simulate a path through a hypothetical future for the agent within it's
