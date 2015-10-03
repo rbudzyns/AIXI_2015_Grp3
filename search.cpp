@@ -1,6 +1,10 @@
 #include "search.hpp"
 
 #include "agent.hpp"
+#include <ctime>
+#include <cassert>
+#include <algorithm>
+
 
 typedef unsigned long long visits_t;
 
@@ -15,7 +19,11 @@ class SearchNode {
 
 public:
 
-	SearchNode(bool is_chance_node);
+	SearchNode(bool is_chance_node) {
+		m_visits = 0;
+		m_chance_node = is_chance_node;
+		m_mean = 0;
+	}
 
 	// determine the next action to play
 	action_t selectAction(Agent &agent) const; // TODO: implement
@@ -30,11 +38,24 @@ public:
 	// number of times the search node has been visited
 	visits_t visits(void) const { return m_visits; }
 
+	double getValueEstimate(void) const {
+		return m_mean;
+	}
+
+	double getNumVisits(void) const {
+		return m_visits;
+	}
+
+	SearchNode getChild(int i) {
+		return m_children[i];
+	}
+
 private:
 
 	bool m_chance_node; // true if this node is a chance node, false otherwise
 	double m_mean;      // the expected reward of this node
 	visits_t m_visits;  // number of times the search node has been visited
+	SearchNode *m_children[100]; // Array of children
 
 	// TODO: decide how to reference child nodes
 	//  e.g. a fixed-size array
@@ -47,7 +68,26 @@ static reward_t playout(Agent &agent, unsigned int playout_len) {
 }
 
 // determine the best action by searching ahead using MCTS
-extern action_t search(Agent &agent) {
-	return agent.genRandomAction(); // TODO: implement
+extern action_t search(Agent &agent,int timeout) {
+	// initialise search tree
+	// TODO cache subtree between searches for efficiency
+
+	SearchNode root = new SearchNode(false);
+	clock_t startTime = clock();
+	do {
+		root.sample(agent,0);
+	} while ((clock() - startTime) / (double) CLOCKS_PER_SEC  < timeout);
+	int N = agent.numActions();
+	double max_val = 0;
+	double val;
+	unsigned int j = N +1; // error handle
+	for (int i = 0; i < N; i++) {
+
+		val = root.getChild(i).getValueEstimate();
+		max_val = std::max(max_val,val);
+		j = i;
+	}
+	assert(j <= N);
+	return j; // TODO: implement
 }
 
