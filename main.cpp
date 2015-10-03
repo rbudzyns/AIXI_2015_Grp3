@@ -61,7 +61,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		}
 		else {
-			action = search(ai); // TODO: implement in search.cpp
+			action = search(ai,10); // TODO: implement in search.cpp
+			// timeout 10 sec per move TODO: get timeout from config
 		}
 
 		// Send an action to the environment
