@@ -4,10 +4,10 @@
 #include <sys/_types/_size_t.h>
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <ctime>
 
 #include "agent.hpp"
-#include "main.hpp"
 
 typedef unsigned long long visits_t;
 
@@ -31,6 +31,29 @@ public:
 	// determine the next action to play
 	action_t selectAction(Agent &agent) const {
 		// TODO: implement
+		action_t a;
+		if (m_num_children == agent.numActions()) {
+			// then U == {}
+			double max_val = 0;
+			double val;
+
+			for (int i = 0; i < m_num_children; i++) {
+				SearchNode child = getChild(i);
+				double normalization = agent.horizon() * (agent.maxReward() - agent.minReward()); // m(\beta - \alpha)
+				double Vha = child.expectation(); // \hat{V}(ha)
+				val = Vha/normalization+ sqrt((double) log((double) visits())/child.visits()); // eqn. 14 (Veness)
+				if (val > max_val) {
+					max_val = val;
+					a = i;
+				}
+			}
+			return a;
+		} else {
+			// U != {}
+			a = randRange(m_num_children, agent.numActions());
+			// TODO create chance node
+		}
+
 
 	}
 
@@ -72,11 +95,7 @@ public:
 		return m_mean;
 	}
 
-	double getNumVisits(void) const {
-		return m_visits;
-	}
-
-	SearchNode getChild(int i) {
+	SearchNode getChild(int i) const {
 		return m_children[i];
 	}
 	// actions
