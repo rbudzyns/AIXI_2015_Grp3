@@ -6,7 +6,7 @@
 class Agent;
 
 // determine the best action by searching ahead
-extern action_t search(Agent &agent, int timeout);
+extern action_t search(Agent &agent, double timeout);
 
 static reward_t playout(Agent &agent, unsigned int playout_len);
 
