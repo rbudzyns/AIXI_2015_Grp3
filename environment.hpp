@@ -2,6 +2,7 @@
 #define __ENVIRONMENT_HPP__
 
 #include "main.hpp"
+#include <string>
 
 class Environment {
 
@@ -46,4 +47,32 @@ private:
 	double p; // Probability of observing 1 (heads)
 };
 
+
+//Basic cheese maze environment. Environment contains the positoin of mouse and cheese
+//along with the structure of the walls. The agent recieves a reward of 10 for finding
+//the cheese, a penalty of -10 for bumping into a wall and a penalty of -1 for moving 
+//into a free cell.
+class CheeseMaze : public Environment {
+public:
+	
+	//setup initial environment for Cheese maze and sets up the inital percept for the agent.
+	CheeseMaze(options_t &options);
+	
+	//actions of the agent and set up percept based on action;
+	virtual void performAction(action_t action);
+	
+	//Check with the environment if the agent has reached the goal;
+	virtual bool isFinished(void) const;
+	
+private:
+	//structure to represent the nodes
+	struct node{
+		unsigned int percept;
+		node *next[4];
+	};
+	
+	std::string maze_conf;
+	node current_node;
+	node cheese_node;
+};
 #endif // __ENVIRONMENT_HPP__
