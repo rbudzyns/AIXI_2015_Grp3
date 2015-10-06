@@ -41,13 +41,24 @@ void CoinFlip::performAction(action_t action) {
  */
 CheeseMaze::CheeseMaze(options_t &options)
 {
+	int mouse_pos=1;
+	int cheese_pos=1;
 	//setup the environment according to the config file
 	if (options.count("maze-structure") > 0){
 		strExtract(options["maze-structure"], maze_conf);
 	}
 	
+	if (options.count("mouse-pos") > 0){
+		strExtract(options["mouse_pos"],mouse_pos);
+	}
+	
+	if (options.count("cheese-pos")>0){
+		strExtract(options["cheese-pos"],cheese_pos);
+	}
+	
 	//Create the nodes of the maze.
 	int i=0;
+	int count=1;
 	char num[3];
 	int j=0;
 	unsigned int per;
@@ -68,6 +79,10 @@ CheeseMaze::CheeseMaze(options_t &options)
 			std::istringstream(num)>>per;
 			node *new_node = new node;
 			new_node->percept = per;
+			if(count == mouse_pos)
+				current_node = new_node;
+			if(count == cheese_pos)
+				curr_node = new_node;
 			for(int k=0;k<4;k++)
 				new_node->next[k] = NULL;
 			//if stack is empty, meaning all edges will have to be connected
@@ -121,6 +136,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 					nodes.push(new_node);
 			}
 			j=0;
+			count++;
 		}
 		else
 		{
@@ -136,14 +152,14 @@ CheeseMaze::CheeseMaze(options_t &options)
 void CheeseMaze::performAction(action_t action)
 {
 	//action takes agent into wall
-	if(current_node.next[action] == NULL)
+	if(current_node->next[action] == NULL)
 		m_reward = -10;
 	//action takes agent into free cell
 	else
-		current_node = *current_node.next[action];
+		current_node = current_node->next[action];
 	//set percept for agent
-	m_observation = current_node.percept;
-	m_reward = &current_node == &cheese_node ? 10 : -1;
+	m_observation = current_node->percept;
+	m_reward = current_node == cheese_node ? 10 : -1;
 }
 
 bool CheeseMaze::isFinished() const

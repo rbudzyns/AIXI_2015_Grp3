@@ -72,7 +72,7 @@ private:
 	};
 	
 	std::string maze_conf;
-	node current_node;
-	node cheese_node;
+	node *current_node;
+	node *cheese_node;
 };
 #endif // __ENVIRONMENT_HPP__
