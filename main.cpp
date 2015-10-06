@@ -204,18 +204,27 @@ int main(int argc, char *argv[]) {
 		// TODO: instantiate "env" (if appropriate)
 	}
 	else if (environment_name == "cheese-maze") {
-		if (environment_name == "cheese-maze") {
-			env = new CheeseMaze(options);
-			options["agent-actions"] = "4";
-			options["observation-bits"] = "4";
-			options["reward-bits"] = "3";
-		}
+		env = new CheeseMaze(options);
+		options["agent-actions"] = "4";
+		options["observation-bits"] = "4";
+		options["reward-bits"] = "3";
 	}
 	else if (environment_name == "tiger") {
 		// TODO: instantiate "env" (if appropriate)
 	}
+	/*actions: 			0 = stand
+	 * 					1 = listen
+	 * 					2 = open left door
+	 * 					3 = open right door
+	 * 
+	 * observations:	0 = nothing known
+	 * 					1 = tiger behind right door
+	 * 					2 = tiger behind left door
+	 */
 	else if (environment_name == "extended-tiger") {
-		// TODO: instantiate "env" (if appropriate)
+		env = new ExtTiger(options);
+		options["agent-actions"] = "4";
+		options["observation-bits"] = "2";
 	}
 	else if (environment_name == "4x4-grid") {
 		// TODO: instantiate "env" (if appropriate)

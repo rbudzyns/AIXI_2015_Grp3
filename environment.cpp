@@ -146,6 +146,10 @@ CheeseMaze::CheeseMaze(options_t &options)
 		i++;
 	}while(maze_conf[i] != '\0');
 	num[j]='\0';
+	
+	//setting initial observation
+	m_observation = current_node->percept;
+	m_reward = 0;
 }
 
 
@@ -167,3 +171,65 @@ bool CheeseMaze::isFinished() const
 	return &current_node == &cheese_node ? 1 : 0;
 }
 
+
+//Creating the environment
+ExtTiger::ExtTiger(options_t &options)
+{
+	p=1.0;
+	//determine the probability of listening correctly
+	if(options.count("listen-p")>0){
+		strExtract(options["listen-p"],p);
+	}
+	assert(0.0<=p);
+	assert(p>=1.0);
+	
+	standing = 0; //player is sitting
+	tiger = rand01() < 0.5 ? 1 : 2; //tiger behind left door with 0.5 probability.
+	//initial observation
+	m_observation = 0;
+	m_reward = 0;
+}
+
+
+//the observation will be correct with probability of p.
+void ExtTiger::performAction(action_t action)
+{
+	switch(action)
+	{
+		case 0:
+		m_reward = standing ? -10 : -1;
+		standing = 1;
+		break;
+		
+		case 2:
+		if(standing){
+			m_reward = tiger == 2 ? -100 : 30;
+		}
+		else{
+			m_reward = -10;
+		}
+		break;
+		
+		case 3:
+		if(standing){
+			m_reward = tiger == 2 ? 30 : -100;
+		}
+		else{
+			m_reward = -10;
+		}
+		break;
+		
+		case 1:
+		if(!standing){
+			if(tiger == 1)
+				m_observation = rand01() < p ? 1 : 2;
+			else
+				m_observation = rand01() < p ? 2 : 1;
+			
+			m_reward = -1;
+		}
+		else{
+			m_reward = -10;
+		}
+	}
+}

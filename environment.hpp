@@ -48,7 +48,7 @@ private:
 };
 
 
-//Basic cheese maze environment. Environment contains the positoin of mouse and cheese
+//Basic cheese maze environment. Environment contains the position of mouse and cheese
 //along with the structure of the walls. The agent recieves a reward of 10 for finding
 //the cheese, a penalty of -10 for bumping into a wall and a penalty of -1 for moving 
 //into a free cell.
@@ -74,5 +74,23 @@ private:
 	std::string maze_conf;
 	node *current_node;
 	node *cheese_node;
+};
+
+//Extented Tiger environment.It maps the location of tiger using a integer variable tiger.
+//If tiger is 2 then tiger is behind left door and 1 if tiger is behind right door.
+//The gold pot is obviously behind the other door.
+//Agent state is mapped using boolean variable sitting. 1 for standing, 0 for sitting.
+class ExtTiger : public Environment{
+public:
+	//setup initial environment for Cheese maze and sets up the inital percept for the agent.
+	ExtTiger(options_t &options);
+	
+	//actions of the agent and set up percept based on action;
+	virtual void performAction(action_t action);
+	
+private:
+	double p; //probability of listening correctly
+	unsigned int tiger; //position of tiger
+	bool standing; //player is standing
 };
 #endif // __ENVIRONMENT_HPP__
