@@ -204,7 +204,12 @@ int main(int argc, char *argv[]) {
 		// TODO: instantiate "env" (if appropriate)
 	}
 	else if (environment_name == "cheese-maze") {
-		// TODO: instantiate "env" (if appropriate)
+		if (environment_name == "cheese-maze") {
+			env = new CheeseMaze(options);
+			options["agent-actions"] = "4";
+			options["observation-bits"] = "4";
+			options["reward-bits"] = "3";
+		}
 	}
 	else if (environment_name == "tiger") {
 		// TODO: instantiate "env" (if appropriate)
