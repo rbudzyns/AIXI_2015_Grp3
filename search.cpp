@@ -1,7 +1,5 @@
 #include "search.hpp"
 
-//#include <sys/_types/_clock_t.h>
-//#include <sys/_types/_size_t.h>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -120,8 +118,8 @@ public:
 			action_t a = selectAction(agent);
 
 			// this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
-			for (int i=0; i < m_children.size(); i++) {
-				if (a== m_children[i].getAction()) {
+			for (int i = 0; i < m_children.size(); i++) {
+				if (a == m_children[i].getAction()) {
 					reward = m_children[i].sample(agent, dfr);
 				}
 			}
@@ -188,7 +186,7 @@ private:
 
 // simulate a path through a hypothetical future for the agent within its
 // internal model of the world, returning the accumulated reward.
-static reward_t playout(Agent &agent, unsigned int playout_len) {
+reward_t playout(Agent &agent, unsigned int playout_len) {
 	std::cout << "Playout:" << std::endl;
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
@@ -207,7 +205,7 @@ extern action_t search(Agent &agent, double timeout) {
 	// TODO cache subtree between searches for efficiency
 	// TODO make a copy of the agent model so we can update during search
 	std::cout << "search: timeout value: " << timeout << std::endl;
-	SearchNode root = SearchNode(false,NULL);
+	SearchNode root = SearchNode(false, NULL);
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	do {
