@@ -23,15 +23,22 @@ class SearchNode {
 public:
 
 	// constructor
-	SearchNode(bool is_chance_node, action_t action) {
+	SearchNode(action_t action) {
+		m_chance_node = true;
 		m_visits = 0llu;
-		m_chance_node = is_chance_node;
 		m_mean = 0;
-		if (is_chance_node) {
-			m_action = action;
-		} else {
-			m_action = NULL;
-		}
+		m_observation = NULL;
+		m_reward = NULL;
+		m_action = action;
+	}
+
+	SearchNode(percept_t obs, percept_t rew) {
+		m_chance_node = false;
+		m_visits = 0llu;
+		m_mean = 0;
+		m_observation = obs;
+		m_reward = rew;
+		m_action = NULL;
 	}
 
 	// print method for debugging purposes
@@ -49,7 +56,7 @@ public:
 		action_t a;
 		if (m_children.size() != agent.numActions()) {
 			// then U != {}
-			std::vector<action_t> U;
+			std::vector < action_t > U;
 			int N = agent.numActions() - m_children.size();
 			bool found;
 			for (action_t i = 0; i < agent.numActions(); i++) {
@@ -66,7 +73,7 @@ public:
 			}
 			assert(U.size() == N);
 			a = U[randRange(N)];
-			SearchNode chance_node = SearchNode(true, a);
+			SearchNode chance_node = SearchNode(a);
 			addChild(chance_node);
 			return a;
 		} else {
@@ -107,8 +114,11 @@ public:
 		} else if (m_chance_node) {
 			percept_t o = 0; // Zero for now to get to compile. agent.genObsAndUpdate(); // TODO fix these up
 			percept_t r = 0; // Zero for now to get to compile. agent.genRewardAndUpdate();
-			SearchNode decision_node = SearchNode(false, NULL);
-			addChild(decision_node);
+			SearchNode decision_node = childWithObsRew(o, r);
+			if (decision_node == NULL) {
+				decision_node = SearchNode(o, r);
+				addChild(decision_node);
+			}
 			reward = r + decision_node.sample(agent, dfr + 1); // do we increment here or on line 91?
 		} else if (m_visits == 0) {
 			std::cout << "Sample: Child node: T(n) = 0" << std::endl;
@@ -150,6 +160,28 @@ public:
 		return m_action;
 	}
 
+	percept_t getObs(void) const {
+		assert(!m_chance_node);
+		return m_observation;
+	}
+
+	percept_t getRew(void) const {
+		assert(!m_chance_node);
+		return m_reward;
+	}
+
+	// returns true if this chance node has a child decision node
+	// which resulted from (obs, rew)
+	SearchNode childWithObsRew(percept_t obs, percept_t rew) const {
+		for (int i = 0; i < m_children.size(); i++) {
+			if (m_children[i].getObs() == obs
+					&& m_children[i].getRew() == rew) {
+				return m_children[i];
+			}
+		}
+		return NULL;
+	}
+
 	// add a new child node
 	bool addChild(SearchNode child) {
 		if (m_children.size() >= MaxBranchFactor) {
@@ -181,6 +213,8 @@ private:
 	double m_mean;      // the expected reward of this node
 	visits_t m_visits;  // number of times the search node has been visited
 	action_t m_action;  // action associated with chance nodes
+	percept_t m_observation; // observation associated with decision nodes
+	percept_t m_reward; // reward associated with decision nodes
 	std::vector<SearchNode> m_children; // list of child nodes
 };
 
@@ -190,13 +224,18 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	std::cout << "Playout:" << std::endl;
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
-		int a = 1; // TODO Generate a from \Pi(h)
-		int o = 1;
+		action_t a = rollout_policy(agent);
+		// modelUpdate(a);
+		int o = 1; // genPerceptAndUpdate(); // (genObsAndUpdate and genRewAndUpdate)
 		int r = 1; // TODO Generate (o,r) from \rho(or|ha)
 		reward += r;
-		// TODO h <-- haor
+
 	}
 	return reward;
+}
+
+action_t rollout_policy(Agent &agent) const {
+	return agent.genRandomAction();
 }
 
 // determine the best action by searching ahead using MCTS
@@ -205,7 +244,7 @@ extern action_t search(Agent &agent, double timeout) {
 	// TODO cache subtree between searches for efficiency
 	// TODO make a copy of the agent model so we can update during search
 	std::cout << "search: timeout value: " << timeout << std::endl;
-	SearchNode root = SearchNode(false, NULL);
+	SearchNode root = SearchNode(NULL, NULL);
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	do {
@@ -214,6 +253,8 @@ extern action_t search(Agent &agent, double timeout) {
 		std::cout << "search: time since start: "
 				<< ((endTime - startTime) / (double) CLOCKS_PER_SEC)
 				<< std::endl;
+		ModelUndo mu = ModelUndo(&agent);
+		agent.modelRevert(&mu);
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	return root.bestAction();
 }
