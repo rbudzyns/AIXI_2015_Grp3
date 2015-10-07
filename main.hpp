@@ -6,8 +6,10 @@
 #include <string>
 #include <vector>
 
+namespace aixi {
 // Streams for logging (defined in main.cpp)
 extern std::ofstream log;
+}
 extern std::ofstream compactLog;
 
 // symbols that can be predicted
