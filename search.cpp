@@ -61,8 +61,8 @@ public:
 			bool found;
 			for (action_t i = 0; i < agent.numActions(); i++) {
 				found = false;
-				for (int j = 0; j < agent.numActions(); j++) {
-					if (i == getChild(j).getAction()) {
+				for (int j = 0; j < int(agent.numActions()); j++) {
+					if (i == getChild(j)->getAction()) {
 						found = true;
 						break;
 					}
@@ -73,7 +73,7 @@ public:
 			}
 			assert(U.size() == N);
 			a = U[randRange(N)];
-			SearchNode chance_node = SearchNode(a);
+			SearchNode* chance_node = new SearchNode(a);
 			addChild(chance_node);
 			return a;
 		} else {
@@ -82,18 +82,18 @@ public:
 			double val;
 
 			for (int i = 0; i < m_children.size(); i++) {
-				SearchNode child = getChild(i);
+				SearchNode* child = getChild(i);
 				double normalization = agent.horizon()
 						* (agent.maxReward() - agent.minReward()); // m(\beta - \alpha)
-				double Vha = child.expectation(); // \hat{V}(ha)
+				double Vha = child->expectation(); // \hat{V}(ha)
 				// John: just a note to check with you re: C from 14 in Veness.
 				val = Vha / normalization
 						+ sqrt(
 								(double) log2((double) m_visits)
-										/ child.visits()); // eqn. 14 (Veness)
+										/ child->visits()); // eqn. 14 (Veness)
 				if (val > max_val) {
 					max_val = val;
-					a = child.getAction();
+					a = child->getAction();
 				}
 			}
 			return a;
@@ -114,12 +114,12 @@ public:
 		} else if (m_chance_node) {
 			percept_t o = 0; // Zero for now to get to compile. agent.genObsAndUpdate(); // TODO fix these up
 			percept_t r = 0; // Zero for now to get to compile. agent.genRewardAndUpdate();
-			SearchNode decision_node = childWithObsRew(o, r);
+			SearchNode* decision_node = childWithObsRew(o,r);
 			if (decision_node == NULL) {
-				decision_node = SearchNode(o, r);
+				decision_node = new SearchNode(o, r);
 				addChild(decision_node);
 			}
-			reward = r + decision_node.sample(agent, dfr + 1); // do we increment here or on line 91?
+			reward = r + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
 		} else if (m_visits == 0) {
 			std::cout << "Sample: Child node: T(n) = 0" << std::endl;
 			reward = playout(agent, agent.horizon() - dfr);
@@ -129,8 +129,8 @@ public:
 
 			// this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
 			for (int i = 0; i < m_children.size(); i++) {
-				if (a == m_children[i].getAction()) {
-					reward = m_children[i].sample(agent, dfr);
+				if (a == m_children[i]->getAction()) {
+					reward = m_children[i]->sample(agent, dfr);
 				}
 			}
 		}
@@ -151,7 +151,7 @@ public:
 		return m_mean;
 	}
 
-	SearchNode getChild(int i) const {
+	SearchNode* getChild(int i) const {
 		return m_children[i];
 	}
 
@@ -172,10 +172,10 @@ public:
 
 	// returns true if this chance node has a child decision node
 	// which resulted from (obs, rew)
-	SearchNode childWithObsRew(percept_t obs, percept_t rew) const {
-		for (int i = 0; i < m_children.size(); i++) {
-			if (m_children[i].getObs() == obs
-					&& m_children[i].getRew() == rew) {
+	SearchNode* childWithObsRew(percept_t obs, percept_t rew) {
+		for (int i = 0; i < int(m_children.size()); i++) {
+			if (m_children[i]->getObs() == obs
+					&& m_children[i]->getRew() == rew) {
 				return m_children[i];
 			}
 		}
@@ -183,7 +183,7 @@ public:
 	}
 
 	// add a new child node
-	bool addChild(SearchNode child) {
+	bool addChild(SearchNode* child) {
 		if (m_children.size() >= MaxBranchFactor) {
 			return false;
 		}
@@ -198,10 +198,10 @@ public:
 		assert(m_children.size() > 0);
 		reward_t max_val = 0;
 		action_t a = 1;
-		for (std::vector<SearchNode>::const_iterator it = m_children.begin();
+		for (std::vector<SearchNode*>::const_iterator it = m_children.begin();
 				it != m_children.end(); ++it) {
-			if ((*it).getValueEstimate() > max_val) {
-				a = (*it).getAction();
+			if ((*it)->getValueEstimate() > max_val) {
+				a = (*it)->getAction();
 			}
 		}
 		return a;
@@ -215,8 +215,12 @@ private:
 	action_t m_action;  // action associated with chance nodes
 	percept_t m_observation; // observation associated with decision nodes
 	percept_t m_reward; // reward associated with decision nodes
-	std::vector<SearchNode> m_children; // list of child nodes
+	std::vector<SearchNode*> m_children; // list of child nodes
 };
+
+action_t rollout_policy(Agent &agent) {
+	return agent.genRandomAction();
+}
 
 // simulate a path through a hypothetical future for the agent within its
 // internal model of the world, returning the accumulated reward.
@@ -234,10 +238,6 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	return reward;
 }
 
-action_t rollout_policy(Agent &agent) const {
-	return agent.genRandomAction();
-}
-
 // determine the best action by searching ahead using MCTS
 extern action_t search(Agent &agent, double timeout) {
 	// initialise search tree
@@ -253,8 +253,8 @@ extern action_t search(Agent &agent, double timeout) {
 		std::cout << "search: time since start: "
 				<< ((endTime - startTime) / (double) CLOCKS_PER_SEC)
 				<< std::endl;
-		ModelUndo mu = ModelUndo(&agent);
-		agent.modelRevert(&mu);
+		ModelUndo mu = ModelUndo(agent);
+		agent.modelRevert(mu);
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	return root.bestAction();
 }

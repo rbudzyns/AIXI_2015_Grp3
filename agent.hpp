@@ -16,6 +16,9 @@ public:
 	// construct a learning agent from the command line arguments
 	Agent(options_t & options);
 
+	// copy constructor
+	Agent(const Agent &obj);
+
 	// destruct the agent and the corresponding context tree
 	~Agent(void);
 
