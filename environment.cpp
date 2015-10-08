@@ -2,6 +2,9 @@
 
 #include <cassert>
 #include <stack>
+#include <string>
+#include <bitset>
+#include <climits>
 
 #include "util.hpp"
 
@@ -49,7 +52,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 	}
 	
 	if (options.count("mouse-pos") > 0){
-		strExtract(options["mouse_pos"],mouse_pos);
+		strExtract(options["mouse-pos"],mouse_pos);
 	}
 	
 	if (options.count("cheese-pos")>0){
@@ -82,7 +85,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			if(count == mouse_pos)
 				current_node = new_node;
 			if(count == cheese_pos)
-				curr_node = new_node;
+				cheese_node = new_node;
 			for(int k=0;k<4;k++)
 				new_node->next[k] = NULL;
 			//if stack is empty, meaning all edges will have to be connected
@@ -157,7 +160,10 @@ void CheeseMaze::performAction(action_t action)
 {
 	//action takes agent into wall
 	if(current_node->next[action] == NULL)
+	{
 		m_reward = -10;
+		return;
+	}
 	//action takes agent into free cell
 	else
 		current_node = current_node->next[action];
@@ -232,4 +238,19 @@ void ExtTiger::performAction(action_t action)
 			m_reward = -10;
 		}
 	}
+}
+
+/*Tic Tac Toe environment.*/
+TicTacToe::TicTacToe(options_t &options)
+{
+	board.reset();
+
+	//setting up initial percepts
+	m_observation = board.to_ulong() & INT_MAX;
+	m_reward = 0;
+}
+
+void TicTacToe::performAction(action_t action)
+{
+	return;
 }
