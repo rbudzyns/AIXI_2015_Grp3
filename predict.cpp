@@ -1,7 +1,7 @@
 #include "predict.hpp"
 
 #include <cassert>
-
+#include <cmath>
 
 CTNode::CTNode(void) :
     m_log_prob_est(0.0),
@@ -72,12 +72,44 @@ void ContextTree::clear(void) {
 
 
 void ContextTree::update(const symbol_t sym) {
-    // TODO: implement
+    // Update the context tree for the next obeserved bit
+    int path_size = (m_history.size() < m_depth)? m_history.size() : m_depth;
+    std::vector<CTNode*> context_path;
+    
+    CTNode* current = m_root;
+    int traverse_nodes_n = 0;
+    // Update the (0,1) count of each context node upto min(depth,history)
+    // and remember the path
+    while(traverse_nodes_n <= path_size) {
+        context_path.push_back(current);
+        if(sym == 0) {
+            current.m_log_prob_est *= log2((current.m_count[0]+0.5)/(current.m_count[0]+current.m_count[1]+1));
+            current->m_count[0]++;
+            current =  current->m_child[0];
+        } else {
+            current.m_log_prob_est *= log2((current.m_count[1]+0.5)/(current.m_count[0]+current.m_count[1]+1));         
+            current->m_count[1]++;
+            current =  current->m_child[1];
+        }
+    }
+    
+    // Add new node for sym to the context tree
+    CTNode node;
+    if(sym == 0) {
+        current.m_child[0] = node;
+    } else {
+        current.m_child[1] = node;
+    }
+    
+    while(current != NULL) {
+    }
 }
 
 
 void ContextTree::update(const symbol_list_t &symbol_list) {
-    // TODO: implement
+    for(size_t i = 0; i < symbol_list.size(); i++) {
+        update(symbol_list.front());
+    }
 }
 
 
