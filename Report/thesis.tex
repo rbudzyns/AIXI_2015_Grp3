@@ -21,6 +21,7 @@
 \usepackage{afterpage}
 \usepackage{graphicx}
 \usepackage{thesis}
+\usepackage[utf8]{inputenc}
 \usepackage[square]{natbib}
 \usepackage[normalem]{ulem}
 \usepackage[table]{xcolor}
@@ -53,9 +54,14 @@
 \input{macros}            
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Preamble
-\title{Title Is Here}
-\author{Author Name}
-\date{\today}
+\title{Applying Context-Tree Weighting To Learning in Various Environments}
+\author{John Aslanides, 
+ Ryk Budzynski,
+ Jarryd Martin, 
+ Nrupenda Rao, 
+ Yadunandan Sannappa, 
+ Cheng Yu}
+\date{20 October, 2015}
 
 \renewcommand{\thepage}{\roman{page}}
 
@@ -68,21 +74,7 @@
 \thispagestyle{empty}
 \input{titlepage}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Here begin the preliminaries
-\input{frontmatter}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Dedication
-\cleardoublepage
-\pagestyle{empty}
-\input{dedication}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Acknowledgements
-\cleardoublepage
-\pagestyle{empty}
-\input{ack}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract
@@ -107,7 +99,6 @@
 \input{intro}
 
 %% Chapters
-\input{background}
 \input{design}
 \input{methodology}
 \input{results}
@@ -116,7 +107,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here begins the end matter
 
-%%\input{appendix}
+\input{appendix}
 
 \backmatter
 
