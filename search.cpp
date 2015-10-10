@@ -32,12 +32,12 @@ public:
 		m_action = action;
 	}
 
-	SearchNode(percept_t obs, percept_t rew) {
+	SearchNode(percept_t observation, percept_t reward) {
 		m_chance_node = false;
 		m_visits = 0llu;
 		m_mean = 0;
-		m_observation = obs;
-		m_reward = rew;
+		m_observation = observation;
+		m_reward = reward;
 		m_action = NULL;
 	}
 
@@ -112,8 +112,8 @@ public:
 		if (dfr == MaxDistanceFromRoot) { // horizon has been reached
 			return 0;
 		} else if (m_chance_node) {
-			percept_t o = 0; // Zero for now to get to compile. agent.genObsAndUpdate(); // TODO fix these up
-			percept_t r = 0; // Zero for now to get to compile. agent.genRewardAndUpdate();
+			percept_t o = agent.genPerceptAndUpdate();
+			percept_t r = agent.genPerceptAndUpdate();
 			SearchNode* decision_node = childWithObsRew(o,r);
 			if (decision_node == NULL) {
 				decision_node = new SearchNode(o, r);
@@ -229,11 +229,10 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
 		action_t a = rollout_policy(agent);
-		// modelUpdate(a);
-		int o = 1; // genPerceptAndUpdate(); // (genObsAndUpdate and genRewAndUpdate)
-		int r = 1; // TODO Generate (o,r) from \rho(or|ha)
+		agent.modelUpdate(a);
+		int o = agent.genPerceptAndUpdate();
+		int r = agent.genPerceptAndUpdate();
 		reward += r;
-
 	}
 	return reward;
 }
@@ -248,14 +247,13 @@ extern action_t search(Agent &agent, double timeout) {
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	do {
+		ModelUndo mu = ModelUndo(agent);
 		root.sample(agent, 0u);
+		agent.modelRevert(mu);
 		endTime = clock();
 		std::cout << "search: time since start: "
 				<< ((endTime - startTime) / (double) CLOCKS_PER_SEC)
 				<< std::endl;
-		ModelUndo mu = ModelUndo(agent);
-		agent.modelRevert(mu);
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	return root.bestAction();
 }
-
