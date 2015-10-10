@@ -3,6 +3,7 @@
 
 #include "main.hpp"
 #include <string>
+#include <bitset>
 
 class Environment {
 
@@ -93,4 +94,31 @@ private:
 	unsigned int tiger; //position of tiger
 	bool standing; //player is standing
 };
+
+class TicTacToe : public Environment
+{
+public:	
+	//constructor to intialise the Tic Tac Toe environment and to give the initial percepts.
+	TicTacToe(options_t & options);
+
+	//actions of the agent
+	virtual void performAction(action_t action);
+
+protected:
+	std::bitset<18> board;
+};
+
+class BRockPaperScissors : public Environment
+{
+public:
+	//constructor to initialise the environment and the set the initial percepts for the agent;
+	BRockPaperScissors(options_t &options);
+
+	//actions of the agent
+	virtual void performAction(action_t action);
+
+private:
+	unsigned int move;
+};
+
 #endif // __ENVIRONMENT_HPP__

@@ -245,7 +245,7 @@ TicTacToe::TicTacToe(options_t &options)
 {
 	board.reset();
 
-	//setting up initial percepts
+	//return the initial percept,
 	m_observation = board.to_ulong() & INT_MAX;
 	m_reward = 0;
 }
@@ -253,4 +253,46 @@ TicTacToe::TicTacToe(options_t &options)
 void TicTacToe::performAction(action_t action)
 {
 	return;
+}
+
+
+/*
+	Biased Rock Paper Scissors environment*
+	Move:
+		0 : Rock
+		1 : Paper
+		2 : Scissors
+*/
+BRockPaperScissors::BRockPaperScissors(options_t &options)
+{
+	move = floor(rand01() * 3);
+	//return the initial percept
+	m_observation = 0;
+	m_reward = 0;
+}
+
+void BRockPaperScissors::performAction(action_t action)
+{
+	if (action != move)
+	{
+		switch (move)
+		{
+		case 0:
+			m_reward = action == 1 ? 1 : -1;
+			break;
+		case 1:
+			m_reward = action == 2 ? 1 : -1;
+			break;
+		case 2:
+			m_reward = action == 0 ? 1 : -1;
+		}
+	}
+	else
+	{
+		m_reward = 0;
+	}
+
+	m_observation = move;
+	
+	move = m_reward == -1 ? move : floor(rand01() * 3);
 }

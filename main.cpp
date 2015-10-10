@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
 		env = new CheeseMaze(options);
 		options["agent-actions"] = "4";
 		options["observation-bits"] = "4";
-		options["reward-bits"] = "3";
+		options["reward-bits"] = "5";
 	}
 	else if (environment_name == "tiger") {
 		// TODO: instantiate "env" (if appropriate)
@@ -225,15 +225,22 @@ int main(int argc, char *argv[]) {
 		env = new ExtTiger(options);
 		options["agent-actions"] = "4";
 		options["observation-bits"] = "2";
+		options["reward-bits"] = "8";
 	}
 	else if (environment_name == "4x4-grid") {
 		// TODO: instantiate "env" (if appropriate)
 	}
 	else if (environment_name == "tictactoe") {
-		// TODO: instantiate "env" (if appropriate)
+		env = new TicTacToe(options);
+		options["agent-actions"] = "9";
+		options["observation-bits"] = "18";
+		options["reward-bits"] = "3";
 	}
 	else if (environment_name == "biased-rock-paper-scissor") {
-		// TODO: instantiate "env" (if appropriate)
+		env = new BRockPaperScissors(options);
+		options["agent-actions"] = "3";
+		options["observation-bits"] = "3";
+		options["reward-bits"] = "3";
 	}
 	else if (environment_name == "kuhn-poker") {
 		// TODO: instantiate "env" (if appropriate)
