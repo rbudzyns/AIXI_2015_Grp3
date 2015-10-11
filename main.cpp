@@ -236,6 +236,12 @@ int main(int argc, char *argv[]) {
 		options["observation-bits"] = "18";
 		options["reward-bits"] = "3";
 	}
+	/*
+	Action 
+			0 : rock
+			1 : paper
+			2 : scissors
+	*/
 	else if (environment_name == "biased-rock-paper-scissor") {
 		env = new BRockPaperScissors(options);
 		options["agent-actions"] = "3";

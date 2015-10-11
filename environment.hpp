@@ -95,6 +95,7 @@ private:
 	bool standing; //player is standing
 };
 
+//Tic Tac Toe environment
 class TicTacToe : public Environment
 {
 public:	
@@ -103,6 +104,9 @@ public:
 
 	//actions of the agent
 	virtual void performAction(action_t action);
+
+	//check if the game is finished
+	virtual bool isFinished() const;
 
 protected:
 	std::bitset<18> board;

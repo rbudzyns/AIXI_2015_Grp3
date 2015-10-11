@@ -252,7 +252,10 @@ TicTacToe::TicTacToe(options_t &options)
 
 void TicTacToe::performAction(action_t action)
 {
-	return;
+	if (((m_observation >> (action*2)) & 3) == 0)
+	{
+		
+	}
 }
 
 
