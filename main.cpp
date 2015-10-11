@@ -152,7 +152,18 @@ void processOptions(std::ifstream &in, options_t &options) {
     }
 }
 
+/*
+void testPredict() {
+    ContextTree m_ct = new ContextTree(10);
+    
+    symbol_list_t sym_list;
+    
+    encode(&sym_list, 62, 6);
+    m_ct.update(sym_list);
+}
+*/
 int main(int argc, char *argv[]) {
+  //  testPredict();
     if (argc < 2 || argc > 3) {
         std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
         std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;

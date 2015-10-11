@@ -15,7 +15,7 @@ typedef double weight_t;
 typedef std::deque<symbol_t> history_t;
 
 class CTNode {
-	friend class ContextTree; // i.e. ContextTree can access private members of CTNode
+    friend class ContextTree; // i.e. ContextTree can access private members of CTNode
 
 public:
     // log weighted blocked probability
@@ -25,21 +25,21 @@ public:
     weight_t logProbEstimated(void) const { return m_log_prob_est; }
 
     // the number of times this context has been visited
-	count_t visits(void) const { return m_count[false] + m_count[true]; }
+    count_t visits(void) const { return m_count[false] + m_count[true]; }
 
-	// child corresponding to a particular symbol
-	const CTNode *child(symbol_t sym) const { return m_child[sym]; }
+    // child corresponding to a particular symbol
+    const CTNode *child(symbol_t sym) const { return m_child[sym]; }
 
-	// number of descendants
-	size_t size(void) const;
+    // number of descendants
+    size_t size(void) const;
 
 private:
-	CTNode(void);
+    CTNode(void);
 
-	~CTNode(void);
+    ~CTNode(void);
 
-	// compute the logarithm of the KT-estimator update multiplier   
-	double logKTMul(symbol_t sym) const; // TODO: implement in predict.cpp
+    // compute the logarithm of the KT-estimator update multiplier   
+    double logKTMul(symbol_t sym) const; // TODO: implement in predict.cpp
 
 
 
@@ -69,13 +69,13 @@ private:
 class ContextTree {
 public:
 
-	// create a context tree of specified maximum depth
-	ContextTree(size_t depth);
+    // create a context tree of specified maximum depth
+    ContextTree(size_t depth);
 
-	~ContextTree(void);
+    ~ContextTree(void);
 
-	// clear the entire context tree
-	void clear(void);
+    // clear the entire context tree
+    void clear(void);
 
     // updates the context tree with a new binary symbol
     void update(const symbol_t sym); // TODO: implement in predict.cpp
@@ -107,8 +107,12 @@ public:
     void genRandomSymbolsAndUpdate(symbol_list_t &symbols, size_t bits); // TODO: implement in predict.cpp
 
     // the logarithm of the block probability of the whole sequence
-	double logBlockProbability(void);
+    double logBlockProbability(void);
 
+    void walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode *current);
+    void debugTree(void);
+    void printTree(CTNode *node);
+    
     // get the n'th history symbol, NULL if doesn't exist
     const symbol_t *nthHistorySymbol(size_t n) const;
 
@@ -127,6 +131,9 @@ private:
     CTNode *m_root;      // the root node of the context tree
     size_t m_depth;      // the maximum depth of the context tree
 
+    // ND: For updating the CT
+    size_t m_update_partial_count;
+    std::vector<symbol_t> m_update_partial_list;
 };
 
 #endif // __PREDICT_HPP__
