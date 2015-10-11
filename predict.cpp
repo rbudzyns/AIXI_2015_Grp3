@@ -4,19 +4,19 @@
 
 
 CTNode::CTNode(void) :
-	m_log_prob_est(0.0),
-	m_log_prob_weighted(0.0)
+    m_log_prob_est(0.0),
+    m_log_prob_weighted(0.0)
 {
-	m_count[0] = 0;
-	m_count[1] = 0;
-	m_child[0] = NULL;
-	m_child[1] = NULL;
+    m_count[0] = 0;
+    m_count[1] = 0;
+    m_child[0] = NULL;
+    m_child[1] = NULL;
 }
 
 
 CTNode::~CTNode(void) {
-	if (m_child[0]) delete m_child[0];
-	if (m_child[1]) delete m_child[1];
+    if (m_child[0]) delete m_child[0];
+    if (m_child[1]) delete m_child[1];
 }
 
 
@@ -32,7 +32,9 @@ size_t CTNode::size(void) const {
 
 // compute the logarithm of the KT-estimator update multiplier
 double CTNode::logKTMul(symbol_t sym) const {
-	return NULL; // TODO: implement
+    // Eq 27, and then take log
+    return NULL; // TODO: implement
+    
 }
 
 // Calculate the logarithm of the weighted block probability.
@@ -51,31 +53,31 @@ void CTNode::revert(const symbol_t symbol){
 
 // create a context tree of specified maximum depth
 ContextTree::ContextTree(size_t depth) :
-	m_root(new CTNode()),
-	m_depth(depth)
+    m_root(new CTNode()),
+    m_depth(depth)
 { return; }
 
 
 ContextTree::~ContextTree(void) {
-	if (m_root) delete m_root;
+    if (m_root) delete m_root;
 }
 
 
 // clear the entire context tree
 void ContextTree::clear(void) {
-	m_history.clear();
-	if (m_root) delete m_root;
-	m_root = new CTNode();
+    m_history.clear();
+    if (m_root) delete m_root;
+    m_root = new CTNode();
 }
 
 
 void ContextTree::update(const symbol_t sym) {
-	// TODO: implement
+    // TODO: implement
 }
 
 
 void ContextTree::update(const symbol_list_t &symbol_list) {
-	// TODO: implement
+    // TODO: implement
 }
 
 
@@ -90,7 +92,7 @@ void ContextTree::updateHistory(const symbol_list_t &symbol_list) {
 
 // removes the most recently observed symbol from the context tree
 void ContextTree::revert(void) {
-	// TODO: implement
+    // TODO: implement
 }
 
 
@@ -107,10 +109,10 @@ void ContextTree::revertHistory(size_t newsize) {
 // distributed according to the context tree statistics
 void ContextTree::genRandomSymbols(symbol_list_t &symbols, size_t bits) {
 
-	genRandomSymbolsAndUpdate(symbols, bits);
+    genRandomSymbolsAndUpdate(symbols, bits);
 
-	// restore the context tree to it's original state
-	for (size_t i=0; i < bits; i++) revert();
+    // restore the context tree to it's original state
+    for (size_t i=0; i < bits; i++) revert();
 }
 
 
@@ -118,7 +120,7 @@ void ContextTree::genRandomSymbols(symbol_list_t &symbols, size_t bits) {
 // the context tree statistics and update the context tree with the newly
 // generated bits
 void ContextTree::genRandomSymbolsAndUpdate(symbol_list_t &symbols, size_t bits) {
-	// TODO: implement
+    // TODO: implement
 }
 
 
