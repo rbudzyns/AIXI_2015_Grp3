@@ -109,13 +109,14 @@ void ContextTree::update(const symbol_t sym) {
 
 void ContextTree::update(const symbol_list_t &symbol_list) {
     m_update_partial_count = 0;
-    m_update_partial_list.clear();
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
         update(symbol_list[i]);
         m_update_partial_count++;
         m_update_partial_list.push_back(symbol_list[i]);
     }
+    m_update_partial_list.clear();
+    m_update_partial_count = 0;
 }
 
 
@@ -176,7 +177,6 @@ void ContextTree::revert(void) {
         current->revert(m_history.at(m_history.size()-1));
         current = context_path.back();
         context_path.pop_back();
-        revertHistory(m_history.size()-1);
     }
 }
 
@@ -189,7 +189,7 @@ void ContextTree::revertHistory(size_t newsize) {
 }
 
 
-
+// Note: It does not revert the history
 // generate a specified number of random symbols
 // distributed according to the context tree statistics
 void ContextTree::genRandomSymbols(symbol_list_t &symbols, size_t bits) {
@@ -201,19 +201,46 @@ void ContextTree::genRandomSymbols(symbol_list_t &symbols, size_t bits) {
 }
 
 
+// P(x[i]=sym|h)
+double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
+    double prob_log_next_bit, new_log_block_prob, last_log_block_prob;
+
+    last_log_block_prob = logBlockProbability();
+    // To calculate the root probability as if the next symbol was 0
+    update(sym);
+    new_log_block_prob = logBlockProbability();
+    prob_log_next_bit = new_log_block_prob-last_log_block_prob;
+    // Remove the recently added 0, which was used for calculating the root prob
+    revert();
+    
+    return prob_log_next_bit;
+}
+
+// P(x[i]=sym|h) and update
+double ContextTree::getLogProbNextSymbolGivenHWithUpdate(symbol_t sym) {
+    double prob_log_next_bit, new_log_block_prob, last_log_block_prob;
+
+    last_log_block_prob = logBlockProbability();
+    // To calculate the root probability as if the next symbol was 0
+    update(sym);
+    new_log_block_prob = logBlockProbability();
+    prob_log_next_bit = new_log_block_prob-last_log_block_prob;
+    // Remove the recently added 0, which was used for calculating the root prob
+    
+    return prob_log_next_bit;
+}
+
+
 // generate a specified number of random symbols distributed according to
 // the context tree statistics and update the context tree with the newly
 // generated bits
 void ContextTree::genRandomSymbolsAndUpdate(symbol_list_t &symbols, size_t bits) {
-    double_t last_block_probability, new_block_probability, prob_next_bit;
+    double prob_next_bit;
     symbol_t sym;   
     
     for(int i = 0; i < bits; i++) {
-        last_block_probability = logBlockProbability();
-        update(0);
-        new_block_probability = logBlockProbability();
-        prob_next_bit = new_block_probability/last_block_probability;
-        revert();
+        
+        prob_next_bit = pow(2, getLogProbNextSymbolGivenH(0));
         
         // Sample the next bit
         if(rand01() <= prob_next_bit) {

@@ -52,7 +52,7 @@ public:
 
     // generate a percept distributed to our history statistics, and
     // update our mixture environment model with it
-    percept_t genPerceptAndUpdate(void); // TODO: implement in agent.cpp
+    percept_t* genPerceptAndUpdate(void); // TODO: implement in agent.cpp
 
     // update the internal agent's model of the world
     // due to receiving a percept or performing an action

@@ -2,6 +2,7 @@
 #define __PREDICT_HPP__
 
 #include <deque>
+#include <cmath>
 
 #include "main.hpp"
 
@@ -108,6 +109,9 @@ public:
 
     // the logarithm of the block probability of the whole sequence
     double logBlockProbability(void);
+
+    double getLogProbNextSymbolGivenH(symbol_t sym);
+    double getLogProbNextSymbolGivenHWithUpdate(symbol_t sym);
 
     void walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode *current);
     void debugTree(void);

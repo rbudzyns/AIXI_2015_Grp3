@@ -91,6 +91,8 @@ percept_t* Agent::genPercept(void) const {
     symbol_list_t symbol_list;
     
     m_ct->genRandomSymbols(symbol_list, m_obs_bits + m_rew_bits);
+    m_ct->revertHistory(m_obs_bits + m_rew_bits);
+    
     percept[0] = decode(symbol_list, m_obs_bits);
     for(int i; i < m_rew_bits; i++) {
         symbol_list[i] = symbol_list[i + m_obs_bits];
@@ -103,8 +105,19 @@ percept_t* Agent::genPercept(void) const {
 
 // generate a percept distributed to our history statistics, and
 // update our mixture environment model with it
-percept_t Agent::genPerceptAndUpdate(void) {
-    return NULL; // TODO: implement
+percept_t* Agent::genPerceptAndUpdate(void) {
+    percept_t* percept =  new percept_t[2];
+    symbol_list_t symbol_list;
+    
+    m_ct->genRandomSymbolsAndUpdate(symbol_list, m_obs_bits + m_rew_bits);
+    
+    percept[0] = decode(symbol_list, m_obs_bits);
+    for(int i; i < m_rew_bits; i++) {
+        symbol_list[i] = symbol_list[i + m_obs_bits];
+    }
+    percept[1] = decode(symbol_list, m_rew_bits);
+    
+    return percept;
 }
 
 
@@ -143,7 +156,15 @@ void Agent::modelUpdate(action_t action) {
 // revert the agent's internal model of the world
 // to that of a previous time cycle, false on failure
 bool Agent::modelRevert(const ModelUndo &mu) {
-    return NULL; // TODO: implement
+    int size_of_ora_pairs = (m_time_cycle - mu.lifetime())*(m_obs_bits + m_rew_bits + m_actions_bits);
+    
+    for(int i = 0; i < size_of_ora_pairs; i++) {
+        m_ct->revert();
+        m_ct->revertHistory(m_ct->historySize()-1);
+    }
+    
+    // Check later: Whether it could return false
+    return true;
 }
 
 
@@ -158,13 +179,29 @@ void Agent::reset(void) {
 // probability of selecting an action according to the
 // agent's internal model of it's own behaviour
 double Agent::getPredictedActionProb(action_t action) {
-    return NULL; // TODO: implement
+    double log_probability = 0.0;
+    
+    for(int i = 0; i < m_actions_bits; i++) {
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (action/2));
+    }
+
+    return pow(2, log_probability);
 }
 
 
 // get the agent's probability of receiving a particular percept
 double Agent::perceptProbability(percept_t observation, percept_t reward) const {
-    return NULL; // TODO: implement
+    double log_probability = 0.0;
+    
+    for(int i = 0; i < m_rew_bits; i++) {
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (observation/2));
+    }
+
+    for(int i = 0; i < m_rew_bits; i++) {
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (reward/2));
+    }
+    
+    return pow(2, log_probability);
 }
 
 
