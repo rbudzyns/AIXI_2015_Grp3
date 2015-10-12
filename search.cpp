@@ -112,14 +112,13 @@ public:
 		if (dfr == MaxDistanceFromRoot) { // horizon has been reached
 			return 0;
 		} else if (m_chance_node) {
-			percept_t o = agent.genPerceptAndUpdate();
-			percept_t r = agent.genPerceptAndUpdate();
-			SearchNode* decision_node = childWithObsRew(o,r);
+			percept_t* percept = agent.genPerceptAndUpdate();
+			SearchNode* decision_node = childWithObsRew(percept[0],percept[1]);
 			if (decision_node == NULL) {
-				decision_node = new SearchNode(o, r);
+				decision_node = new SearchNode(percept[0],percept[1]);
 				addChild(decision_node);
 			}
-			reward = r + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
+			reward = percept[1] + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
 		} else if (m_visits == 0) {
 			std::cout << "Sample: Child node: T(n) = 0" << std::endl;
 			reward = playout(agent, agent.horizon() - dfr);
@@ -230,9 +229,8 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	for (int i = 1; i <= int(playout_len); i++) {
 		action_t a = rollout_policy(agent);
 		agent.modelUpdate(a);
-		int o = agent.genPerceptAndUpdate();
-		int r = agent.genPerceptAndUpdate();
-		reward += r;
+		percept_t* percept = agent.genPerceptAndUpdate();
+		reward += percept[1];
 	}
 	return reward;
 }

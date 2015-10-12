@@ -125,9 +125,12 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
     // Update internal model
     symbol_list_t percept;
     encodePercept(percept, observation, reward);
+    std::cout << "Hello1" << std::endl;
 
     m_ct->update(percept);
+    std::cout << "Hello2" << std::endl;
     m_ct->updateHistory(percept);
+    std::cout << "Hello3" << std::endl;
 
 
     // Update other properties

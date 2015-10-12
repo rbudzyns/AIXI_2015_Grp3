@@ -54,6 +54,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
         // Update agent's environment model with the new percept
         ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
+        std::cout << "Hello" << std::endl;
 
         // Determine best exploitive action, or explore
         action_t action;
@@ -63,7 +64,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
             action = ai.genRandomAction();
         }
         else {
-            action = search(ai); // TODO: implement in search.cpp
+            action = search(ai, 0.00005); // TODO: implement in search.cpp
         }
 
         // Send an action to the environment
