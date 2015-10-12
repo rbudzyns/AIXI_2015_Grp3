@@ -4,6 +4,7 @@
 #include "main.hpp"
 #include <string>
 #include <bitset>
+#include <algorithm>
 #include "util.hpp"
 
 class Environment {
@@ -199,6 +200,56 @@ public:
 
 private:
 	unsigned int move;
+};
+
+/*Pacman environment
+ *	0 : Wall
+ *	1 : Empty Cell
+ *	2 : Food Pelet
+ *	3 : Power Pill
+ */
+class Pacman : public Environment
+{
+public:
+	//constructor to initialise the environment and set the initial percepts for the agent
+	Pacman(options_t &options);
+
+	//actions of the agent
+	virtual void performAction(action_t action);
+
+	//check if the game is finished
+	virtual bool isFinished() const;
+
+private:
+	struct cell
+	{
+		unsigned int wall;
+		int content;
+	};
+	cell maze[19][21];
+	struct pos
+	{
+		int x;
+		int y;
+	};
+
+	pos ghost[4];
+	pos pacman;
+
+	int ghostCheck()
+	{
+		std::bitset<4> chk;
+		for(int i=0; i<4; i++)
+		{
+			if(pacman.x = ghost[i].x)
+			{
+				for(int j = std::min(pacman.x, ghost[i].x); j <= std::max(pacman.x, ghost[i].x); j++)
+				{
+					if
+				}
+			}
+		}
+	}
 };
 
 #endif // __ENVIRONMENT_HPP__
