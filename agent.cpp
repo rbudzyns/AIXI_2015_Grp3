@@ -26,29 +26,6 @@ Agent::Agent(options_t & options) {
     reset();
 }
 
-// copy constructor
-Agent::Agent(const Agent &obj) {
-	// agent properties
-	m_actions = obj.m_actions;
-    m_actions_bits = obj.m_actions_bits;
-	m_obs_bits = obj.m_obs_bits;
-	m_rew_bits = obj.m_rew_bits;
-	m_horizon = obj.m_horizon;
-
-	// Context Tree representing the agent's beliefs
-	//ContextTree *m_ct;
-
-	// How many time cycles the agent has been alive
-	m_time_cycle = obj.m_time_cycle;
-
-	// The total reward received by the agent
-	m_total_reward = obj.m_total_reward;
-
-	// True if the last update was a percept update
-	m_last_update_percept = obj.m_last_update_percept;
-}
-
-
 // destruct the agent and the corresponding context tree
 Agent::~Agent(void) {
     if (m_ct) delete m_ct;

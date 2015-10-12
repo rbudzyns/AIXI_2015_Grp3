@@ -12,107 +12,14 @@
 #include "util.hpp"
 
 // Streams for logging
-<<<<<<< HEAD
-std::ofstream verboseLog;        // A verbose human-readable log
-=======
 namespace aixi {
 std::ofstream log;        // A verbose human-readable log
 }
->>>>>>> master
 std::ofstream compactLog; // A compact comma-separated value log
 
 // The main agent/environment interaction loop
 void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
-<<<<<<< HEAD
-	// Determine exploration options
-	bool explore = options.count("exploration") > 0;
-	double explore_rate, explore_decay;
-	if (explore) {
-		strExtract(options["exploration"], explore_rate);
-		strExtract(options["explore-decay"], explore_decay);
-		assert(0.0 <= explore_rate && explore_rate <= 1.0);
-		assert(0.0 <= explore_decay && explore_decay <= 1.0);
-	}
-
-
-	// Determine termination lifetime
-	bool terminate_check = options.count("terminate-lifetime") > 0;
-	lifetime_t terminate_lifetime;
-	if (terminate_check) {
-		strExtract(options["terminate-lifetime"], terminate_lifetime);
-		assert(0 <= terminate_lifetime);
-	}
-
-	// Agent/environment interaction loop
-	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
-	for (unsigned int cycle = 1; cycle <= 1; cycle++) {
-
-		// check for agent termination
-		if (terminate_check && ai.lifetime() > terminate_lifetime) {
-			verboseLog << "info: terminating lifetiment" << std::endl;
-			break;
-		}
-
-		// Get a percept from the environment
-		percept_t observation = env.getObservation();
-		percept_t reward = env.getReward();
-
-		// Update agent's environment model with the new percept
-		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-
-		// Determine best exploitive action, or explore
-		action_t action;
-		bool explored = false;
-		if (explore && rand01() < explore_rate) {
-			explored = true;
-			action = ai.genRandomAction();
-		}
-		else {
-			action = search(ai,0.00005); // TODO: implement in search.cpp
-			// timeout 10 sec per move TODO: get timeout from config
-		}
-
-		// Send an action to the environment
-		env.performAction(action); // TODO: implement for each environment
-
-		// Update agent's environment model with the chosen action
-		ai.modelUpdate(action); // TODO: implement in agent.cpp
-
-		// Log this turn
-		verboseLog << "cycle: " << cycle << std::endl;
-		verboseLog << "observation: " << observation << std::endl;
-		verboseLog << "reward: " << reward << std::endl;
-		verboseLog << "action: " << action << std::endl;
-		verboseLog << "explored: " << (explored ? "yes" : "no") << std::endl;
-		verboseLog << "explore rate: " << explore_rate << std::endl;
-		verboseLog << "total reward: " << ai.reward() << std::endl;
-		verboseLog << "average reward: " << ai.averageReward() << std::endl;
-
-		// Log the data in a more compact form
-		compactLog << cycle << ", " << observation << ", " << reward << ", "
-				<< action << ", " << explored << ", " << explore_rate << ", "
-				<< ai.reward() << ", " << ai.averageReward() << std::endl;
-
-		// Print to standard output when cycle == 2^n
-		if ((cycle & (cycle - 1)) == 0) {
-			std::cout << "cycle: " << cycle << std::endl;
-			std::cout << "average reward: " << ai.averageReward() << std::endl;
-			if (explore) {
-				std::cout << "explore rate: " << explore_rate << std::endl;
-			}
-		}
-
-		// Update exploration rate
-		if (explore) explore_rate *= explore_decay;
-
-	}
-
-	// Print summary to standard output
-	std::cout << std::endl << std::endl << "SUMMARY" << std::endl;
-	std::cout << "agent lifetime: " << ai.lifetime() << std::endl;
-	std::cout << "average reward: " << ai.averageReward() << std::endl;
-=======
     // Determine exploration options
     bool explore = options.count("exploration") > 0;
     double explore_rate, explore_decay;
@@ -198,7 +105,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
     std::cout << std::endl << std::endl << "SUMMARY" << std::endl;
     std::cout << "agent lifetime: " << ai.lifetime() << std::endl;
     std::cout << "average reward: " << ai.averageReward() << std::endl;
->>>>>>> master
+
 }
 
 
@@ -258,99 +165,6 @@ void testPredict() {
 */
 
 int main(int argc, char *argv[]) {
-<<<<<<< HEAD
-	if (argc < 2 || argc > 3) {
-		std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
-		std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
-		return -1;
-	}
-
-	// Set up logging
-	std::string log_file = argc < 3 ? "log" : argv[2];
-	verboseLog.open((log_file + ".log").c_str());
-	compactLog.open((log_file + ".csv").c_str());
-
-	// Print header to compactLog
-	compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
-
-
-	// Load configuration options
-	options_t options;
-
-	// Default configuration values
-	options["ct-depth"] = "3";
-	options["agent-horizon"] = "16";
-	options["exploration"] = "0";     // do not explore
-	options["explore-decay"] = "1.0"; // exploration rate does not decay
-
-	// Read configuration options
-	std::ifstream conf(argv[1]);
-	if (!conf.is_open()) {
-		std::cerr << "ERROR: Could not open file '" << argv[1] << "' now exiting" << std::endl;
-		return -1;
-	}
-	processOptions(conf, options);
-	conf.close();
-
-	// Set up the environment
-	Environment *env;
-
-	// TODO: instantiate the environment based on the "environment-name"
-	// option. For any environment you do not implement you may delete the
-	// corresponding if statement.
-	// NOTE: you may modify the options map in order to set quantities such as
-	// the reward-bits for each particular environment. See the coin-flip
-	// experiment for an example.
-	std::string environment_name = options["environment"];
-	if (environment_name == "coin-flip") {
-		env = new CoinFlip(options);
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-	}
-	else if (environment_name == "1d-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "cheese-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "extended-tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "4x4-grid") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tictactoe") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "biased-rock-paper-scissor") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "kuhn-poker") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "pacman") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else {
-		std::cerr << "ERROR: unknown environment '" << environment_name << "'" << std::endl;
-		return -1;
-	}
-
-	// Set up the agent
-	Agent ai(options);
-
-	// Run the main agent/environment interaction loop
-	mainLoop(ai, *env, options);
-
-	verboseLog.close();
-	compactLog.close();
-
-	return 0;
-=======
 //    testPredict();
     if (argc < 2 || argc > 3) {
         std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
@@ -443,5 +257,4 @@ int main(int argc, char *argv[]) {
     compactLog.close();
 
     return 0;
->>>>>>> master
 }

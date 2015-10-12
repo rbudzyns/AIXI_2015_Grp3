@@ -16,16 +16,8 @@ public:
     // construct a learning agent from the command line arguments
     Agent(options_t & options);
 
-<<<<<<< HEAD
-	// copy constructor
-	Agent(const Agent &obj);
-
-	// destruct the agent and the corresponding context tree
-	~Agent(void);
-=======
     // destruct the agent and the corresponding context tree
     ~Agent(void);
->>>>>>> master
 
     // current lifetime of the agent in cycles
     lifetime_t lifetime(void) const;
