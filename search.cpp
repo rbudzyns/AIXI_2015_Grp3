@@ -219,10 +219,6 @@ private:
 
 // return a random action according to the agent's model for its own
 // behavior.
-action_t rollout_policy(Agent &agent) {
-	// return agent.genRandomAction();
-	return genModelledAction(agent);
-}
 
 action_t genModelledAction(Agent &agent) {
 	double p = 0.0;
@@ -233,6 +229,12 @@ action_t genModelledAction(Agent &agent) {
 			return i;
 		}
 	}
+	return 0;
+}
+
+action_t rollout_policy(Agent &agent) {
+	// return agent.genRandomAction();
+	return genModelledAction(agent);
 }
 
 // simulate a path through a hypothetical future for the agent within its
