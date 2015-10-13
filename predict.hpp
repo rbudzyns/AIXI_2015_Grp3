@@ -113,7 +113,7 @@ public:
     double getLogProbNextSymbolGivenH(symbol_t sym);
     double getLogProbNextSymbolGivenHWithUpdate(symbol_t sym);
 
-    void walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode *current);
+    void walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path, CTNode **current);
     void debugTree(void);
     void debugTree1(void);
     void printTree(CTNode *node);

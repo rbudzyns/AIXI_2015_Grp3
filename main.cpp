@@ -156,19 +156,36 @@ void processOptions(std::ifstream &in, options_t &options) {
 
 void testPredict() {
     ContextTree* ct = new ContextTree(30);
-    
     symbol_list_t sym_list;
     
-    encode(sym_list, 1031234, 10);
+    encode(sym_list, 1031234, 30);
     ct->update(sym_list);
     ct->updateHistory(sym_list);
-    ct->debugTree1();
+    ct->debugTree();
+
+    ct->revert();
+    ct->updateHistory(sym_list);
+    ct->debugTree();
 }
 
+void testAgentAndPredict(Agent *agent) {
+    symbol_list_t sym_list;
+    action_t action = 0x5;
+    percept_t obs = 0x0795;
+    percept_t rew = 0xE;
 
+    ModelUndo *mu = new ModelUndo(*agent);
+
+    agent->modelUpdate(obs, rew);
+    agent->modelUpdate(action);
+    agent->getContextTree()->debugTree();
+
+    agent->modelRevert(*mu);
+    agent->getContextTree()->debugTree();
+}
 int main(int argc, char *argv[]) {
-    testPredict();
-    /*
+
+
     if (argc < 2 || argc > 3) {
         std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
         std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
@@ -218,6 +235,14 @@ int main(int argc, char *argv[]) {
         options["observation-bits"] = "1";
         options["reward-bits"] = "1";
     }
+    else if (environment_name == "test") {
+        //env = new CoinFlip(options);
+        options["ct-depth"] = "3";
+        options["agent-actions"] = "8";
+        options["observation-bits"] = "3";
+        options["reward-bits"] = "3";
+        options["action-bits"] = "3";
+    }
     else if (environment_name == "1d-maze") {
         // TODO: instantiate "env" (if appropriate)
     }
@@ -253,11 +278,13 @@ int main(int argc, char *argv[]) {
     // Set up the agent
     Agent ai(options);
 
+    testAgentAndPredict(&ai);
+    /*
     // Run the main agent/environment interaction loop
     mainLoop(ai, *env, options);
 
     aixi::log.close();
     compactLog.close();
-*/
+	*/
     return 0;
 }

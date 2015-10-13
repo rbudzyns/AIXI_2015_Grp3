@@ -113,7 +113,7 @@ void ContextTree::update(const symbol_t sym) {
     std::vector<CTNode*> context_path;
     CTNode* current = m_root;
 
-    walkAndGeneratePath(context_path, current);
+    walkAndGeneratePath(0, context_path, &current);
      
     while(context_path.empty() != true) {
         // Update the nodes along the context path bottom up
@@ -147,7 +147,7 @@ void ContextTree::updateHistory(const symbol_list_t &symbol_list) {
 }
 
 
-void ContextTree::walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode *current) {
+void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path, CTNode **current) {
         // Update the context tree for the next obeserved bit
     // Path size is min of history size and max depth of the CT
     int path_size = ((m_history.size() + m_update_partial_count) < m_depth)? (m_history.size()+ m_update_partial_count) : m_depth;
@@ -157,7 +157,7 @@ void ContextTree::walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode
     int cur_history_sym;
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
-    while(traverse_depth <= path_size) {
+    while(traverse_depth < (path_size+bit_fix)) {
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -170,27 +170,26 @@ void ContextTree::walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode
             cur_history_sym = m_update_partial_list[traverse_depth];
         } 
         else if(m_history.size() > 0 ) {
-            //aixi::log << "TD = " << traverse_depth << " PC = " << m_update_partial_count << std::endl;
-            cur_history_sym = m_history.at(m_history.size()-(traverse_depth-m_update_partial_count)-1);
+       		cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
+       		std::cout << cur_history_sym << std::endl;
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
-        if(traverse_depth < m_depth) {
-            if(current->m_child[cur_history_sym] == NULL) {               
-                CTNode* node = new CTNode();
-                current->m_child[cur_history_sym] = node;
-            }
-        } else {
-            break;
-        }
+		if(traverse_depth < m_depth) {
+			if((*current)->m_child[cur_history_sym] == NULL) {
+				CTNode* node = new CTNode();
+				(*current)->m_child[cur_history_sym] = node;
+			}
+		}
         // Store the current node on the context path, used when updating the CT bottom up
-        context_path.push_back(current);
+        context_path.push_back((*current));
 
-        current =  current->m_child[cur_history_sym];
+        (*current) =  (*current)->m_child[cur_history_sym];
         traverse_depth++;
     }
 }
+
 
 // Revert the CT to its state prior to 
 // the most recently observed symbol
@@ -198,7 +197,7 @@ void ContextTree::revert(void) {
     std::vector<CTNode*> context_path;
     CTNode* current = m_root;
 
-    walkAndGeneratePath(context_path, current);
+    walkAndGeneratePath(-1, context_path, &current);
 
     while(context_path.empty() != true) {
         // Update the nodes along the context path bottom up
@@ -307,7 +306,7 @@ void ContextTree::debugTree() {
         std::cout << m_history.at(i);
     }
     count = 0;
-    std::cout << "Preorder list of weighted probabilites" << std::endl;
+    std::cout << std::endl << "Preorder list of weighted probabilites" << std::endl;
     printTree(m_root);
     std::cout << "----------------------------" << std::endl;
 }
