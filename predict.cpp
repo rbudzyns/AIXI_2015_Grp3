@@ -150,15 +150,15 @@ void ContextTree::updateHistory(const symbol_list_t &symbol_list) {
 void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path, CTNode **current) {
         // Update the context tree for the next obeserved bit
     // Path size is min of history size and max depth of the CT
-    int path_size = ((m_history.size() + m_update_partial_count) < m_depth)? (m_history.size()+ m_update_partial_count) : m_depth;
+    int path_size = ((m_history.size() + bit_fix + m_update_partial_count) < m_depth)? (m_history.size()+ bit_fix + m_update_partial_count) : m_depth;
         
     int traverse_depth = 0;
     
     int cur_history_sym;
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
-    while(traverse_depth < (path_size+bit_fix)) {
-    	std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
+    while(traverse_depth < (path_size)) {
+        std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -169,22 +169,22 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
         }
         else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
             cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
-       		std::cout << "From Partial list " << cur_history_sym << std::endl;
+            std::cout << "From Partial list " << cur_history_sym << std::endl;
         } 
         else if(m_history.size() > 0) {
-       		cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
-       		std::cout << "From History " << cur_history_sym << std::endl;
+            cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
+            std::cout << "From History " << cur_history_sym << std::endl;
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
-		if(traverse_depth < m_depth) {
-			if((*current)->m_child[cur_history_sym] == NULL) {
-				std::cout << "Child created" << std::endl;
-				CTNode* node = new CTNode();
-				(*current)->m_child[cur_history_sym] = node;
-			}
-		}
+        if(traverse_depth < m_depth) {
+            if((*current)->m_child[cur_history_sym] == NULL) {
+                std::cout << "Child created" << std::endl;
+                CTNode* node = new CTNode();
+                (*current)->m_child[cur_history_sym] = node;
+            }
+        }
         // Store the current node on the context path, used when updating the CT bottom up
         context_path.push_back((*current));
 

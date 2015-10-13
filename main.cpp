@@ -174,10 +174,11 @@ void testAgentAndPredict(Agent *agent) {
     percept_t obs = 0x0795;
     percept_t rew = 0xE;
 
-    ModelUndo *mu = new ModelUndo(*agent);
 
     agent->modelUpdate(obs, rew);
     agent->getContextTree()->debugTree();
+
+    ModelUndo *mu = new ModelUndo(*agent);
 
     agent->modelUpdate(action);
     agent->getContextTree()->debugTree();
@@ -287,6 +288,6 @@ int main(int argc, char *argv[]) {
 
     aixi::log.close();
     compactLog.close();
-	*/
+    */
     return 0;
 }
