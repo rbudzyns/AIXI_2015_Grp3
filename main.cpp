@@ -10,6 +10,7 @@
 #include "environment.hpp"
 #include "search.hpp"
 #include "util.hpp"
+#include "predict.hpp"
 
 // Streams for logging
 namespace aixi {
@@ -152,19 +153,22 @@ void processOptions(std::ifstream &in, options_t &options) {
     }
 }
 
-/*
+
 void testPredict() {
-    ContextTree* ct = new ContextTree(10);
+    ContextTree* ct = new ContextTree(30);
     
     symbol_list_t sym_list;
     
-    encode(&sym_list, 62, 6);
-    ct.update(sym_list);
+    encode(sym_list, 1031234, 10);
+    ct->update(sym_list);
+    ct->updateHistory(sym_list);
+    ct->debugTree1();
 }
-*/
+
 
 int main(int argc, char *argv[]) {
-//    testPredict();
+    testPredict();
+    /*
     if (argc < 2 || argc > 3) {
         std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
         std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
@@ -254,6 +258,6 @@ int main(int argc, char *argv[]) {
 
     aixi::log.close();
     compactLog.close();
-
+*/
     return 0;
 }

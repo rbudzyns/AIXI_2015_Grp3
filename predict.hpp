@@ -115,7 +115,10 @@ public:
 
     void walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode *current);
     void debugTree(void);
+    void debugTree1(void);
     void printTree(CTNode *node);
+    void printInTree(CTNode *node);
+    void printPreTree(CTNode *node);
     
     // get the n'th history symbol, NULL if doesn't exist
     const symbol_t *nthHistorySymbol(size_t n) const;
