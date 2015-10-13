@@ -159,7 +159,7 @@ void testPredict() {
     
     symbol_list_t sym_list;
     
-    encode(sym_list, 1031234, 3);
+    encode(sym_list, 1031234, 10);
     ct->update(sym_list);
     ct->updateHistory(sym_list);
     ct->debugTree1();

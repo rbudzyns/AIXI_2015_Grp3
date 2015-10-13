@@ -63,9 +63,9 @@ int search(double arr[], int strt, int end, double value)
 struct BinaryTree* newNode(double data)
 {
   struct BinaryTree* node = new BinaryTree();
- //s node->data = pow(2,data)*1000;
+ // node->data = pow(2,data)*1000;
   
-  node->data = 10;
+  node->data = data;
   node->left = NULL;
   node->right = NULL;
  

@@ -1,3 +1,5 @@
+#include "binary_tree_pretty_print.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <deque>
@@ -7,12 +9,6 @@
 #include <cmath>
 using namespace std;
 
-
-struct BinaryTree {
-  BinaryTree *left, *right;
-  double data;
-  //BinaryTree(double val) : left(NULL), right(NULL), data(val) { }
-};
 
 // Find the maximum height of the binary tree
 int maxHeight(BinaryTree *p) {

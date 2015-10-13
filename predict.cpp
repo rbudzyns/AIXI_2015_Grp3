@@ -181,6 +181,8 @@ void ContextTree::walkAndGeneratePath(std::vector<CTNode*> &context_path, CTNode
                 CTNode* node = new CTNode();
                 current->m_child[cur_history_sym] = node;
             }
+        } else {
+            break;
         }
         // Store the current node on the context path, used when updating the CT bottom up
         context_path.push_back(current);
