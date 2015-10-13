@@ -113,9 +113,9 @@ public:
 			return 0;
 		} else if (m_chance_node) {
 			percept_t* percept = agent.genPerceptAndUpdate();
-			SearchNode* decision_node = childWithObsRew(percept[0],percept[1]);
+			SearchNode* decision_node = childWithObsRew(percept[0], percept[1]);
 			if (decision_node == NULL) {
-				decision_node = new SearchNode(percept[0],percept[1]);
+				decision_node = new SearchNode(percept[0], percept[1]);
 				addChild(decision_node);
 			}
 			reward = percept[1] + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
@@ -217,8 +217,22 @@ private:
 	std::vector<SearchNode*> m_children; // list of child nodes
 };
 
+// return a random action according to the agent's model for its own
+// behavior.
 action_t rollout_policy(Agent &agent) {
-	return agent.genRandomAction();
+	// return agent.genRandomAction();
+	return genModelledAction(agent);
+}
+
+action_t genModelledAction(Agent &agent) {
+	double p = 0.0;
+	double pr = rand01();
+	for (action_t i = 0; i < agent.numActions(); i++) {
+		p += agent.getPredictedActionProb(i);
+		if (p > pr) {
+			return i;
+		}
+	}
 }
 
 // simulate a path through a hypothetical future for the agent within its
@@ -237,9 +251,9 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 
 // determine the best action by searching ahead using MCTS
 extern action_t search(Agent &agent, double timeout) {
-	// initialise search tree
-	// TODO cache subtree between searches for efficiency
-	// TODO make a copy of the agent model so we can update during search
+// initialise search tree
+// TODO cache subtree between searches for efficiency
+// TODO make a copy of the agent model so we can update during search
 	std::cout << "search: timeout value: " << timeout << std::endl;
 	SearchNode root = SearchNode(NULL, NULL);
 	clock_t startTime = clock();
