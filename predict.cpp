@@ -81,8 +81,6 @@ void CTNode::revert(const symbol_t symbol){
     if(m_count[0] == 0 && m_count[1] == 0) {
         m_log_prob_est = 0.0;
         m_log_prob_weighted = 0.0;
-        m_count[0] = 0;
-        m_count[1] = 0;
     } else {
         m_log_prob_est -= logKTMul(symbol);
         updateLogProbability();
@@ -129,7 +127,9 @@ void ContextTree::update(const symbol_list_t &symbol_list) {
     m_update_partial_count = 0;
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
+        std::cout<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
         update(symbol_list[i]);
+        std::cout<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
         m_update_partial_count++;
         m_update_partial_list.push_back(symbol_list[i]);
         //debugTree();
@@ -158,6 +158,7 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
     while(traverse_depth < (path_size+bit_fix)) {
+    	std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -166,18 +167,20 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
             traverse_depth++;
             break;
         }
-        else if(m_update_partial_count > 0 && traverse_depth <= m_update_partial_count) {
-            cur_history_sym = m_update_partial_list[traverse_depth];
+        else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
+            cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
+       		std::cout << "From Partial list " << cur_history_sym << std::endl;
         } 
-        else if(m_history.size() > 0 ) {
+        else if(m_history.size() > 0) {
        		cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
-       		std::cout << cur_history_sym << std::endl;
+       		std::cout << "From History " << cur_history_sym << std::endl;
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
 		if(traverse_depth < m_depth) {
 			if((*current)->m_child[cur_history_sym] == NULL) {
+				std::cout << "Child created" << std::endl;
 				CTNode* node = new CTNode();
 				(*current)->m_child[cur_history_sym] = node;
 			}
@@ -187,6 +190,7 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
 
         (*current) =  (*current)->m_child[cur_history_sym];
         traverse_depth++;
+        //std::cout << "-" << std::endl;
     }
 }
 
@@ -205,6 +209,7 @@ void ContextTree::revert(void) {
         current = context_path.back();
         context_path.pop_back();
     }
+    current->revert(m_history.at(m_history.size()-1));
 }
 
 

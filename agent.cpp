@@ -158,6 +158,8 @@ void Agent::modelUpdate(action_t action) {
 bool Agent::modelRevert(const ModelUndo &mu) {
     int size_of_ora_pairs = (m_time_cycle - mu.lifetime())*(m_obs_bits + m_rew_bits + m_actions_bits);
     
+    std::cout << "Size of ora = " << size_of_ora_pairs << std::endl;
+
     for(int i = 0; i < size_of_ora_pairs; i++) {
         m_ct->revert();
         m_ct->revertHistory(m_ct->historySize()-1);

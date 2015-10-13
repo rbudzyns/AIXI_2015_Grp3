@@ -177,6 +177,8 @@ void testAgentAndPredict(Agent *agent) {
     ModelUndo *mu = new ModelUndo(*agent);
 
     agent->modelUpdate(obs, rew);
+    agent->getContextTree()->debugTree();
+
     agent->modelUpdate(action);
     agent->getContextTree()->debugTree();
 
