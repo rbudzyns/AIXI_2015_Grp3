@@ -1,5 +1,4 @@
 #include "agent.hpp"
-#include "binary_tree_pretty_print.hpp"
 #include <cassert>
 
 #include "predict.hpp"
@@ -250,7 +249,7 @@ percept_t Agent::decodeReward(const symbol_list_t &symlist) const {
 
 
 ContextTree* Agent::getContextTree() {
-	return m_ct;
+    return m_ct;
 }
 // used to revert an agent to a previous state
 ModelUndo::ModelUndo(const Agent &agent) {

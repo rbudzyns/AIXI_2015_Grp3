@@ -115,7 +115,6 @@ public:
 
     void walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path, CTNode **current);
     void debugTree(void);
-    void debugTree1(void);
     void printTree(CTNode *node);
     void printInTree(CTNode *node);
     void printPreTree(CTNode *node);

@@ -1,8 +1,6 @@
 #include "predict.hpp"
 #include "util.hpp"
 
-#include "buildTree.hpp"
-
 #include <cassert>
 #include <cmath>
 
@@ -127,9 +125,9 @@ void ContextTree::update(const symbol_list_t &symbol_list) {
     m_update_partial_count = 0;
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
-        std::cout<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
+        //std::cout<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
         update(symbol_list[i]);
-        std::cout<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
+        //std::cout<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
         m_update_partial_count++;
         m_update_partial_list.push_back(symbol_list[i]);
         //debugTree();
@@ -158,7 +156,7 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
     while(traverse_depth < (path_size)) {
-        std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
+        //std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -169,18 +167,18 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
         }
         else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
             cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
-            std::cout << "From Partial list " << cur_history_sym << std::endl;
+            //std::cout << "From Partial list " << cur_history_sym << std::endl;
         } 
         else if(m_history.size() > 0) {
             cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
-            std::cout << "From History " << cur_history_sym << std::endl;
+            //std::cout << "From History " << cur_history_sym << std::endl;
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
         if(traverse_depth < m_depth) {
             if((*current)->m_child[cur_history_sym] == NULL) {
-                std::cout << "Child created" << std::endl;
+                //std::cout << "Child created" << std::endl;
                 CTNode* node = new CTNode();
                 (*current)->m_child[cur_history_sym] = node;
             }
@@ -308,16 +306,16 @@ int count;
 void ContextTree::debugTree() {
     aixi::log << "History : ";
     for(int i=0; i < m_history.size(); i++) {
-        std::cout << m_history.at(i);
+        //std::cout << m_history.at(i);
     }
     count = 0;
-    std::cout << std::endl << "Preorder list of weighted probabilites" << std::endl;
+    //std::cout << std::endl << "Preorder list of weighted probabilites" << std::endl;
     printTree(m_root);
-    std::cout << "----------------------------" << std::endl;
+    //std::cout << "----------------------------" << std::endl;
 }
 
 void ContextTree::printTree(CTNode *node) {
-    std::cout << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
+    //std::cout << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
 
     if(node->m_child[1] != NULL)
         printTree(node->m_child[1]);
@@ -326,24 +324,6 @@ void ContextTree::printTree(CTNode *node) {
         printTree(node->m_child[0]);
 }
 
-void ContextTree::debugTree1() {
-    std::cout << "History : ";
-    for(int i=0; i < m_history.size(); i++) {
-        std::cout << m_history.at(i);
-    }
-    std::cout << std::endl;
-    
-    num_of_nodes_pre = 0;
-    num_of_nodes_in = 0;
-    
-    treeIn = new double[100];
-    treePre = new double[100];
-
-    printInTree(m_root);
-    printPreTree(m_root);
-    printTreeStructure(treeIn, treePre, num_of_nodes_pre);
-    
-}
 
 void ContextTree::printInTree(CTNode *node) {
     if(node->m_child[1] != NULL)
