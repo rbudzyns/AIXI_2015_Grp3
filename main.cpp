@@ -17,6 +17,7 @@ namespace aixi {
 std::ofstream log;        // A verbose human-readable log
 }
 std::ofstream compactLog; // A compact comma-separated value log
+std::ofstream debug;
 
 // The main agent/environment interaction loop
 void mainLoop(Agent &ai, Environment &env, options_t &options) {
@@ -200,7 +201,7 @@ int main(int argc, char *argv[]) {
     std::string log_file = argc < 3 ? "log" : argv[2];
     aixi::log.open((log_file + ".log").c_str());
     compactLog.open((log_file + ".csv").c_str());
-
+    
     // Print header to compactLog
     compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
 
