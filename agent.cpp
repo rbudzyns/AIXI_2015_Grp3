@@ -25,7 +25,6 @@ Agent::Agent(options_t & options) {
     reset();
 }
 
-
 // destruct the agent and the corresponding context tree
 Agent::~Agent(void) {
     if (m_ct) delete m_ct;
@@ -128,7 +127,6 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
 
     m_ct->update(percept);
     m_ct->updateHistory(percept);
-
 
     // Update other properties
     m_total_reward += reward;
