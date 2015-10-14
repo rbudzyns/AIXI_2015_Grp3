@@ -10,6 +10,7 @@
 #include "environment.hpp"
 #include "search.hpp"
 #include "util.hpp"
+#include "predict.hpp"
 
 // Streams for logging
 namespace aixi {
@@ -152,25 +153,24 @@ void processOptions(std::ifstream &in, options_t &options) {
     }
 }
 
+
 int main(int argc, char *argv[]) {
-	if (argc < 2 || argc > 3) {
-		std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
-		std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
-		return -1;
-	}
 
-	// Set up logging
-	std::string log_file = argc < 3 ? "log" : argv[2];
-	aixi::log.open((log_file + ".log").c_str());
-	compactLog.open((log_file + ".csv").c_str());
+    if (argc < 2 || argc > 3) {
+        std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
+        std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
+        return -1;
+    }
 
-	// Print header to compactLog
-	compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
+    // Set up logging
+    std::string log_file = argc < 3 ? "log" : argv[2];
+    aixi::log.open((log_file + ".log").c_str());
+    compactLog.open((log_file + ".csv").c_str());
 
+    // Print header to compactLog
+    	compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
 
-	// Load configuration options
-	options_t options;
-
+    options_t options;
 	// Default configuration values
 	options["ct-depth"] = "3";
 	options["agent-horizon"] = "16";
