@@ -3,14 +3,20 @@
 
 \section{Software platform}
 \label{sec:softplat}
+<<<<<<< HEAD
 We use C++ standard libraries. Due to time and library constraints, we decide not to visualise the cheese maze and pacman. 
 
 See Appendix for implementation documentation including class diagram.
 
 
+=======
+
+
+
 \section{Hardware platform}
 \label{sec:hardplat}
 
+>>>>>>> environment
 Table~\ref{tab:machines} shows how to include tables and Figure~\ref{fig:helloworld} shows how to include codes.
 \begin{table*}
   \centering
@@ -37,7 +43,10 @@ Table~\ref{tab:machines} shows how to include tables and Figure~\ref{fig:hellowo
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> environment
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "paper"

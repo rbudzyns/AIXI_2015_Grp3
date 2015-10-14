@@ -154,108 +154,123 @@ void processOptions(std::ifstream &in, options_t &options) {
     }
 }
 
-/*
-void testPredict() {
-    ContextTree* ct = new ContextTree(10);
-    
-    symbol_list_t sym_list;
-    
-    encode(&sym_list, 62, 6);
-    ct.update(sym_list);
-}
-*/
-
 int main(int argc, char *argv[]) {
-//    testPredict();
-    if (argc < 2 || argc > 3) {
-        std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
-        std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
-        return -1;
-    }
+	if (argc < 2 || argc > 3) {
+		std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
+		std::cerr << "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to." << std::endl;
+		return -1;
+	}
 
-    // Set up logging
-    std::string log_file = argc < 3 ? "log" : argv[2];
-    aixi::log.open((log_file + ".log").c_str());
-    compactLog.open((log_file + ".csv").c_str());
+	// Set up logging
+	std::string log_file = argc < 3 ? "log" : argv[2];
+	aixi::log.open((log_file + ".log").c_str());
+	compactLog.open((log_file + ".csv").c_str());
 
-    // Print header to compactLog
-    compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
+	// Print header to compactLog
+	compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
 
 
-    // Load configuration options
-    options_t options;
+	// Load configuration options
+	options_t options;
 
-    // Default configuration values
-    options["ct-depth"] = "3";
-    options["agent-horizon"] = "16";
-    options["exploration"] = "0";     // do not explore
-    options["explore-decay"] = "1.0"; // exploration rate does not decay
+	// Default configuration values
+	options["ct-depth"] = "3";
+	options["agent-horizon"] = "16";
+	options["exploration"] = "0";     // do not explore
+	options["explore-decay"] = "1.0"; // exploration rate does not decay
 
-    // Read configuration options
-    std::ifstream conf(argv[1]);
-    if (!conf.is_open()) {
-        std::cerr << "ERROR: Could not open file '" << argv[1] << "' now exiting" << std::endl;
-        return -1;
-    }
-    processOptions(conf, options);
-    conf.close();
+	// Read configuration options
+	std::ifstream conf(argv[1]);
+	if (!conf.is_open()) {
+		std::cerr << "ERROR: Could not open file '" << argv[1] << "' now exiting" << std::endl;
+		return -1;
+	}
+	processOptions(conf, options);
+	conf.close();
 
-    // Set up the environment
-    Environment *env;
+	// Set up the environment
+	Environment *env;
 
-    // TODO: instantiate the environment based on the "environment-name"
-    // option. For any environment you do not implement you may delete the
-    // corresponding if statement.
-    // NOTE: you may modify the options map in order to set quantities such as
-    // the reward-bits for each particular environment. See the coin-flip
-    // experiment for an example.
-    std::string environment_name = options["environment"];
-    if (environment_name == "coin-flip") {
-        env = new CoinFlip(options);
-        options["agent-actions"] = "2";
-        options["observation-bits"] = "1";
-        options["reward-bits"] = "1";
-    }
-    else if (environment_name == "1d-maze") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "cheese-maze") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "tiger") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "extended-tiger") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "4x4-grid") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "tictactoe") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "biased-rock-paper-scissor") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "kuhn-poker") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else if (environment_name == "pacman") {
-        // TODO: instantiate "env" (if appropriate)
-    }
-    else {
-        std::cerr << "ERROR: unknown environment '" << environment_name << "'" << std::endl;
-        return -1;
-    }
+	// TODO: instantiate the environment based on the "environment-name"
+	// option. For any environment you do not implement you may delete the
+	// corresponding if statement.
+	// NOTE: you may modify the options map in order to set quantities such as
+	// the reward-bits for each particular environment. See the coin-flip
+	// experiment for an example.
+	std::string environment_name = options["environment"];
+	if (environment_name == "coin-flip") {
+		env = new CoinFlip(options);
+		options["agent-actions"] = "2";
+		options["observation-bits"] = "1";
+		options["reward-bits"] = "1";
+	}
+	else if (environment_name == "1d-maze") {
+		// TODO: instantiate "env" (if appropriate)
+	}
+	else if (environment_name == "cheese-maze") {
+		env = new CheeseMaze(options);
+		options["agent-actions"] = "4";
+		options["observation-bits"] = "4";
+		options["reward-bits"] = "5";
+	}
+	else if (environment_name == "tiger") {
+		// TODO: instantiate "env" (if appropriate)
+	}
+	/*actions: 			0 = stand
+	 * 					1 = listen
+	 * 					2 = open left door
+	 * 					3 = open right door
+	 * 
+	 * observations:	0 = nothing known
+	 * 					1 = tiger behind right door
+	 * 					2 = tiger behind left door
+	 */
+	else if (environment_name == "extended-tiger") {
+		env = new ExtTiger(options);
+		options["agent-actions"] = "4";
+		options["observation-bits"] = "2";
+		options["reward-bits"] = "8";
+	}
+	else if (environment_name == "4x4-grid") {
+		// TODO: instantiate "env" (if appropriate)
+	}
+	else if (environment_name == "tictactoe") {
+		env = new TicTacToe(options);
+		options["agent-actions"] = "9";
+		options["observation-bits"] = "18";
+		options["reward-bits"] = "3";
+	}
+	/*
+	Action 
+			0 : rock
+			1 : paper
+			2 : scissors
+	*/
+	else if (environment_name == "biased-rock-paper-scissor") {
+		env = new BRockPaperScissors(options);
+		options["agent-actions"] = "3";
+		options["observation-bits"] = "3";
+		options["reward-bits"] = "3";
+	}
+	else if (environment_name == "kuhn-poker") {
+		// TODO: instantiate "env" (if appropriate)
+	}
+	else if (environment_name == "pacman") {
+		// TODO: instantiate "env" (if appropriate)
+	}
+	else {
+		std::cerr << "ERROR: unknown environment '" << environment_name << "'" << std::endl;
+		return -1;
+	}
 
-    // Set up the agent
-    Agent ai(options);
+	// Set up the agent
+	Agent ai(options);
 
-    // Run the main agent/environment interaction loop
-    mainLoop(ai, *env, options);
+	// Run the main agent/environment interaction loop
+	mainLoop(ai, *env, options);
 
-    aixi::log.close();
-    compactLog.close();
+	aixi::log.close();
+	compactLog.close();
 
-    return 0;
+	return 0;
 }

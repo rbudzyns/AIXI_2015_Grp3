@@ -1,5 +1,5 @@
 #include "agent.hpp"
-
+#include "binary_tree_pretty_print.hpp"
 #include <cassert>
 
 #include "predict.hpp"
@@ -20,7 +20,7 @@ Agent::Agent(options_t & options) {
     for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
         m_actions_bits = c;
     }
-
+    
     m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
 
     reset();
@@ -184,7 +184,8 @@ double Agent::getPredictedActionProb(action_t action) {
     double log_probability = 0.0;
     
     for(int i = 0; i < m_actions_bits; i++) {
-        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (action/2));
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & action);
+        action /= 2;
     }
 
     return pow(2, log_probability);
@@ -196,11 +197,13 @@ double Agent::perceptProbability(percept_t observation, percept_t reward) const 
     double log_probability = 0.0;
     
     for(int i = 0; i < m_rew_bits; i++) {
-        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (observation/2));
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & observation);
+        observation /= 2;
     }
 
     for(int i = 0; i < m_rew_bits; i++) {
-        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & (reward/2));
+        log_probability += m_ct->getLogProbNextSymbolGivenHWithUpdate(1 & reward);
+        reward /= 2;
     }
     
     return pow(2, log_probability);
