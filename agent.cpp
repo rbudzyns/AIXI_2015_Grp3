@@ -1,5 +1,4 @@
 #include "agent.hpp"
-#include "binary_tree_pretty_print.hpp"
 #include <cassert>
 
 #include "predict.hpp"
@@ -156,6 +155,8 @@ void Agent::modelUpdate(action_t action) {
 bool Agent::modelRevert(const ModelUndo &mu) {
     int size_of_ora_pairs = (m_time_cycle - mu.lifetime())*(m_obs_bits + m_rew_bits + m_actions_bits);
     
+    std::cout << "Size of ora = " << size_of_ora_pairs << std::endl;
+
     for(int i = 0; i < size_of_ora_pairs; i++) {
         m_ct->revert();
         m_ct->revertHistory(m_ct->historySize()-1);
@@ -245,6 +246,9 @@ percept_t Agent::decodeReward(const symbol_list_t &symlist) const {
 }
 
 
+ContextTree* Agent::getContextTree() {
+    return m_ct;
+}
 // used to revert an agent to a previous state
 ModelUndo::ModelUndo(const Agent &agent) {
 
@@ -253,3 +257,4 @@ ModelUndo::ModelUndo(const Agent &agent) {
     m_history_size = agent.historySize();
 
 }
+
