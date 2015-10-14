@@ -186,6 +186,7 @@ void testAgentAndPredict(Agent *agent) {
     agent->modelRevert(*mu);
     agent->getContextTree()->debugTree();
 }
+
 int main(int argc, char *argv[]) {
 
 
