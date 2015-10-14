@@ -1,0 +1,30 @@
+\chapter{Design and Implementation}
+\label{cha:design}
+<<<<<<< HEAD
+Our team divides the assignment into three parts: execution, learning, environment, and report. 
+
+\section{Roles}
+Execution is for the agent to choosing the most optimal action using $\rho UTC$ algorithm using the updated probability from the root node of the context tree. This part is done by Ryk and John.
+
+Learning is about using the algorithm mentioned in Venness's paper. Using the observation from the environment to update the KT estimator for each node in the context tree. This part is handled by Yadu and Jarryd. 
+
+Environment part of the project is about encoding different games into structured format to dole out reward and provides observation towards the agent. This part is handled by Rao.
+
+Report summaries what the group understands and has implemented for the assignment. This part is done by Cheng.   
+=======
+Same as the last chapter, introduce the motivation and the high-level picture to
+readers, and introduce the sections in this chapter.
+
+>>>>>>> environment
+
+\section{Smart Design}
+\label{sec:des-hotpath}
+
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> environment
+\section{Summary}
+Same as the last chapter, summary what you discussed in this chapter and
+be the bridge to next chapter.
