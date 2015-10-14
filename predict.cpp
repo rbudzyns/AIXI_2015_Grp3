@@ -1,6 +1,5 @@
 #include "predict.hpp"
 #include "util.hpp"
-
 #include "buildTree.hpp"
 
 #include <cassert>
@@ -141,6 +140,7 @@ void ContextTree::update(const symbol_list_t &symbol_list) {
 
 // updates the history statistics, without touching the context tree
 void ContextTree::updateHistory(const symbol_list_t &symbol_list) {
+
     for (size_t i=0; i < symbol_list.size(); i++) {
         m_history.push_back(symbol_list[i]);
     }

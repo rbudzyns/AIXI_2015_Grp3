@@ -21,7 +21,10 @@
 \usepackage{afterpage}
 \usepackage{graphicx}
 \usepackage{thesis}
+<<<<<<< HEAD
 \usepackage[utf8]{inputenc}
+=======
+>>>>>>> environment
 \usepackage[square]{natbib}
 \usepackage[normalem]{ulem}
 \usepackage[table]{xcolor}
@@ -54,6 +57,7 @@
 \input{macros}            
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Preamble
+<<<<<<< HEAD
 \title{Applying Context-Tree Weighting To Learning in Various Environments}
 \author{John Aslanides, 
  Ryk Budzynski,
@@ -62,6 +66,11 @@
  Yadunandan Sannappa, 
  Cheng Yu}
 \date{20 October, 2015}
+=======
+\title{Title Is Here}
+\author{Author Name}
+\date{\today}
+>>>>>>> environment
 
 \renewcommand{\thepage}{\roman{page}}
 
@@ -74,6 +83,9 @@
 \thispagestyle{empty}
 \input{titlepage}
 
+<<<<<<< HEAD
+
+=======
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Here begin the preliminaries
 \input{frontmatter}
@@ -89,6 +101,7 @@
 \cleardoublepage
 \pagestyle{empty}
 \input{ack}
+>>>>>>> environment
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract
@@ -113,7 +126,10 @@
 \input{intro}
 
 %% Chapters
+<<<<<<< HEAD
+=======
 \input{background}
+>>>>>>> environment
 \input{design}
 \input{methodology}
 \input{results}
@@ -122,7 +138,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Here begins the end matter
 
+<<<<<<< HEAD
 \input{appendix}
+=======
+%%\input{appendix}
+>>>>>>> environment
 
 \backmatter
 
