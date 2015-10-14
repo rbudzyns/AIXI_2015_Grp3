@@ -4,6 +4,8 @@
 #include "main.hpp"
 #include <string>
 #include <bitset>
+#include <climits>
+#include "util.hpp"
 
 class Environment {
 
@@ -108,8 +110,83 @@ public:
 	//check if the game is finished
 	virtual bool isFinished() const;
 
-protected:
-	std::bitset<18> board;
+private:
+	int board[9];
+	bool finished;
+	int freeCells;
+
+	percept_t calBoardVal()
+	{
+		std::bitset<18> boardVal;
+		for (int i = 0; i < 9; i++)
+		{
+			if (board[i] == 0)
+			{
+				boardVal.set(i * 2, 0);
+				boardVal.set((i * 2) + 1, 0);
+			}
+			else if (board[i] == 1)
+			{
+				boardVal.set(i * 2, 0);
+				boardVal.set((i * 2) + 1, 1);
+			}
+			else if (board[i] == 2)
+			{
+				boardVal.set(i * 2, 1);
+				boardVal.set((i * 2) + 1, 0);
+			}
+		}
+		return boardVal.to_ulong() & INT_MAX;
+	}
+
+	void env_move()
+	{
+		int move = (int)(rand01() * freeCells);
+		int count = 0;
+		for (int i = 0; i < 9; i++)
+		{
+			if (board[i] == 0)
+				if (count++ == move)
+				{
+					freeCells--;
+					return;
+				}
+		}
+	}
+
+	int check_winner()
+	{
+		if (freeCells <= 4)
+		{
+			if (board[0] != 0)
+			{
+				if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
+					|| (board[0] == board[4] && board[4] == board[8]))
+					return board[0];
+			}
+			else if (board[1] != 0)
+			{
+				if (board[1] == board[4] && board[4] == board[7])
+					return board[1];
+			}
+			else if (board[2] != 0)
+			{
+				if ((board[2] == board[5] && board[5] == board[8]) || (board[2] == board[4] && board[4] == board[6]))
+					return board[2];
+			}
+			else if (board[3] != 0)
+			{
+				if (board[3] == board[4] && board[4] == board[5])
+					return board[3];
+			}
+			else if (board[6] != 0)
+			{
+				if (board[6] == board[7] && board[7] == board[8])
+					return board[6];
+			}
+		}
+		return 0;
+	}
 };
 
 class BRockPaperScissors : public Environment

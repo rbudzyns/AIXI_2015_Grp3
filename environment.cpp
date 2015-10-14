@@ -243,19 +243,64 @@ void ExtTiger::performAction(action_t action)
 /*Tic Tac Toe environment.*/
 TicTacToe::TicTacToe(options_t &options)
 {
-	board.reset();
+	for (int i = 0; i < 9; i++)
+		board[i] = 0;
+
+	freeCells = 9;
+	finished = 0;
 
 	//return the initial percept,
-	m_observation = board.to_ulong() & INT_MAX;
+	m_observation = calBoardVal();
 	m_reward = 0;
 }
 
 void TicTacToe::performAction(action_t action)
 {
-	if (((m_observation >> (action*2)) & 3) == 0)
+	if (board[action] != 0 && freeCells != 0) //illegal move
 	{
-		
+		m_reward = -3;
+		return; //Obverstaion will not change so there is no need to re-calculate
 	}
+	else
+	{
+		board[action] = 2;
+		if (check_winner() == 2) //agent won the game
+		{
+			m_reward = 2;
+			m_observation = calBoardVal();
+			finished = 1;
+			return;
+		}
+		else if (--freeCells == 0) //game is a draw
+		{
+			m_reward = 1;
+			m_observation = calBoardVal();
+			finished = 1;
+			return;
+		}
+		else
+		{
+			env_move();
+			if (check_winner() == 1) //agent lost the game
+			{
+				m_reward = -2;
+				m_observation = calBoardVal();
+				finished = 1;
+				return;
+			}
+			else //game has not yet ended
+			{
+				m_reward = 0;
+				m_observation = calBoardVal();
+				return;
+			}
+		}
+	}
+}
+
+bool TicTacToe::isFinished() const
+{
+	return finished;
 }
 
 
@@ -268,7 +313,7 @@ void TicTacToe::performAction(action_t action)
 */
 BRockPaperScissors::BRockPaperScissors(options_t &options)
 {
-	move = floor(rand01() * 3);
+	move = (int)(rand01() * 3);
 	//return the initial percept
 	m_observation = 0;
 	m_reward = 0;
@@ -297,5 +342,5 @@ void BRockPaperScissors::performAction(action_t action)
 
 	m_observation = move;
 	
-	move = m_reward == -1 ? move : floor(rand01() * 3);
+	move = m_reward == -1 ? move : (int)(rand01() * 3);
 }
