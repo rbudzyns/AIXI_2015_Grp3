@@ -224,7 +224,9 @@ action_t genModelledAction(Agent &agent) {
 	double p = 0.0;
 	double pr = rand01();
 	for (action_t i = 0; i < agent.numActions(); i++) {
+		std::cout << "genModelledAction: before getPredictedActionProb" << i << std::endl;
 		p += agent.getPredictedActionProb(i);
+		std::cout << "genModelledAction: after getPredictedActionProb" << std::endl;
 		if (p > pr) {
 			return i;
 		}
@@ -233,8 +235,8 @@ action_t genModelledAction(Agent &agent) {
 }
 
 action_t rollout_policy(Agent &agent) {
-	// return agent.genRandomAction();
-	return genModelledAction(agent);
+	return agent.genRandomAction();
+	// return genModelledAction(agent);
 }
 
 // simulate a path through a hypothetical future for the agent within its
@@ -243,11 +245,16 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	std::cout << "Playout:" << std::endl;
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
+		std::cout << "Playout: before rollout_policy" << std::endl;
 		action_t a = rollout_policy(agent);
+		std::cout << "Playout: after rollout_policy" << std::endl;
+		std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
 		agent.modelUpdate(a);
+		std::cout << "Playout: after modelUpdate" << std::endl;
 		percept_t* percept = agent.genPerceptAndUpdate();
 		reward += percept[1];
 	}
+	std::cout << "Playout: leaving" << std::endl;
 	return reward;
 }
 
