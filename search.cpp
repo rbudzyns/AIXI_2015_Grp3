@@ -55,7 +55,7 @@ public:
 	action_t selectAction(Agent &agent) {
 		action_t a;
 		if (m_children.size() != agent.numActions()) {
-			std::cout << "selectAction: if " << m_children.size() << std::endl;
+			//std::cout << "selectAction: if " << m_children.size() << std::endl;
 			// then U != {}
 			std::vector < action_t > U;
 			int N = agent.numActions() - m_children.size();
@@ -73,17 +73,17 @@ public:
 			 */
 			if (m_children.size() != 0) {
 				for (action_t i = 0; i < agent.numActions(); i++) {
-					std::cout << "selectAction: for " << i << std::endl;
+					//std::cout << "selectAction: for " << i << std::endl;
 					found = false;
-					for (int j = 0; j < int(agent.numActions()); j++) {
-						std::cout << "selectAction: before if " << std::endl;
+					for (int j = 0; j < int(m_children.size()); j++) {
+						//std::cout << "selectAction: before if " << std::endl;
 						if (i == getChild(j)->getAction()) {
-							std::cout << "selectAction: found " << std::endl;
+							//std::cout << "selectAction: found " << std::endl;
 							found = true;
 							break;
 						}
 					}
-					std::cout << "selectAction: after for " << std::endl;
+					//std::cout << "selectAction: after for " << std::endl;
 					if (!found) {
 						U.push_back(i);
 					}
@@ -100,8 +100,8 @@ public:
 			addChild(chance_node);
 			return a;
 		} else {
-			std::cout << "selectAction: else " << m_children.size()
-					<< std::endl;
+			//std::cout << "selectAction: else " << m_children.size()
+			//<< std::endl;
 			// U == {}
 			double max_val = 0;
 			double val;
@@ -117,6 +117,7 @@ public:
 								(double) log2((double) m_visits)
 										/ child->visits()); // eqn. 14 (Veness)
 				if (val > max_val) {
+					//std::cout << "getAction in UCB" << std::endl;
 					max_val = val;
 					a = child->getAction();
 				}
@@ -145,15 +146,16 @@ public:
 			}
 			reward = percept[1] + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
 		} else if (m_visits == 0) {
-			std::cout << "Sample: Child node: T(n) = 0" << std::endl;
+			//std::cout << "Sample: Child node: T(n) = 0" << std::endl;
 			reward = playout(agent, agent.horizon() - dfr);
 		} else {
-			std::cout << "Sample: Child node: T(n) = " << m_visits << std::endl;
+			//std::cout << "Sample: Child node: T(n) = " << m_visits << std::endl;
 			action_t a = selectAction(agent);
-			std::cout << "Sample: after selectAction" << std::endl;
+			//std::cout << "Sample: after selectAction" << std::endl;
 
 			// this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
 			for (int i = 0; i < m_children.size(); i++) {
+				//std::cout << "In selectAction else loop" << std::endl;
 				if (a == m_children[i]->getAction()) {
 					reward = m_children[i]->sample(agent, dfr);
 				}
@@ -162,7 +164,7 @@ public:
 		m_mean = (1.0 / (m_visits + 1)) * (reward + m_visits * m_mean);
 		m_visits++;
 
-		print(); // print the node state for debugging purposes
+		//print(); // print the node state for debugging purposes
 
 		return reward;
 	}
@@ -177,15 +179,12 @@ public:
 	}
 
 	SearchNode* getChild(int i) const {
-		std::cout << "getChild:" << i << std::endl;
-
-		std::cout << "getChild:" << m_children.size() << std::endl;
-		std::cout << "getChild: before return" << std::endl;
+		//std::cout << "getChild:" << i << std::endl;
 		return m_children[i];
 	}
 
 	action_t getAction(void) const {
-		std::cout << "getAction" << std::endl;
+		//std::cout << "getAction" << std::endl;
 		assert(m_chance_node);
 
 		return m_action;
@@ -219,7 +218,7 @@ public:
 			return false;
 		}
 		m_children.push_back(child);
-		std::cout << "addChild: " << m_children.size() << std::endl;
+		//std::cout << "addChild: " << m_children.size() << std::endl;
 
 		return true;
 	}
@@ -230,6 +229,7 @@ public:
 		assert(m_children.size() > 0);
 		reward_t max_val = 0;
 		action_t a = 1;
+		//std::cout << "BestAction" << std::endl;
 		for (std::vector<SearchNode*>::const_iterator it = m_children.begin();
 				it != m_children.end(); ++it) {
 			if ((*it)->getValueEstimate() > max_val) {
@@ -275,7 +275,7 @@ action_t rollout_policy(Agent &agent) {
 // simulate a path through a hypothetical future for the agent within its
 // internal model of the world, returning the accumulated reward.
 reward_t playout(Agent &agent, unsigned int playout_len) {
-	std::cout << "Playout:" << std::endl;
+	//std::cout << "Playout:" << std::endl;
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
 		//std::cout << "Playout: before rollout_policy" << std::endl;
@@ -297,22 +297,24 @@ extern action_t search(Agent &agent, double timeout) {
 // initialise search tree
 // TODO cache subtree between searches for efficiency
 // TODO make a copy of the agent model so we can update during search
-	std::cout << "search: timeout value: " << timeout << std::endl;
+	//std::cout << "search: timeout value: " << timeout << std::endl;
 	SearchNode root = SearchNode(NULL, NULL);
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	int iter = 0;
 	do {
-		std::cout << "search: in main loop, iter = " << iter << std::endl;
+		//std::cout << "search: in main loop, iter = " << iter << std::endl;
 		ModelUndo mu = ModelUndo(agent);
 		root.sample(agent, 0u);
 		agent.modelRevert(mu);
 		endTime = clock();
-
-		std::cout << "search: time since start: "
-				<< ((endTime - startTime) / (double) CLOCKS_PER_SEC)
-				<< std::endl;
+		/*
+		 std::cout << "search: time since start: "
+		 << ((endTime - startTime) / (double) CLOCKS_PER_SEC)
+		 << std::endl;
+		 */
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
+	//std::cout << "Done searching" << std::endl;
 	return root.bestAction();
 }
