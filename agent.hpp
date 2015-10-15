@@ -106,6 +106,7 @@ private:
 
     // True if the last update was a percept update
     bool m_last_update_percept;
+    
 };
 
 

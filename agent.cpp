@@ -21,7 +21,6 @@ Agent::Agent(options_t & options) {
     }
     
     m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
-
     reset();
 }
 
@@ -167,7 +166,8 @@ bool Agent::modelRevert(const ModelUndo &mu) {
         m_ct->revertHistory(m_ct->historySize()-1);
     }
     
-    // Check later: Whether it could return false
+    m_time_cycle = mu.lifetime();
+    m_total_reward = mu.reward();
     return true;
 }
 
