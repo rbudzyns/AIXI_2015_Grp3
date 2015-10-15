@@ -55,18 +55,23 @@ public:
     action_t selectAction(Agent &agent) {
         action_t a;
         if (m_children.size() != agent.numActions()) {
+            std::cout << "selectAction: if " << m_children.size() << std::endl;
             // then U != {}
             std::vector < action_t > U;
             int N = agent.numActions() - m_children.size();
             bool found;
             for (action_t i = 0; i < agent.numActions(); i++) {
+                std::cout << "selectAction: for " << i << std::endl;
                 found = false;
                 for (int j = 0; j < int(agent.numActions()); j++) {
+                    std::cout << "selectAction: before if " << std::endl;
                     if (i == getChild(j)->getAction()) {
+                        std::cout << "selectAction: found " << std::endl;
                         found = true;
                         break;
                     }
                 }
+                std::cout << "selectAction: after for " << std::endl;
                 if (!found) {
                     U.push_back(i);
                 }
@@ -77,6 +82,7 @@ public:
             addChild(chance_node);
             return a;
         } else {
+            std::cout << "selectAction: else " << m_children.size() << std::endl;
             // U == {}
             double max_val = 0;
             double val;
@@ -125,6 +131,7 @@ public:
         } else {
             std::cout << "Sample: Child node: T(n) > 0" << std::endl;
             action_t a = selectAction(agent);
+            std::cout << "Sample: after selectAction" << std::endl;
 
             // this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
             for (int i = 0; i < m_children.size(); i++) {
@@ -151,6 +158,9 @@ public:
     }
 
     SearchNode* getChild(int i) const {
+        std::cout << "getChild:" << i << std::endl;
+        std::cout << "getChild:" << m_children[i]->getAction() << std::endl;
+        std::cout << "getChild: before return" << std::endl;
         return m_children[i];
     }
 
@@ -224,9 +234,9 @@ action_t genModelledAction(Agent &agent) {
     double p = 0.0;
     double pr = rand01();
     for (action_t i = 0; i < agent.numActions(); i++) {
-        std::cout << "genModelledAction: before getPredictedActionProb" << i << std::endl;
+        //std::cout << "genModelledAction: before getPredictedActionProb" << i << std::endl;
         p += agent.getPredictedActionProb(i);
-        std::cout << "genModelledAction: after getPredictedActionProb" << std::endl;
+        //std::cout << "genModelledAction: after getPredictedActionProb" << std::endl;
         if (p > pr) {
             return i;
         }
@@ -245,17 +255,17 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	std::cout << "Playout:" << std::endl;
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
-		std::cout << "Playout: before rollout_policy" << std::endl;
+		//std::cout << "Playout: before rollout_policy" << std::endl;
 		action_t a = rollout_policy(agent);
-		std::cout << "Playout: after rollout_policy" << std::endl;
-		std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
+		//std::cout << "Playout: after rollout_policy" << std::endl;
+		//std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
 		agent.modelUpdate(a);
-		std::cout << "Playout: after modelUpdate" << std::endl;
+		//std::cout << "Playout: after modelUpdate" << std::endl;
 		percept_t* percept = agent.genPerceptAndUpdate();
-		std::cout << "Playout: after genPerceptAndUpdate" << std::endl;
+		//std::cout << "Playout: after genPerceptAndUpdate" << std::endl;
 		reward += percept[1];
 	}
-	std::cout << "Playout: leaving" << std::endl;
+	//std::cout << "Playout: leaving" << std::endl;
 	return reward;
 }
 
@@ -269,6 +279,7 @@ extern action_t search(Agent &agent, double timeout) {
     clock_t startTime = clock();
     clock_t endTime = clock();
     do {
+        std::cout << "search: in main loop" << std::endl;
         ModelUndo mu = ModelUndo(agent);
         root.sample(agent, 0u);
         agent.modelRevert(mu);
