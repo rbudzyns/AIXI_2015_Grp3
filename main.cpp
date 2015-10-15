@@ -54,7 +54,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Update agent's environment model with the new percept
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-		std::cout << "Hello" << std::endl;
+		//std::cout << "Hello" << std::endl;
+		//std::cout << ai.reward() << std::endl;
 
 		// Determine best exploitive action, or explore
 		action_t action;
@@ -63,11 +64,15 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			explored = true;
 			action = ai.genRandomAction();
 		} else {
-			if (ai.historySize() > ai.maxTreeDepth()) {
-				action = search(ai, 0.10005);
-			} else {
-				action = ai.genRandomAction();
-			}
+			/*
+			 if (ai.historySize() > ai.maxTreeDepth()) {
+			 action = search(ai, 0.10005);
+			 } else {
+			 action = ai.genRandomAction();
+			 }
+			 */
+			action = search(ai, 0.01);
+			//action = ai.genRandomAction();
 		}
 
 		// Send an action to the environment
@@ -223,7 +228,7 @@ int main(int argc, char *argv[]) {
 	 * 					1 = listen
 	 * 					2 = open left door
 	 * 					3 = open right door
-	 * 
+	 *
 	 * observations:	0 = nothing known
 	 * 					1 = tiger behind right door
 	 * 					2 = tiger behind left door
@@ -242,7 +247,7 @@ int main(int argc, char *argv[]) {
 		options["reward-bits"] = "3";
 	}
 	/*
-	 Action 
+	 Action
 	 0 : rock
 	 1 : paper
 	 2 : scissors
