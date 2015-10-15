@@ -83,7 +83,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			node *new_node = new node;
 			new_node->percept = per;
 			if(count == mouse_pos)
-				current_node = new_node;
+				mouse_start = new_node;
 			if(count == cheese_pos)
 				cheese_node = new_node;
 			for(int k=0;k<4;k++)
@@ -149,7 +149,8 @@ CheeseMaze::CheeseMaze(options_t &options)
 		i++;
 	}while(maze_conf[i] != '\0');
 	num[j]='\0';
-	
+
+	current_node = mouse_start;
 	//setting initial observation
 	m_observation = current_node->percept;
 	m_reward = 0;
@@ -170,6 +171,14 @@ void CheeseMaze::performAction(action_t action)
 	//set percept for agent
 	m_observation = current_node->percept;
 	m_reward = current_node == cheese_node ? 10 : -1;
+}
+
+void CheeseMaze::envReset()
+{
+	current_node = mouse_start;
+
+	m_reward = 0;
+	m_observation = current_node->percept;
 }
 
 bool CheeseMaze::isFinished() const
@@ -298,6 +307,20 @@ void TicTacToe::performAction(action_t action)
 	}
 }
 
+//reset the environment
+void TicTacToe::envReset()
+{
+	for (int i = 0; i < 9; i++)
+		board[i] = 0;
+
+	freeCells = 9;
+	finished = 0;
+
+	//return the initial percept,
+	m_observation = calBoardVal();
+	m_reward = 0;
+}
+
 bool TicTacToe::isFinished() const
 {
 	return finished;
@@ -350,6 +373,8 @@ void BRockPaperScissors::performAction(action_t action)
  */
 Pacman::Pacman(options_t &options)
 {
+
+	//encoding the structure of the maze
 	bool maze1[21][19] = {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -412,22 +437,20 @@ Pacman::Pacman(options_t &options)
 	maze[1][15].contents = 2;
 	maze[17][15].contents = 2;
 
-	ghost[0].x = 8;
-	ghost[0].y = 9;
-
-	ghost[1].x = ghost[0].x;
-	ghost[1].y = ghost[0].y +1;
-
-	ghost[2].x = ghost[0].x +1;
-	ghost[2].y = ghost[0].y;
-
-	ghost[3].x = ghost[2].x;
-	ghost[3].y = ghost[1].y;
-
+	//initialising the ghosts
+	for (int i = 0; i < 4; i++)
+	{
+		ghost[i].x = 8 + (int)(i / 2);
+		ghost[i].y = 9 + (int)(i % 2);
+		ghost[i].state = 1;
+	}
+	//initialising pacman
 	pacman.x = 8;
 	pacman.y = 13;
+	pacman.state = 0;
 
-	pacmanPowered = 0;
+	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) || ((seeGhost() & 15) << 8) || ((smellFood() & 7) << 5) || ((seeFood() & 15) << 1) || pacman.state;
+	m_reward = 0;
 }
 
 void Pacman::performAction(action_t action)

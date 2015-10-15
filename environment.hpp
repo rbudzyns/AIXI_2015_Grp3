@@ -19,6 +19,9 @@ public:
 	// receives the agent's action and calculates the new environment percept
 	virtual void performAction(action_t action) = 0; // TODO: implement in inherited class
 
+	//reset the environment after episode
+	virtual void envReset(void) { return; }
+
 	// returns true if the environment cannot interact with the agent anymore
 	virtual bool isFinished(void) const { return false; } // TODO: implement in inherited class (if necessary)
 
@@ -68,6 +71,9 @@ public:
 	
 	//Check with the environment if the agent has reached the goal;
 	virtual bool isFinished(void) const;
+
+	//reset the environment
+	virtual void envReset(void);
 	
 private:
 	//structure to represent the nodes
@@ -79,6 +85,7 @@ private:
 	std::string maze_conf;
 	node *current_node;
 	node *cheese_node;
+	node *mouse_start;
 };
 
 //Extented Tiger environment.It maps the location of tiger using a integer variable tiger.
@@ -108,6 +115,9 @@ public:
 
 	//actions of the agent
 	virtual void performAction(action_t action);
+
+	//reset the environemnt
+	virtual void envReset(void);
 
 	//check if the game is finished
 	virtual bool isFinished() const;
@@ -235,6 +245,7 @@ private:
 	{
 		int x;
 		int y;
+		bool state;
 	};
 
 	bool pacmanPowered;
