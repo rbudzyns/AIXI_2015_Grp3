@@ -235,8 +235,8 @@ action_t genModelledAction(Agent &agent) {
 }
 
 action_t rollout_policy(Agent &agent) {
-	return agent.genRandomAction();
-	// return genModelledAction(agent);
+	// return agent.genRandomAction();
+	return genModelledAction(agent);
 }
 
 // simulate a path through a hypothetical future for the agent within its
@@ -252,6 +252,7 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 		agent.modelUpdate(a);
 		std::cout << "Playout: after modelUpdate" << std::endl;
 		percept_t* percept = agent.genPerceptAndUpdate();
+		std::cout << "Playout: after genPerceptAndUpdate" << std::endl;
 		reward += percept[1];
 	}
 	std::cout << "Playout: leaving" << std::endl;
