@@ -344,3 +344,83 @@ void BRockPaperScissors::performAction(action_t action)
 	
 	move = m_reward == -1 ? move : (int)(rand01() * 3);
 }
+
+
+/* Pacman environment
+ */
+Pacman::Pacman(options_t &options)
+{
+	maze[19][21].isFreeCell = {
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0},
+			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
+			{0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0},
+			{1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1},
+			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
+			{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0},
+			{0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0},
+			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
+			{0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+	};
+	std::bitset<4> per;
+	for(int i=1;i<18; i++)
+		for(int j=1; j<20; j++)
+		{
+			if(maze[i][j].isFreeCell)
+			{
+				!maze[i-1][j].isFreeCell ? per.set(3,1) : per.set(3,0);
+				!maze[i][j+1].isFreeCell ? per.set(2,1) : per.set(2,0);
+				!maze[i+1][j].isFreeCell ? per.set(1,1) : per.set(1,0);
+				!maze[i][j-1].isFreeCell ? per.set(0,1) : per.set(0,0);
+				maze[i][j].wall = per.to_ulong() & INT_MAX;
+				if(rand01() < 0.5)
+					maze[i][j].contents = 1;
+				else
+					maze[i][j].contents = 0;
+			}
+			else
+				maze[i][j].wall = 15;
+		}
+	maze[9][0].wall = 10;
+	maze[9][18].wall = 10;
+	if (rand01() < 0.5)
+		maze[9][0].contents = 1;
+	else
+		maze[9][0].contents = 0;
+	if (rand01() < 0.5)
+			maze[9][18].contents = 1;
+		else
+			maze[9][18].contents = 0;
+
+	maze[1][3].contents = 2;
+	maze[17][3].contents = 2;
+
+	maze[1][15].contents = 2;
+	maze[17][15].contents = 2;
+
+	ghost[0].x = 8;
+	ghost[0].y = 9;
+
+	ghost[1].x = ghost[0].x;
+	ghost[1].y = ghost[0].y +1;
+
+	ghost[2].x = ghost[0].x +1;
+	ghost[2].y = ghost[0].y;
+
+	ghost[3].x = ghost[2].x;
+	ghost[3].y = ghost[1].y;
+
+	pacman.x = 8;
+	pacman.y = 13;
+}

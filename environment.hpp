@@ -224,7 +224,8 @@ private:
 	struct cell
 	{
 		unsigned int wall;
-		int content;
+		int isFreeCell;
+		int contents;
 	};
 	cell maze[19][21];
 	struct pos
@@ -236,19 +237,48 @@ private:
 	pos ghost[4];
 	pos pacman;
 
-	int ghostCheck()
+	unsigned int ghostCheck()
 	{
 		std::bitset<4> chk;
 		for(int i=0; i<4; i++)
 		{
-			if(pacman.x = ghost[i].x)
+			chk.set(3-i, 0);
+			if(i == 0 || i == 2)
 			{
-				for(int j = std::min(pacman.x, ghost[i].x); j <= std::max(pacman.x, ghost[i].x); j++)
+				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
 				{
-					if
+					for(int j = pacman.y; i==0?j>0:j<21; i==0?j--:j++)
+					{
+						if(!maze[pacman.x][j].isFreeCell)
+							break;
+						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
+						{
+							chk.set(3-i,1);
+							break;
+						}
+					}
 				}
 			}
+			else
+			{
+				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
+				{
+					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
+					{
+						if(!maze[j][pacman.y].isFreeCell)
+							break;
+						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
+						{
+							chk.set(3-i, 1);
+							break;
+						}
+					}
+				}
+			}
+
 		}
+
+		return chk.to_ulong() & INT_MAX;
 	}
 };
 
