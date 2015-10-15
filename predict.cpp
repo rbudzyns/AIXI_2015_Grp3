@@ -126,15 +126,9 @@ void ContextTree::update(const symbol_list_t &symbol_list) {
     m_update_partial_count = 0;
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
-<<<<<<< HEAD
-        std::cout<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
-        update(symbol_list[i]);
-        std::cout<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
-=======
         std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
         update(symbol_list[i]);
         std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
->>>>>>> test
         m_update_partial_count++;
         m_update_partial_list.push_back(symbol_list[i]);
         //debugTree();
@@ -163,11 +157,7 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
     while(traverse_depth < (path_size)) {
-<<<<<<< HEAD
-        std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
-=======
         std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
->>>>>>> test
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -178,30 +168,18 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
         }
         else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
             cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
-<<<<<<< HEAD
-            std::cout << "From Partial list " << cur_history_sym << std::endl;
-        } 
-        else if(m_history.size() > 0) {
-            cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
-            std::cout << "From History " << cur_history_sym << std::endl;
-=======
             std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From Partial list " << cur_history_sym << std::endl;
         } 
         else if(m_history.size() > 0) {
             cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
             std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From History " << cur_history_sym << std::endl;
->>>>>>> test
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
         if(traverse_depth < m_depth) {
             if((*current)->m_child[cur_history_sym] == NULL) {
-<<<<<<< HEAD
-                std::cout << "Child created" << std::endl;
-=======
                 std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Child created" << std::endl;
->>>>>>> test
                 CTNode* node = new CTNode();
                 (*current)->m_child[cur_history_sym] = node;
             }
