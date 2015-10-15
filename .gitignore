@@ -30,3 +30,7 @@
 # Eclipse
 .cproject
 .project
+/Debug/
+
+log.*
+.gitignore

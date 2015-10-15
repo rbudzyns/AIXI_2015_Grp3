@@ -126,9 +126,15 @@ void ContextTree::update(const symbol_list_t &symbol_list) {
     m_update_partial_count = 0;
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
+<<<<<<< HEAD
         std::cout<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
         update(symbol_list[i]);
         std::cout<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
+=======
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
+        update(symbol_list[i]);
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
+>>>>>>> test
         m_update_partial_count++;
         m_update_partial_list.push_back(symbol_list[i]);
         //debugTree();
@@ -157,7 +163,11 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
     while(traverse_depth < (path_size)) {
+<<<<<<< HEAD
         std::cout << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
+=======
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
+>>>>>>> test
         // Start with the root
         // Go down using the history. 
         // If a context in the history is not present in CT, then add new node
@@ -168,18 +178,30 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
         }
         else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
             cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
+<<<<<<< HEAD
             std::cout << "From Partial list " << cur_history_sym << std::endl;
         } 
         else if(m_history.size() > 0) {
             cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
             std::cout << "From History " << cur_history_sym << std::endl;
+=======
+            std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From Partial list " << cur_history_sym << std::endl;
+        } 
+        else if(m_history.size() > 0) {
+            cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
+            std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From History " << cur_history_sym << std::endl;
+>>>>>>> test
         }
         // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
         if(traverse_depth < m_depth) {
             if((*current)->m_child[cur_history_sym] == NULL) {
+<<<<<<< HEAD
                 std::cout << "Child created" << std::endl;
+=======
+                std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Child created" << std::endl;
+>>>>>>> test
                 CTNode* node = new CTNode();
                 (*current)->m_child[cur_history_sym] = node;
             }
@@ -189,7 +211,7 @@ void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context
 
         (*current) =  (*current)->m_child[cur_history_sym];
         traverse_depth++;
-        //std::cout << "-" << std::endl;
+        //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "-" << std::endl;
     }
 }
 
@@ -270,6 +292,7 @@ void ContextTree::genRandomSymbolsAndUpdate(symbol_list_t &symbols, size_t bits)
     symbol_t sym;   
     
     for(int i = 0; i < bits; i++) {
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " Before getLogProbNextSymbolGivenH" << std::endl;
         
         prob_next_bit = pow(2, getLogProbNextSymbolGivenH(0));
         
@@ -279,9 +302,14 @@ void ContextTree::genRandomSymbolsAndUpdate(symbol_list_t &symbols, size_t bits)
         } else {
             sym = 1;
         } 
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " Before update" << std::endl;
+
         update(sym);
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After update" << std::endl;
         m_history.push_back(sym);
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After history pushback" << std::endl;
         symbols[i] = sym;
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After store sym" << std::endl;
     }
 }
 
@@ -307,16 +335,16 @@ int count;
 void ContextTree::debugTree() {
     aixi::log << "History : ";
     for(int i=0; i < m_history.size(); i++) {
-        std::cout << m_history.at(i);
+        std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << m_history.at(i);
     }
     count = 0;
-    std::cout << std::endl << "Preorder list of weighted probabilites" << std::endl;
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << std::endl << "Preorder list of weighted probabilites" << std::endl;
     printTree(m_root);
-    std::cout << "----------------------------" << std::endl;
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
 }
 
 void ContextTree::printTree(CTNode *node) {
-    std::cout << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
 
     if(node->m_child[1] != NULL)
         printTree(node->m_child[1]);
@@ -329,7 +357,7 @@ void ContextTree::printTree(CTNode *node) {
 void ContextTree::printInTree(CTNode *node) {
     if(node->m_child[1] != NULL)
         printInTree(node->m_child[1]);
-    std::cout << "Node Weighted probability " << node->m_log_prob_weighted << std::endl;
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Node Weighted probability " << node->m_log_prob_weighted << std::endl;
     treeIn[num_of_nodes_in] = node->m_log_prob_weighted;
     num_of_nodes_in++;
     if(node->m_child[0] != NULL)
@@ -337,7 +365,7 @@ void ContextTree::printInTree(CTNode *node) {
 }
 
 void ContextTree::printPreTree(CTNode *node) {
-    std::cout << "Node Weighted probability " << node->m_log_prob_weighted << std::endl;
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Node Weighted probability " << node->m_log_prob_weighted << std::endl;
     treePre[num_of_nodes_pre] = node->m_log_prob_weighted;
     num_of_nodes_pre++;
     if(node->m_child[1] != NULL)
