@@ -116,6 +116,10 @@ percept_t* Agent::genPerceptAndUpdate(void) {
     }
     percept[1] = decode(symbol_list, m_rew_bits);
     std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After Decoding" << std::endl;
+    
+        // Update other properties
+    m_total_reward += percept[1];
+    m_last_update_percept = true;
     return percept;
 }
 
