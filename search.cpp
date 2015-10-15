@@ -235,28 +235,28 @@ action_t genModelledAction(Agent &agent) {
 }
 
 action_t rollout_policy(Agent &agent) {
-    return agent.genRandomAction();
-    // return genModelledAction(agent);
+	// return agent.genRandomAction();
+	return genModelledAction(agent);
 }
 
 // simulate a path through a hypothetical future for the agent within its
 // internal model of the world, returning the accumulated reward.
 reward_t playout(Agent &agent, unsigned int playout_len) {
-    std::cout << "Playout:" << std::endl;
-    reward_t reward = 0;
-    for (int i = 1; i <= int(playout_len); i++) {
-        std::cout << "Playout: before rollout_policy" << std::endl;
-        action_t a = rollout_policy(agent);
-        std::cout << "Playout: after rollout_policy" << std::endl;
-        std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
-        agent.modelUpdate(a);
-        std::cout << "Playout: after modelUpdate" << std::endl;
-        percept_t* percept = agent.genPerceptAndUpdate();
-        std::cout << "Playout: after genPerceptAndUpdate" << std::endl;
-        reward += percept[1];
-    }
-    std::cout << "Playout: leaving" << std::endl;
-    return reward;
+	std::cout << "Playout:" << std::endl;
+	reward_t reward = 0;
+	for (int i = 1; i <= int(playout_len); i++) {
+		std::cout << "Playout: before rollout_policy" << std::endl;
+		action_t a = rollout_policy(agent);
+		std::cout << "Playout: after rollout_policy" << std::endl;
+		std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
+		agent.modelUpdate(a);
+		std::cout << "Playout: after modelUpdate" << std::endl;
+		percept_t* percept = agent.genPerceptAndUpdate();
+		std::cout << "Playout: after genPerceptAndUpdate" << std::endl;
+		reward += percept[1];
+	}
+	std::cout << "Playout: leaving" << std::endl;
+	return reward;
 }
 
 // determine the best action by searching ahead using MCTS
