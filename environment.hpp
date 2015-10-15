@@ -5,6 +5,8 @@
 #include <string>
 #include <bitset>
 #include <climits>
+#include <algorithm>
+#include <cassert>
 #include "util.hpp"
 
 class Environment {
@@ -227,17 +229,22 @@ private:
 		int isFreeCell;
 		int contents;
 	};
-	cell maze[19][21];
+	cell maze[21][19];
+	bool maze1[21][19];
 	struct pos
 	{
 		int x;
 		int y;
 	};
 
+	bool pacmanPowered;
+
 	pos ghost[4];
 	pos pacman;
 
-	unsigned int ghostCheck()
+
+	//returns the bits for direction of ghost which are in line of sight
+	unsigned int seeGhost()
 	{
 		std::bitset<4> chk;
 		for(int i=0; i<4; i++)
@@ -247,8 +254,9 @@ private:
 			{
 				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
 				{
-					for(int j = pacman.y; i==0?j>0:j<21; i==0?j--:j++)
+					for(int j = pacman.y; i==0?j>0:j<19; i==0?j--:j++)
 					{
+						assert(0 <= j && j <= 18);
 						if(!maze[pacman.x][j].isFreeCell)
 							break;
 						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
@@ -263,8 +271,9 @@ private:
 			{
 				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
 				{
-					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
+					for(int j = pacman.y; i==1?j>0:j<21; i==1?j--:j++)
 					{
+						assert(0 <= j && j < 21);
 						if(!maze[j][pacman.y].isFreeCell)
 							break;
 						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
@@ -279,6 +288,63 @@ private:
 		}
 
 		return chk.to_ulong() & INT_MAX;
+	}
+
+	unsigned int smellFood()
+	{
+		std::bitset<3> smell;
+		//manhattan distance of 4
+		for (int i = std::min(pacman.x - 4, 0); i <= std::max(pacman.x + 4, 20); i++)
+		{
+			assert(0 <= i && i <= 20);
+			//the range of j changes based on the value of i, such that the manhattan distance is bounded by 4.
+			for (int j = std::min(pacman.y - std::abs(std::abs(pacman.x - i) - 4), 0); j <= std::max(pacman.y + std::abs(std::abs(pacman.x - i) - 4), 18); j++)
+			{
+				assert(0 <= j && j <= 18);
+				assert(std::abs(pacman.x - i) + std::abs(pacman.y - j) <= 4);
+				if (maze[i][j].contents == 1)
+					smell.set(std::abs(pacman.x - i) + std::abs(pacman.y - j) - 1, 1);
+			}
+		}
+		return smell.to_ulong() & INT_MAX;
+	}
+
+	unsigned int seeFood()
+	{
+		std::bitset<4> sight;
+		for (int i = 0; i < 4; i++)
+		{
+			sight.set(3 - i, 0); //assuming there is no food in line of sight
+			if (i == 0 || i == 2)
+			{
+				for (int j = pacman.y; i == 0 ? j > 0:j < 19; i == 0 ? j-- : j++)
+				{
+					assert(0 <= j && j < 19);
+					if (!maze[pacman.x][j].isFreeCell)
+						break;
+					else if (maze[pacman.x][j].contents == 1)
+					{
+						sight.set(3 - i, 1);
+						break;
+					}
+				}
+			}
+			else if (i == 1 || i == 3)
+			{
+				for (int j = pacman.x; i == 3 ? j > 0:j < 21; i == 3 ? j-- : j++)
+				{
+					assert(0 <= j && j < 19);
+					if (!maze[j][pacman.y].isFreeCell)
+						break;
+					else if (maze[j][pacman.y].contents == 1)
+					{
+						sight.set(3 - i, 1);
+						break;
+					}
+				}
+			}
+		}
+		return sight.to_ulong() & INT_MAX;
 	}
 };
 

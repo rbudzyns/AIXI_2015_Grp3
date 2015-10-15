@@ -350,7 +350,7 @@ void BRockPaperScissors::performAction(action_t action)
  */
 Pacman::Pacman(options_t &options)
 {
-	maze[19][21].isFreeCell = {
+	bool maze1[21][19] = {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
 			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
@@ -373,9 +373,12 @@ Pacman::Pacman(options_t &options)
 			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 	};
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			maze[i][j].isFreeCell = maze1[i][j];
 	std::bitset<4> per;
-	for(int i=1;i<18; i++)
-		for(int j=1; j<20; j++)
+	for(int i=1;i<20; i++)
+		for(int j=1; j<18; j++)
 		{
 			if(maze[i][j].isFreeCell)
 			{
@@ -423,4 +426,16 @@ Pacman::Pacman(options_t &options)
 
 	pacman.x = 8;
 	pacman.y = 13;
+
+	pacmanPowered = 0;
+}
+
+void Pacman::performAction(action_t action)
+{
+
+}
+
+bool Pacman::isFinished(void) const
+{
+	return false;
 }
