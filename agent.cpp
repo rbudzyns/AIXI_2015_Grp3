@@ -92,7 +92,7 @@ percept_t* Agent::genPercept(void) const {
     m_ct->revertHistory(m_obs_bits + m_rew_bits);
     
     percept[0] = decode(symbol_list, m_obs_bits);
-    for(int i; i < m_rew_bits; i++) {
+    for(int i = 0; i < m_rew_bits; i++) {
         symbol_list[i] = symbol_list[i + m_obs_bits];
     }
     percept[1] = decode(symbol_list, m_rew_bits);
@@ -105,16 +105,17 @@ percept_t* Agent::genPercept(void) const {
 // update our mixture environment model with it
 percept_t* Agent::genPerceptAndUpdate(void) {
     percept_t* percept =  new percept_t[2];
-    symbol_list_t symbol_list;
+    symbol_list_t symbol_list(m_obs_bits + m_rew_bits);
     
     m_ct->genRandomSymbolsAndUpdate(symbol_list, m_obs_bits + m_rew_bits);
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " Before Decoding" << std::endl;
     
     percept[0] = decode(symbol_list, m_obs_bits);
-    for(int i; i < m_rew_bits; i++) {
+    for(int i = 0; i < m_rew_bits; i++) {
         symbol_list[i] = symbol_list[i + m_obs_bits];
     }
     percept[1] = decode(symbol_list, m_rew_bits);
-    
+    std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After Decoding" << std::endl;
     return percept;
 }
 
