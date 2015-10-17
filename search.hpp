@@ -2,22 +2,22 @@
 #define __SEARCH_HPP__
 
 #include <unordered_map>
-#include <utility>
 
+#include "agent.hpp"
 #include "main.hpp"
 
 class or_hasher {
 
 public:
-    size_t operator()(const obsrew_t & p) const {
-        return p.first*100 + p.second*10000;
-    }
+	size_t operator()(const obsrew_t & p) const {
+		return p.first * 100 + p.second * 10000;
+	}
 };
 class ChanceNode;
 class DecisionNode;
 
-typedef std::unordered_map<obsrew_t,DecisionNode*,or_hasher> decision_map_t;
-typedef std::unordered_map<action_t,ChanceNode*> chance_map_t;
+typedef std::unordered_map<obsrew_t, DecisionNode*, or_hasher> decision_map_t;
+typedef std::unordered_map<action_t, ChanceNode*> chance_map_t;
 typedef unsigned long long visits_t;
 
 class Agent;
@@ -37,7 +37,6 @@ public:
 
 protected:
 
-	// bool m_chance_node; // true if this node is a chance node, false otherwise
 	double m_mean;      // the expected reward of this node
 	visits_t m_visits;  // number of times the search node has been visited
 };
@@ -46,16 +45,19 @@ class DecisionNode: SearchNode {
 
 public:
 
+	// constructor
 	DecisionNode(obsrew_t obsrew);
 
+	// print node data for debugging purposes
 	void print() const;
 
-	obsrew_t getObsRew(void) const;
+	// get (observation,reward) label
+	obsrew_t obsRew(void) const;
 
-	// add a new child node
+	// add a new child chance node
 	bool addChild(ChanceNode* child);
 
-	// perform a sample run through this node and it's children,
+	// perform a sample run through this node and its children,
 	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr);
 
@@ -66,23 +68,25 @@ public:
 	action_t bestAction(Agent &agent) const;
 
 private:
-	obsrew_t m_obsrew; // observation associated with decision nodes
-	chance_map_t m_children; // list of child nodes
+	obsrew_t m_obsrew; 		  // observation associated with decision nodes
+	chance_map_t m_children;  // list of child nodes
 };
 
 class ChanceNode: public SearchNode {
 
 public:
 
+	// constructor
 	ChanceNode(action_t action);
 
-	action_t getAction(void) const;
+	// get action label
+	action_t action(void) const;
 
-    // add a new child node
+	// add a new child node
 	bool addChild(DecisionNode* child);
 
-    // perform a sample run through this node and it's children,
-    // returning the accumulated reward from this sample run
+	// perform a sample run through this node and it's children,
+	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr);
 
 private:
@@ -93,6 +97,6 @@ private:
 // determine the best action by searching ahead
 extern action_t search(Agent &agent, double timeout);
 
-static reward_t playout(Agent &agent, unsigned int playout_len);
+extern reward_t playout(Agent &agent, unsigned int playout_len);
 
 #endif // __SEARCH_HPP__
