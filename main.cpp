@@ -58,6 +58,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
         //std::cout << "Hello" << std::endl;
 
+        //std::cout << "Model update with real OR bits ^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
+        //ai.getContextTree()->debugTree();
+
         // Determine best exploitive action, or explore
         action_t action;
         bool explored = false;
@@ -76,12 +79,12 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
         // Send an action to the environment
         env.performAction(action); // TODO: implement for each environment
-        std::cout << "Action performed======================"<<std::endl;
+        //std::cout << "Action performed======================"<<std::endl;
 
         // Update agent's environment model with the chosen action
         ai.modelUpdate(action); // TODO: implement in agent.cpp
-        std::cout << "Model update with performed action *******************"<<std::endl;
-        ai.getContextTree()->debugTree();
+        //std::cout << "Model update with performed action *******************"<<std::endl;
+        //ai.getContextTree()->debugTree();
         // Log this turn
         aixi::log << "cycle: " << cycle << std::endl;
         aixi::log << "observation: " << observation << std::endl;
@@ -100,12 +103,12 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
         //std::cout << "Current cycle : " << cycle << std::endl;
         // Print to standard output when cycle == 2^n
         // if ((cycle & (cycle - 1)) == 0) {
-        if (cycle % 1000 == 0) {
-            std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
+        if (cycle % 1 == 0) {
+            std::cout << "head prob: " << pow(2, ai.getProbNextSymbol()) << std::endl;
             std::cout << "cycle: " << cycle << std::endl;
-            std::cout << "average reward: " << ai.averageReward() << std::endl;
+            //std::cout << "average reward: " << ai.averageReward() << std::endl;
             if (explore) {
-                std::cout << "explore rate: " << explore_rate << std::endl;
+                //std::cout << "explore rate: " << explore_rate << std::endl;
             }
         }
 

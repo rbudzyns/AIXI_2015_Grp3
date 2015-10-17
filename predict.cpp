@@ -45,22 +45,19 @@ double CTNode::logKTMul(symbol_t sym) const {
 
 // Calculate the logarithm of the weighted block probability.
 void CTNode::updateLogProbability(void) {
-    double prob_weighted;
-    
     if(m_child[0] == NULL) {
         if(m_child[1] == NULL) {
-            prob_weighted = pow(2, m_log_prob_est);
+            m_log_prob_weighted = m_log_prob_est;
         } else {
-            prob_weighted = pow(2, m_log_prob_est-1) + pow(2, m_child[1]->m_log_prob_weighted-1);
+        	m_log_prob_weighted = log2(pow(2, m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
         }
     } else{
         if(m_child[1] == NULL) {
-            prob_weighted = pow(2, m_log_prob_est-1) + pow(2, m_child[0]->m_log_prob_weighted-1);
+        	m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
         } else {
-            prob_weighted = pow(2, m_log_prob_est-1) + pow(2, (m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted)-1);
+        	m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
         }
     }
-    m_log_prob_weighted = log2(prob_weighted);
 }
 
 // Update the node after having observed a new symbol.
@@ -92,7 +89,8 @@ void CTNode::revert(const symbol_t symbol){
 ContextTree::ContextTree(size_t depth) :
     m_root(new CTNode()),
     m_depth(depth)
-{ return; }
+{
+return; }
 
 
 ContextTree::~ContextTree(void) {
@@ -125,18 +123,13 @@ void ContextTree::update(const symbol_t sym) {
 
 
 void ContextTree::update(const symbol_list_t &symbol_list) {
-    m_update_partial_count = 0;
     
     for(size_t i = 0; i < symbol_list.size(); i++) {
         //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "Start Update ----------- sym-read " << symbol_list[i] << std::endl;
         update(symbol_list[i]);
         //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " "<< "End Update ------------- sym-read " << symbol_list[i] << std::endl << std::endl;
-        m_update_partial_count++;
-        m_update_partial_list.push_back(symbol_list[i]);
         //debugTree();
     }
-    m_update_partial_list.clear();
-    m_update_partial_count = 0;
 }
 
 
@@ -149,42 +142,21 @@ void ContextTree::updateHistory(const symbol_list_t &symbol_list) {
 
 
 void ContextTree::walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path, CTNode **current) {
-        // Update the context tree for the next obeserved bit
-    // Path size is min of history size and max depth of the CT
-    int path_size = ((m_history.size() + bit_fix + m_update_partial_count) < m_depth)? (m_history.size()+ bit_fix + m_update_partial_count) : m_depth;
-        
     int traverse_depth = 0;
     
     int cur_history_sym;
     // Update the (0,1) count of each context node upto min(depth,history)
     // and remember the path
-    while(traverse_depth < (path_size)) {
+    while(traverse_depth < m_depth) {
         //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "PC= " << m_update_partial_count << " T= " << traverse_depth << std::endl;
-        // Start with the root
-        // Go down using the history. 
-        // If a context in the history is not present in CT, then add new node
-        if(m_history.size() == 0 && m_update_partial_count == 0) {
-            // When history is empty and you add the first symbol
-            traverse_depth++;
-            break;
-        }
-        else if(m_update_partial_count > 0 && traverse_depth < m_update_partial_count) {
-            cur_history_sym = m_update_partial_list[m_update_partial_count - traverse_depth-1];
-            //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From Partial list " << cur_history_sym << std::endl;
-        } 
-        else if(m_history.size() > 0) {
-            cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-(traverse_depth-m_update_partial_count));
+        cur_history_sym = m_history.at(bit_fix + (m_history.size()-1)-traverse_depth);
             //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "From History " << cur_history_sym << std::endl;
-        }
-        // cur_history_sym could be 0 or 1
         // If sym is 0, then move right
         // If sym is 1, then move left
-        if(traverse_depth < m_depth) {
-            if((*current)->m_child[cur_history_sym] == NULL) {
-                //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Child created" << std::endl;
-                CTNode* node = new CTNode();
-                (*current)->m_child[cur_history_sym] = node;
-            }
+        if((*current)->m_child[cur_history_sym] == NULL) {
+			//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Child created" << std::endl;
+			CTNode* node = new CTNode();
+			(*current)->m_child[cur_history_sym] = node;
         }
         // Store the current node on the context path, used when updating the CT bottom up
         context_path.push_back((*current));

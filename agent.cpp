@@ -136,9 +136,9 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
     symbol_list_t percept;
     encodePercept(percept, observation, reward);
 
-    std::cout << "In Model update PERCEPT----------------" << std::endl;
-    m_ct->debugTree();
-    std::cout << "In Model update PERCEPT................\n" << std::endl;
+    //std::cout << "In Model update PERCEPT----------------" << std::endl;
+    //m_ct->debugTree();
+    //std::cout << "In Model update PERCEPT................\n" << std::endl;
     if(m_ct->historySize() >= m_ct->depth()) {
     	m_ct->update(percept);
     }
@@ -153,16 +153,17 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
 void Agent::modelUpdate(action_t action) {
     assert(isActionOk(action));
     assert(m_last_update_percept == true);
-    std::cout << "In Model update ACTION----------------" << std::endl;
-    m_ct->debugTree();
-    std::cout << "In Model update ACTION................\n" << std::endl;
    //std::cout << "Model Update"<<std::endl;
     // Update internal model
     symbol_list_t action_syms;
     encodeAction(action_syms, action);
+    //std::cout << "In Model update ACTION------Start----------" << std::endl;
 
     // m_ct->update(action_syms);
     m_ct->updateHistory(action_syms);
+
+    //m_ct->debugTree();
+    //std::cout << "In Model update ACTION........End........\n" << std::endl;
 
     m_time_cycle++;
     m_last_update_percept = false;
@@ -176,7 +177,7 @@ bool Agent::modelRevert(const ModelUndo &mu) {
 	//std::cout << "Model Revert"<<std::endl;
 
     for(int i = 0; i < n_cycles; i++) {
-    	m_ct->debugTree();
+    	//m_ct->debugTree();
     	for(int j = 0; j < m_obs_bits + m_rew_bits; j++) {
 			m_ct->revert();
 			m_ct->revertHistory(m_ct->historySize()-1);
