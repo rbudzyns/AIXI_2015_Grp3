@@ -1,15 +1,17 @@
 #include "search.hpp"
 
-#include <algorithm>
+#include <stddef.h>
+#include <sys/time.h>
 #include <cassert>
 #include <cmath>
 #include <ctime>
+#include <iostream>
+#include <iterator>
 #include <vector>
 
 #include "agent.hpp"
+#include "main.hpp"
 #include "util.hpp"
-
-typedef unsigned long long visits_t;
 
 // search options
 static const visits_t MinVisitsBeforeExpansion = 1;
@@ -17,42 +19,83 @@ static const unsigned int MaxDistanceFromRoot = 100;
 static size_t MaxSearchNodes;
 static const int MaxBranchFactor = 100;
 
-// contains information about a single "state"
-class SearchNode {
-
-public:
-
 	// constructor
-	SearchNode(action_t action) {
-		m_chance_node = true;
+	SearchNode::SearchNode(void) {
 		m_visits = 0llu;
 		m_mean = 0;
-		m_observation = NULL;
-		m_reward = NULL;
-		m_action = action;
-	}
-
-	SearchNode(percept_t observation, percept_t reward) {
-		m_chance_node = false;
-		m_visits = 0llu;
-		m_mean = 0;
-		m_observation = observation;
-		m_reward = reward;
-		m_action = NULL;
 	}
 
 	// print method for debugging purposes
-	void print() const {
+	void DecisionNode::print() const {
 		std::cout << "Node state:" << std::endl;
-		std::cout << "    Node type: "
-				<< (m_chance_node ? "chance" : "decision") << std::endl;
 		std::cout << "    T(h): " << m_visits << std::endl;
 		std::cout << "    Vhat(h): " << m_mean << std::endl;
 		std::cout << "    Children: " << m_children.size() << std::endl;
 	}
 
+	// determine the expected reward from this node
+	reward_t SearchNode::expectation(void) const {
+		return m_mean;
+	}
+
+	// number of times the search node has been visited
+	visits_t SearchNode::visits(void) const {
+		return m_visits;
+	}
+
+	DecisionNode::DecisionNode(obsrew_t obsrew):SearchNode() {
+		m_obsrew = obsrew;
+		//m_children = std::unordered_map<action_t,ChanceNode*>;
+	}
+
+	obsrew_t DecisionNode::getObsRew(void) const {
+		return m_obsrew;
+	}
+
+	// add a new child node
+	bool DecisionNode::addChild(ChanceNode* child) {
+		if (m_children.size() >= MaxBranchFactor) {
+			return false;
+		}
+		std::pair<action_t,ChanceNode*> p = std::make_pair(child->getAction(),child);
+		m_children.insert(p);
+
+		return true;
+	}
+
+	// perform a sample run through this node and it's children,
+	// returning the accumulated reward from this sample run
+	reward_t DecisionNode::sample(Agent &agent, unsigned int dfr) {
+		reward_t reward;
+		if (dfr == MaxDistanceFromRoot) { // horizon has been reached
+			return 0;
+		} else if (m_visits == 0) {
+			//std::cout << "Sample: Child node: T(n) = 0" << std::endl;
+			reward = playout(agent, agent.horizon() - dfr);
+		} else {
+			//std::cout << "Sample: Child node: T(n) = " << m_visits << std::endl;
+			action_t action = selectAction(agent);
+			//std::cout << "Sample: after selectAction" << std::endl;
+
+			reward = m_children[action]->sample(agent, dfr);
+			// this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
+//			for (int i = 0; i < m_children.size(); i++) {
+//				//std::cout << "In selectAction else loop" << std::endl;
+//				if (a == m_children[i]->getAction()) {
+//					reward = m_children[i]->sample(agent, dfr);
+//				}
+//			}
+		}
+		m_mean = (1.0 / (m_visits + 1)) * (reward + m_visits * m_mean);
+		m_visits++;
+
+		//print(); // print the node state for debugging purposes
+
+		return reward;
+	}
+
 	// determine the next action to play
-	action_t selectAction(Agent &agent) {
+	action_t DecisionNode::selectAction(Agent &agent) {
 		action_t a;
 		if (m_children.size() != agent.numActions()) {
 			//std::cout << "selectAction: if " << m_children.size() << std::endl;
@@ -74,16 +117,17 @@ public:
 			if (m_children.size() != 0) {
 				for (action_t i = 0; i < agent.numActions(); i++) {
 					//std::cout << "selectAction: for " << i << std::endl;
-					found = false;
-					for (int j = 0; j < int(m_children.size()); j++) {
-						//std::cout << "selectAction: before if " << std::endl;
-						if (i == getChild(j)->getAction()) {
-							//std::cout << "selectAction: found " << std::endl;
-							found = true;
-							break;
-						}
-					}
+//					found = false;
+//					for (int j = 0; j < int(m_children.size()); j++) {
+//						//std::cout << "selectAction: before if " << std::endl;
+//						if (i == getChild(j)->getAction()) {
+//							//std::cout << "selectAction: found " << std::endl;
+//							found = true;
+//							break;
+//						}
+//					}
 					//std::cout << "selectAction: after for " << std::endl;
+					bool found = m_children.count(i);
 					if (!found) {
 						U.push_back(i);
 					}
@@ -96,7 +140,7 @@ public:
 			}
 
 			a = U[randRange(N)];
-			SearchNode* chance_node = new SearchNode(a);
+			ChanceNode* chance_node = new ChanceNode(a);
 			addChild(chance_node);
 			return a;
 		} else {
@@ -106,60 +150,80 @@ public:
 			double max_val = 0;
 			double val;
 
-			for (int i = 0; i < m_children.size(); i++) {
-				SearchNode* child = getChild(i);
+			for (action_t action = 0; action < m_children.size(); action++) {
+				ChanceNode* child = m_children[action];
 				double normalization = agent.horizon()
 						* (agent.maxReward() - agent.minReward()); // m(\beta - \alpha)
 				double Vha = child->expectation(); // \hat{V}(ha)
 				// John: just a note to check with you re: C from 14 in Veness.
 				val = Vha / normalization
-						+ sqrt(
+						+ agent.UCBWeight() * sqrt(
 								(double) log2((double) m_visits)
 										/ child->visits()); // eqn. 14 (Veness)
 				if (val > max_val) {
 					//std::cout << "getAction in UCB" << std::endl;
 					max_val = val;
-					a = child->getAction();
+					a = action;
 				}
 			}
 			return a;
 		}
 	}
 
-	// determine the expected reward from this node
-	reward_t expectation(void) const {
-		return m_mean;
+	// return the best action for a decision node
+	action_t DecisionNode::bestAction(Agent &agent) const {
+		if (m_children.size() > 0) {
+			reward_t max_val = 0;
+			action_t a = 1;
+			//std::cout << "BestAction" << std::endl;
+			for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+				if ((it->second)->expectation() > max_val) {
+					a = it->first;
+				}
+			}
+			return a;
+		} else {
+			std::cout << "Generating random action in bestAction." << std::endl;
+			return agent.genRandomAction();
+		}
+	}
+
+	ChanceNode::ChanceNode(action_t action):SearchNode() {
+		m_action = action;
+		//m_children = std::unordered_map<obsrew_t,DecisionNode*>();
+	}
+
+	action_t ChanceNode::getAction(void) const {
+		return m_action;
+	}
+
+	// add a new child node
+	bool ChanceNode::addChild(DecisionNode* child) {
+		if (m_children.size() >= MaxBranchFactor) {
+			return false;
+		}
+		std::pair<obsrew_t,DecisionNode*> p = std::make_pair(child->getObsRew(),child);
+		m_children.insert(p);
+		//std::cout << "addChild: " << m_children.size() << std::endl;
+
+		return true;
 	}
 
 	// perform a sample run through this node and it's children,
 	// returning the accumulated reward from this sample run
-	reward_t sample(Agent &agent, unsigned int dfr) {
+	reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 		reward_t reward;
 		if (dfr == MaxDistanceFromRoot) { // horizon has been reached
 			return 0;
-		} else if (m_chance_node) {
+		} else {
 			percept_t* percept = agent.genPerceptAndUpdate();
-			SearchNode* decision_node = childWithObsRew(percept[0], percept[1]);
-			if (decision_node == NULL) {
-				decision_node = new SearchNode(percept[0], percept[1]);
+			obsrew_t o_r = std::make_pair(percept[0],percept[1]);
+			bool found = m_children.count(o_r);
+			if (!found) {
+				DecisionNode* decision_node = new DecisionNode(o_r);
 				addChild(decision_node);
 			}
-			reward = percept[1] + decision_node->sample(agent, dfr + 1); // do we increment here or on line 91?
-		} else if (m_visits == 0) {
-			//std::cout << "Sample: Child node: T(n) = 0" << std::endl;
-			reward = playout(agent, agent.horizon() - dfr);
-		} else {
-			//std::cout << "Sample: Child node: T(n) = " << m_visits << std::endl;
-			action_t a = selectAction(agent);
-			//std::cout << "Sample: after selectAction" << std::endl;
-
-			// this is ugly, but necessary to keep the chance node creation inside selectAction, i think.
-			for (int i = 0; i < m_children.size(); i++) {
-				//std::cout << "In selectAction else loop" << std::endl;
-				if (a == m_children[i]->getAction()) {
-					reward = m_children[i]->sample(agent, dfr);
-				}
-			}
+			reward = percept[1] + m_children[o_r]->sample(agent, dfr + 1); // do we increment here or on line 91?
 		}
 		m_mean = (1.0 / (m_visits + 1)) * (reward + m_visits * m_mean);
 		m_visits++;
@@ -169,90 +233,10 @@ public:
 		return reward;
 	}
 
-	// number of times the search node has been visited
-	visits_t visits(void) const {
-		return m_visits;
-	}
-
-	double getValueEstimate(void) const {
-		return m_mean;
-	}
-
-	SearchNode* getChild(int i) const {
-		//std::cout << "getChild:" << i << std::endl;
-		return m_children[i];
-	}
-
-	action_t getAction(void) const {
-		//std::cout << "getAction" << std::endl;
-		assert(m_chance_node);
-
-		return m_action;
-	}
-
-	percept_t getObs(void) const {
-		assert(!m_chance_node);
-		return m_observation;
-	}
-
-	percept_t getRew(void) const {
-		assert(!m_chance_node);
-		return m_reward;
-	}
-
-	// returns true if this chance node has a child decision node
-	// which resulted from (obs, rew)
-	SearchNode* childWithObsRew(percept_t obs, percept_t rew) {
-		for (int i = 0; i < int(m_children.size()); i++) {
-			if (m_children[i]->getObs() == obs
-					&& m_children[i]->getRew() == rew) {
-				return m_children[i];
-			}
-		}
-		return NULL;
-	}
-
-	// add a new child node
-	bool addChild(SearchNode* child) {
-		if (m_children.size() >= MaxBranchFactor) {
-			return false;
-		}
-		m_children.push_back(child);
-		//std::cout << "addChild: " << m_children.size() << std::endl;
-
-		return true;
-	}
-
-	// return the best action for a decision node
-	action_t bestAction() const {
-		assert(!m_chance_node);
-		assert(m_children.size() > 0);
-		reward_t max_val = 0;
-		action_t a = 1;
-		//std::cout << "BestAction" << std::endl;
-		for (std::vector<SearchNode*>::const_iterator it = m_children.begin();
-				it != m_children.end(); ++it) {
-			if ((*it)->getValueEstimate() > max_val) {
-				a = (*it)->getAction();
-			}
-		}
-		return a;
-	}
-
-private:
-
-	bool m_chance_node; // true if this node is a chance node, false otherwise
-	double m_mean;      // the expected reward of this node
-	visits_t m_visits;  // number of times the search node has been visited
-	action_t m_action;  // action associated with chance nodes
-	percept_t m_observation; // observation associated with decision nodes
-	percept_t m_reward; // reward associated with decision nodes
-	std::vector<SearchNode*> m_children; // list of child nodes
-};
-
 // return a random action according to the agent's model for its own
 // behavior.
 
+// possibly to be removed...
 action_t genModelledAction(Agent &agent) {
 	double p = 0.0;
 	double pr = rand01();
@@ -267,6 +251,7 @@ action_t genModelledAction(Agent &agent) {
 	return 0;
 }
 
+// possibly to be removed...
 action_t rollout_policy(Agent &agent) {
 	// return agent.genRandomAction();
 	return genModelledAction(agent);
@@ -279,7 +264,6 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
 		//std::cout << "Playout: before rollout_policy" << std::endl;
-		//action_t a = rollout_policy(agent);
 		action_t a = agent.genRandomAction();
 		//std::cout << "Playout: after rollout_policy" << std::endl;
 		//std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
@@ -299,7 +283,8 @@ extern action_t search(Agent &agent, double timeout) {
 // TODO cache subtree between searches for efficiency
 // TODO make a copy of the agent model so we can update during search
 	//std::cout << "search: timeout value: " << timeout << std::endl;
-	SearchNode root = SearchNode(NULL, NULL);
+    obsrew_t o_r = std::make_pair(NULL,NULL);
+	DecisionNode root = DecisionNode(o_r);
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	int iter = 0;
@@ -320,5 +305,5 @@ extern action_t search(Agent &agent, double timeout) {
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	//std::cout << "Done searching" << std::endl;
-	return root.bestAction();
+	return root.bestAction(agent);
 }

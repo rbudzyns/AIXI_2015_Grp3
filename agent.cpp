@@ -22,6 +22,8 @@ Agent::Agent(options_t & options) {
     
     m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
     reset();
+
+    m_UCBWeight = 1.0;
 }
 
 // destruct the agent and the corresponding context tree
@@ -34,6 +36,11 @@ Agent::~Agent(void) {
 lifetime_t Agent::lifetime(void) const {
     return m_time_cycle;
 }
+
+double Agent::UCBWeight(void) const {
+	return m_UCBWeight;
+}
+
 
 // the total accumulated reward across an agents lifespan
 reward_t Agent::reward(void) const {

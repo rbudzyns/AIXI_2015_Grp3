@@ -5,6 +5,9 @@
 #include <string>
 #include <bitset>
 #include <climits>
+#include <iostream>
+#include <algorithm>
+#include <cassert>
 #include "util.hpp"
 
 class Environment {
@@ -16,6 +19,9 @@ public:
 
 	// receives the agent's action and calculates the new environment percept
 	virtual void performAction(action_t action) = 0; // TODO: implement in inherited class
+
+	//reset the environment after episode
+	virtual void envReset(void) { return; }
 
 	// returns true if the environment cannot interact with the agent anymore
 	virtual bool isFinished(void) const { return false; } // TODO: implement in inherited class (if necessary)
@@ -66,6 +72,9 @@ public:
 	
 	//Check with the environment if the agent has reached the goal;
 	virtual bool isFinished(void) const;
+
+	//reset the environment
+	virtual void envReset(void);
 	
 private:
 	//structure to represent the nodes
@@ -77,6 +86,7 @@ private:
 	std::string maze_conf;
 	node *current_node;
 	node *cheese_node;
+	node *mouse_start;
 };
 
 //Extented Tiger environment.It maps the location of tiger using a integer variable tiger.
@@ -106,6 +116,9 @@ public:
 
 	//actions of the agent
 	virtual void performAction(action_t action);
+
+	//reset the environemnt
+	virtual void envReset(void);
 
 	//check if the game is finished
 	virtual bool isFinished() const;
@@ -200,6 +213,160 @@ public:
 
 private:
 	unsigned int move;
+};
+
+/*Pacman environment
+ *	0 : Wall
+ *	1 : Empty Cell
+ *	2 : Food Pelet
+ *	3 : Power Pill
+ */
+class Pacman : public Environment
+{
+public:
+	//constructor to initialise the environment and set the initial percepts for the agent
+	Pacman(options_t &options);
+
+	//actions of the agent
+	virtual void performAction(action_t action);
+
+	//check if the game is finished
+	virtual bool isFinished() const;
+
+private:
+	struct cell
+	{
+		unsigned int wall;
+		bool isFreeCell;
+		int contents;
+	};
+	cell maze[21][19];
+	bool maze1[21][19];
+	struct pos
+	{
+		int x;
+		int y;
+		bool state;
+	};
+
+	bool pacmanPowered;
+
+	pos ghost[4];
+	pos pacman;
+
+
+	//returns the bits for direction of ghost which are in line of sight
+	unsigned int seeGhost()
+	{
+		std::bitset<4> chk;
+		for(int i=0; i<4; i++)
+		{
+			chk.set(3-i, 0);
+			if(i == 0 || i == 2)
+			{
+				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
+				{
+					for(int j = pacman.x; i==0?j>0:j<21; i==0?j--:j++)
+					{
+						assert(0 < j && j <= 21);
+						if(!maze[j][pacman.y].isFreeCell)
+							break;
+						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
+						{
+							chk.set(3-i,1);
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
+				{
+					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
+					{
+						assert(0 < j && j < 19);
+						if(!maze[pacman.x][j].isFreeCell)
+							break;
+						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
+						{
+							chk.set(3-i, 1);
+							break;
+						}
+					}
+				}
+			}
+
+		}
+
+		return chk.to_ulong() & INT_MAX;
+	}
+
+	unsigned int smellFood()
+	{
+		std::bitset<3> smell;
+		//checking all cell at a man_dist of 1 to 4
+		for(int man_dist = 1; man_dist<=4 && !smell.test(std::max(man_dist-2, 0)); man_dist++)
+		{
+			for (int i = std::max(pacman.x - man_dist, 0); i <= std::min(pacman.x + man_dist, 20) && !smell.test(std::max(man_dist-2, 0)); i++)
+			{
+				assert(pacman.x - man_dist <= i && 0 <= i && pacman.x+ man_dist >= i &&  i <= 20);
+				//the range of j changes based on the value of i, such that the manhattan distance is bounded by man_dist.
+				for (int j = std::max(pacman.y - abs(abs(pacman.x - i) - man_dist), 0); j <= std::min(pacman.y + abs(abs(pacman.x - i) - man_dist), 18) &&
+				!smell.test(std::max(man_dist-2,0)); j++)
+				{
+					assert(0 <= j && pacman.y - man_dist <= j && pacman.y + man_dist >= j && j <= 18);
+					assert(abs(pacman.x - i) + abs(pacman.y - j) <= man_dist);
+					if (maze[i][j].contents == 1)
+					{
+						for(int k = std::max(man_dist-2, 0); k<=2; k++)
+						{
+							smell.set(k,1);
+						}
+					}
+				}
+			}
+		}
+		return smell.to_ulong() & INT_MAX;
+	}
+
+	unsigned int seeFood()
+	{
+		std::bitset<4> sight;
+		for (int i = 0; i < 4; i++)
+		{
+			sight.set(3 - i, 0); //assuming there is no food in line of sight
+			if (i == 1 || i == 3)
+			{
+				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
+				{
+					assert(0 < j && j < 19);
+					if (!maze[pacman.x][j].isFreeCell)
+						break;
+					else if (maze[pacman.x][j].contents == 1)
+					{
+						sight.set(3 - i, 1);
+						break;
+					}
+				}
+			}
+			else if (i == 0 || i == 2)
+			{
+				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
+				{
+					assert(0 < j && j < 21);
+					if (!maze[j][pacman.y].isFreeCell)
+						break;
+					else if (maze[j][pacman.y].contents == 1)
+					{
+						sight.set(3 - i, 1);
+						break;
+					}
+				}
+			}
+		}
+		return sight.to_ulong() & INT_MAX;
+	}
 };
 
 #endif // __ENVIRONMENT_HPP__
