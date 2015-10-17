@@ -19,11 +19,6 @@ Agent::Agent(options_t & options) {
     for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
         m_actions_bits = c;
     }
-
-    // calculate the number of bits needed to represent the action
-    for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
-        m_actions_bits = c;
-    }
     
     m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
     reset();
