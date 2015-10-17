@@ -5,6 +5,7 @@
 #include <string>
 #include <bitset>
 #include <climits>
+#include <iostream>
 #include <algorithm>
 #include <cassert>
 #include "util.hpp"
@@ -236,7 +237,7 @@ private:
 	struct cell
 	{
 		unsigned int wall;
-		int isFreeCell;
+		bool isFreeCell;
 		int contents;
 	};
 	cell maze[21][19];
@@ -263,14 +264,14 @@ private:
 			chk.set(3-i, 0);
 			if(i == 0 || i == 2)
 			{
-				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
+				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
 				{
-					for(int j = pacman.y; i==0?j>0:j<19; i==0?j--:j++)
+					for(int j = pacman.x; i==0?j>0:j<21; i==0?j--:j++)
 					{
-						assert(0 <= j && j <= 18);
-						if(!maze[pacman.x][j].isFreeCell)
+						assert(0 < j && j <= 21);
+						if(!maze[j][pacman.y].isFreeCell)
 							break;
-						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
+						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
 						{
 							chk.set(3-i,1);
 							break;
@@ -280,14 +281,14 @@ private:
 			}
 			else
 			{
-				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
+				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
 				{
-					for(int j = pacman.y; i==1?j>0:j<21; i==1?j--:j++)
+					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
 					{
-						assert(0 <= j && j < 21);
-						if(!maze[j][pacman.y].isFreeCell)
+						assert(0 < j && j < 19);
+						if(!maze[pacman.x][j].isFreeCell)
 							break;
-						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
+						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
 						{
 							chk.set(3-i, 1);
 							break;
@@ -304,17 +305,26 @@ private:
 	unsigned int smellFood()
 	{
 		std::bitset<3> smell;
-		//manhattan distance of 4
-		for (int i = std::min(pacman.x - 4, 0); i <= std::max(pacman.x + 4, 20); i++)
+		//checking all cell at a man_dist of 1 to 4
+		for(int man_dist = 1; man_dist<=4 && !smell.test(std::max(man_dist-2, 0)); man_dist++)
 		{
-			assert(0 <= i && i <= 20);
-			//the range of j changes based on the value of i, such that the manhattan distance is bounded by 4.
-			for (int j = std::min(pacman.y - std::abs(std::abs(pacman.x - i) - 4), 0); j <= std::max(pacman.y + std::abs(std::abs(pacman.x - i) - 4), 18); j++)
+			for (int i = std::max(pacman.x - man_dist, 0); i <= std::min(pacman.x + man_dist, 20) && !smell.test(std::max(man_dist-2, 0)); i++)
 			{
-				assert(0 <= j && j <= 18);
-				assert(std::abs(pacman.x - i) + std::abs(pacman.y - j) <= 4);
-				if (maze[i][j].contents == 1)
-					smell.set(std::abs(pacman.x - i) + std::abs(pacman.y - j) - 1, 1);
+				assert(pacman.x - man_dist <= i && 0 <= i && pacman.x+ man_dist >= i &&  i <= 20);
+				//the range of j changes based on the value of i, such that the manhattan distance is bounded by man_dist.
+				for (int j = std::max(pacman.y - abs(abs(pacman.x - i) - man_dist), 0); j <= std::min(pacman.y + abs(abs(pacman.x - i) - man_dist), 18) &&
+				!smell.test(std::max(man_dist-2,0)); j++)
+				{
+					assert(0 <= j && pacman.y - man_dist <= j && pacman.y + man_dist >= j && j <= 18);
+					assert(abs(pacman.x - i) + abs(pacman.y - j) <= man_dist);
+					if (maze[i][j].contents == 1)
+					{
+						for(int k = std::max(man_dist-2, 0); k<=2; k++)
+						{
+							smell.set(k,1);
+						}
+					}
+				}
 			}
 		}
 		return smell.to_ulong() & INT_MAX;
@@ -326,11 +336,11 @@ private:
 		for (int i = 0; i < 4; i++)
 		{
 			sight.set(3 - i, 0); //assuming there is no food in line of sight
-			if (i == 0 || i == 2)
+			if (i == 1 || i == 3)
 			{
-				for (int j = pacman.y; i == 0 ? j > 0:j < 19; i == 0 ? j-- : j++)
+				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
 				{
-					assert(0 <= j && j < 19);
+					assert(0 < j && j < 19);
 					if (!maze[pacman.x][j].isFreeCell)
 						break;
 					else if (maze[pacman.x][j].contents == 1)
@@ -340,11 +350,11 @@ private:
 					}
 				}
 			}
-			else if (i == 1 || i == 3)
+			else if (i == 0 || i == 2)
 			{
-				for (int j = pacman.x; i == 3 ? j > 0:j < 21; i == 3 ? j-- : j++)
+				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
 				{
-					assert(0 <= j && j < 19);
+					assert(0 < j && j < 21);
 					if (!maze[j][pacman.y].isFreeCell)
 						break;
 					else if (maze[j][pacman.y].contents == 1)

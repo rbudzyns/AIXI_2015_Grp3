@@ -445,11 +445,12 @@ Pacman::Pacman(options_t &options)
 		ghost[i].state = 1;
 	}
 	//initialising pacman
-	pacman.x = 8;
-	pacman.y = 13;
+	pacman.x = 13;
+	pacman.y = 9;
 	pacman.state = 0;
+	maze[13][9].contents = 0;
 
-	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) || ((seeGhost() & 15) << 8) || ((smellFood() & 7) << 5) || ((seeFood() & 15) << 1) || pacman.state;
+	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
 	m_reward = 0;
 }
 
