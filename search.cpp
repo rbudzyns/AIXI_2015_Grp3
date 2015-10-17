@@ -279,7 +279,8 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
 		//std::cout << "Playout: before rollout_policy" << std::endl;
-		action_t a = rollout_policy(agent);
+		//action_t a = rollout_policy(agent);
+		action_t a = agent.genRandomAction();
 		//std::cout << "Playout: after rollout_policy" << std::endl;
 		//std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
 		agent.modelUpdate(a);
