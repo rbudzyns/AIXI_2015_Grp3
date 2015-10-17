@@ -24,7 +24,9 @@ typedef double reward_t;
 
 // describe a percept (observation or reward)
 typedef unsigned int percept_t;
-typedef std::pair<percept_t,percept_t> obsrew_t;
+
+// percept (observation,reward) pair
+typedef std::pair<percept_t, percept_t> obsrew_t;
 
 // describe the lifetime of an agent
 typedef unsigned long long lifetime_t;
