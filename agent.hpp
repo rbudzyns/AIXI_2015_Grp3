@@ -22,6 +22,9 @@ public:
     // current lifetime of the agent in cycles
     lifetime_t lifetime(void) const;
 
+    // current lifetime of the agent in cycles
+    double UCBWeight(void) const;
+
     // the total accumulated reward across an agents lifespan
     reward_t reward(void) const;
 
@@ -117,6 +120,9 @@ private:
     // True if the last update was a percept update
     bool m_last_update_percept;
     
+    // The weight (C) used in the UCB algorithm
+    double m_UCBWeight;
+
 };
 
 // used to store sufficient information to revert an agent

@@ -113,7 +113,7 @@ public:
 				double Vha = child->expectation(); // \hat{V}(ha)
 				// John: just a note to check with you re: C from 14 in Veness.
 				val = Vha / normalization
-						+ sqrt(
+						+ agent.UCBWeight() * sqrt(
 								(double) log2((double) m_visits)
 										/ child->visits()); // eqn. 14 (Veness)
 				if (val > max_val) {
@@ -224,19 +224,23 @@ public:
 	}
 
 	// return the best action for a decision node
-	action_t bestAction() const {
+	action_t bestAction(Agent &agent) const {
 		assert(!m_chance_node);
-		assert(m_children.size() > 0);
-		reward_t max_val = 0;
-		action_t a = 1;
-		//std::cout << "BestAction" << std::endl;
-		for (std::vector<SearchNode*>::const_iterator it = m_children.begin();
-				it != m_children.end(); ++it) {
-			if ((*it)->getValueEstimate() > max_val) {
-				a = (*it)->getAction();
+		if (m_children.size() > 0) {
+			reward_t max_val = 0;
+			action_t a = 1;
+			//std::cout << "BestAction" << std::endl;
+			for (std::vector<SearchNode*>::const_iterator it = m_children.begin();
+					it != m_children.end(); ++it) {
+				if ((*it)->getValueEstimate() > max_val) {
+					a = (*it)->getAction();
+				}
 			}
+			return a;
+		} else {
+			std::cout << "Generating random action in bestAction." << std::endl;
+			return agent.genRandomAction();
 		}
-		return a;
 	}
 
 private:
@@ -253,6 +257,7 @@ private:
 // return a random action according to the agent's model for its own
 // behavior.
 
+// possibly to be removed...
 action_t genModelledAction(Agent &agent) {
 	double p = 0.0;
 	double pr = rand01();
@@ -267,6 +272,7 @@ action_t genModelledAction(Agent &agent) {
 	return 0;
 }
 
+// possibly to be removed...
 action_t rollout_policy(Agent &agent) {
 	// return agent.genRandomAction();
 	return genModelledAction(agent);
@@ -279,7 +285,6 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 	reward_t reward = 0;
 	for (int i = 1; i <= int(playout_len); i++) {
 		//std::cout << "Playout: before rollout_policy" << std::endl;
-		//action_t a = rollout_policy(agent);
 		action_t a = agent.genRandomAction();
 		//std::cout << "Playout: after rollout_policy" << std::endl;
 		//std::cout << "Playout: before modelUpdate(" << a << ")" << std::endl;
@@ -317,5 +322,5 @@ extern action_t search(Agent &agent, double timeout) {
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	//std::cout << "Done searching" << std::endl;
-	return root.bestAction();
+	return root.bestAction(agent);
 }
