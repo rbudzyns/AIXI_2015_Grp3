@@ -308,6 +308,9 @@ extern action_t search(Agent &agent, double timeout) {
 		ModelUndo mu = ModelUndo(agent);
 		root.sample(agent, 0u);
 		agent.modelRevert(mu);
+		std::cout << "After FULL Model Revert++++++++++++++++++++" << std::endl;
+    	agent.getContextTree()->debugTree();
+
 		endTime = clock();
 		/*
 		 std::cout << "search: time since start: "

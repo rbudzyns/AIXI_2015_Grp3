@@ -65,6 +65,7 @@ void CTNode::updateLogProbability(void) {
 
 // Update the node after having observed a new symbol.
 void CTNode::update(const symbol_t symbol){
+	//std::cout << "----------------------Update"<<std::endl;
     // Update the KT estimate for this node
     //Add(As log(P)) the log probabilities, equation 23,24
     m_log_prob_est += logKTMul(symbol);
@@ -76,6 +77,7 @@ void CTNode::update(const symbol_t symbol){
 }
 
 void CTNode::revert(const symbol_t symbol){
+	//std::cout << "----------------------Revert"<<std::endl;
     m_count[symbol]--;
     if(m_count[0] == 0 && m_count[1] == 0) {
         m_log_prob_est = 0.0;
@@ -200,6 +202,7 @@ void ContextTree::revert(void) {
     std::vector<CTNode*> context_path;
     CTNode* current = m_root;
 
+    //std::cout << "CT Revert" << std::endl;
     walkAndGeneratePath(-1, context_path, &current);
 
     while(context_path.empty() != true) {
@@ -235,14 +238,21 @@ void ContextTree::genRandomSymbols(symbol_list_t &symbols, size_t bits) {
 // P(x[i]=sym|h)
 double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
     double prob_log_next_bit, new_log_block_prob, last_log_block_prob;
+	//std::cout << "getLogProbNextSymbolGivenH"<<std::endl;
 
     last_log_block_prob = logBlockProbability();
     // To calculate the root probability as if the next symbol was 0
     update(sym);
+    m_history.push_back(sym);
+
+	//std::cout << "getLogProbNextSymbolGivenH After update"<<std::endl;
     new_log_block_prob = logBlockProbability();
     prob_log_next_bit = new_log_block_prob-last_log_block_prob;
     // Remove the recently added 0, which was used for calculating the root prob
     revert();
+    revertHistory(m_history.size()-1);
+
+	//std::cout << "getLogProbNextSymbolGivenH After revert"<<std::endl;
     
     return prob_log_next_bit;
 }
@@ -311,18 +321,20 @@ int num_of_nodes_in;
 int count;
 
 void ContextTree::debugTree() {
-    aixi::log << "History : ";
+    std::cout << "History : " << "C0 = "<< m_root->m_count[0] << " C1 = " << m_root->m_count[1] << std::endl;
     for(int i=0; i < m_history.size(); i++) {
-        //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << m_history.at(i);
+        std::cout << m_history.at(i);
     }
     count = 0;
-    //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << std::endl << "Preorder list of weighted probabilites" << std::endl;
+    std::cout << std::endl;
+    //std::cout << "\nPreorder list of weighted probabilites" << std::endl;
     printTree(m_root);
+    std::cout << std::endl;
     //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
 }
 
 void ContextTree::printTree(CTNode *node) {
-    //std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
+    std::cout << "Count " << ++count << " Node Weighted probability " << node->m_log_prob_weighted << std::endl;
 
     if(node->m_child[1] != NULL)
         printTree(node->m_child[1]);

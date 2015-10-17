@@ -30,7 +30,7 @@ CoinFlip::CoinFlip(options_t &options) {
 // the agent correctly predicts the next observation and 0 otherwise.
 void CoinFlip::performAction(action_t action) {
 	m_observation = rand01() < p ? 1 : 0;
-	m_reward = action == m_observation ? 1 : 0;
+	m_reward = (action == m_observation) ? 1 : 0;
 }
 
 /*

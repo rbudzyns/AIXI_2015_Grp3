@@ -79,7 +79,7 @@ size_t Agent::horizon(void) const {
 }
 
 // generate an action uniformly at random
-action_t Agent::genRandomAction(void) const {
+action_t Agent::genRandomAction(void) {
     return randRange(m_actions);
 }
 
@@ -129,7 +129,12 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
     symbol_list_t percept;
     encodePercept(percept, observation, reward);
 
-    m_ct->update(percept);
+    std::cout << "In Model update PERCEPT----------------" << std::endl;
+    m_ct->debugTree();
+    std::cout << "In Model update PERCEPT................\n" << std::endl;
+    if(m_ct->historySize() >= m_ct->depth()) {
+    	m_ct->update(percept);
+    }
     m_ct->updateHistory(percept);
 
     // Update other properties
@@ -141,10 +146,14 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
 void Agent::modelUpdate(action_t action) {
     assert(isActionOk(action));
     assert(m_last_update_percept == true);
-
+    std::cout << "In Model update ACTION----------------" << std::endl;
+    m_ct->debugTree();
+    std::cout << "In Model update ACTION................\n" << std::endl;
+   //std::cout << "Model Update"<<std::endl;
     // Update internal model
     symbol_list_t action_syms;
     encodeAction(action_syms, action);
+
     // m_ct->update(action_syms);
     m_ct->updateHistory(action_syms);
 
@@ -155,13 +164,17 @@ void Agent::modelUpdate(action_t action) {
 // revert the agent's internal model of the world
 // to that of a previous time cycle, false on failure
 bool Agent::modelRevert(const ModelUndo &mu) {
-    int size_of_ora_pairs = (m_time_cycle - mu.lifetime())*(m_obs_bits + m_rew_bits + m_actions_bits);
+    int n_cycles = m_time_cycle - mu.lifetime();
     
-    //std::cout << "Size of ora = " << size_of_ora_pairs << std::endl;
+	//std::cout << "Model Revert"<<std::endl;
 
-    for(int i = 0; i < size_of_ora_pairs; i++) {
-        m_ct->revert();
-        m_ct->revertHistory(m_ct->historySize()-1);
+    for(int i = 0; i < n_cycles; i++) {
+    	m_ct->debugTree();
+    	for(int j = 0; j < m_obs_bits + m_rew_bits; j++) {
+			m_ct->revert();
+			m_ct->revertHistory(m_ct->historySize()-1);
+    	}
+    	m_ct->revertHistory(m_ct->historySize()-m_actions_bits);
     }
     
     m_time_cycle = mu.lifetime();
