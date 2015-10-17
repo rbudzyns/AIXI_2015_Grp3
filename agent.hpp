@@ -65,6 +65,8 @@ public:
 
     size_t maxTreeDepth(void);
 
+    double getProbNextSymbol(void);
+
     // resets the agent
     void reset(void);
 

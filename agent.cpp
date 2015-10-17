@@ -64,6 +64,10 @@ size_t Agent::maxTreeDepth(void) {
     return m_max_tree_depth;
 }
 
+double Agent::getProbNextSymbol(void) {
+    return m_ct->getLogProbNextSymbolGivenH(1);
+}
+
 // the length of the stored history for an agent
 size_t Agent::historySize(void) const {
     return m_ct->historySize();
@@ -141,7 +145,7 @@ void Agent::modelUpdate(action_t action) {
     // Update internal model
     symbol_list_t action_syms;
     encodeAction(action_syms, action);
-    m_ct->update(action_syms);
+    // m_ct->update(action_syms);
     m_ct->updateHistory(action_syms);
 
     m_time_cycle++;
@@ -153,7 +157,7 @@ void Agent::modelUpdate(action_t action) {
 bool Agent::modelRevert(const ModelUndo &mu) {
     int size_of_ora_pairs = (m_time_cycle - mu.lifetime())*(m_obs_bits + m_rew_bits + m_actions_bits);
     
-    std::cout << "Size of ora = " << size_of_ora_pairs << std::endl;
+    //std::cout << "Size of ora = " << size_of_ora_pairs << std::endl;
 
     for(int i = 0; i < size_of_ora_pairs; i++) {
         m_ct->revert();

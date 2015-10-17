@@ -52,10 +52,11 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
         // Get a percept from the environment
         percept_t observation = env.getObservation();
         percept_t reward = env.getReward();
+        //std::cout << "Reward = " << reward << std::endl;
 
         // Update agent's environment model with the new percept
         ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-        std::cout << "Hello" << std::endl;
+        //std::cout << "Hello" << std::endl;
 
         // Determine best exploitive action, or explore
         action_t action;
@@ -65,7 +66,12 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
             action = ai.genRandomAction();
         }
         else {
-            action = search(ai, 0.00005); // TODO: implement in search.cpp
+        	if (ai.historySize() > ai.maxTreeDepth()) {
+        	    action = search(ai, 0.005);
+        	} else {
+        		std::cout << "Generating random action" << std::endl;
+        		action = ai.genRandomAction();
+        	}
         }
 
         // Send an action to the environment
@@ -90,7 +96,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
                 << ai.reward() << ", " << ai.averageReward() << std::endl;
 
         // Print to standard output when cycle == 2^n
-        if ((cycle & (cycle - 1)) == 0) {
+        // if ((cycle & (cycle - 1)) == 0) {
+        if (cycle % 1000 == 0) {
+            std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
             std::cout << "cycle: " << cycle << std::endl;
             std::cout << "average reward: " << ai.averageReward() << std::endl;
             if (explore) {
@@ -307,7 +315,7 @@ int main(int argc, char *argv[]) {
     compactLog.open((log_file + ".csv").c_str());
 
     // Print header to compactLog
-        compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
+    compactLog << "cycle, observation, reward, action, explored, explore_rate, total reward, average reward" << std::endl;
 
     options_t options;
     // Default configuration values
