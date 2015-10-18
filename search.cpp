@@ -1,6 +1,5 @@
 #include "search.hpp"
 
-#include <sys/_types/_clock_t.h>
 #include <cassert>
 #include <cmath>
 #include <ctime>
@@ -32,10 +31,16 @@ visits_t SearchNode::visits(void) const {
 	return m_visits;
 }
 
-// constructor
 DecisionNode::DecisionNode(obsrew_t obsrew) :
 		SearchNode() {
 	m_obsrew = obsrew;
+}
+
+DecisionNode::~DecisionNode() {
+	//std::cout << "DecisionNode::~DecisionNode" << std::endl;
+	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+		delete i->second;
+	}
 }
 
 // print method for debugging purposes
@@ -152,6 +157,13 @@ action_t DecisionNode::bestAction(Agent &agent) const {
 ChanceNode::ChanceNode(action_t action) :
 		SearchNode() {
 	m_action = action;
+}
+
+ChanceNode::~ChanceNode() {
+	//std::cout << "ChanceNode::~ChanceNode" << std::endl;
+	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+		delete i->second;
+	}
 }
 
 action_t ChanceNode::action(void) const {
