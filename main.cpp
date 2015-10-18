@@ -41,14 +41,14 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
-	for (unsigned int cycle = 1; cycle <= 3; cycle++) {
+	for (unsigned int cycle = 1; cycle <= 100; cycle++) {
 
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetiment" << std::endl;
 			break;
 		}
-		std::cout << "-----------" << std::endl;
+
 		// Get a percept from the environment
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
@@ -59,7 +59,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Hello" << std::endl;
 
 		//std::cout << "Model update with real OR bits ^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
-		ai.getContextTree()->printRootKTAndWeight();
+
 
 		// Determine best exploitive action, or explore
 		action_t action;
@@ -75,7 +75,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				action = ai.genRandomAction();
 			}
 		}
-		std::cout << "Agent performed action" << action << std::endl;
+		//std::cout << "Agent performed action: " << action << std::endl;
 
 		// Send an action to the environment
 		env.performAction(action); // TODO: implement for each environment
@@ -83,10 +83,12 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
-		ai.getContextTree()->debugTree();
+		//ai.getContextTree()->debugTree();
+		//ai.getContextTree()->printRootKTAndWeight();
 		//std::cout << "Model update with performed action *******************"<<std::endl;
 		//ai.getContextTree()->debugTree();
 		// Log this turn
+		aixi::log << "-----" << std::endl;
 		aixi::log << "cycle: " << cycle << std::endl;
 		aixi::log << "observation: " << observation << std::endl;
 		aixi::log << "reward: " << reward << std::endl;
@@ -105,9 +107,11 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Print to standard output when cycle == 2^n
 		// if ((cycle & (cycle - 1)) == 0) {
 		if (cycle % 1 == 0) {
-			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
+
 			std::cout << "cycle: " << cycle << std::endl;
+			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
 			//std::cout << "average reward: " << ai.averageReward() << std::endl;
+
 			if (explore) {
 				//std::cout << "explore rate: " << explore_rate << std::endl;
 			}
