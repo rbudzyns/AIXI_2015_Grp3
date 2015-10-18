@@ -35,11 +35,17 @@ visits_t SearchNode::visits(void) const {
 	return m_visits;
 }
 
-// constructor
 DecisionNode::DecisionNode(obsrew_t obsrew) :
 		SearchNode() {
 	m_obsrew = obsrew;
 	//m_children = std::unordered_map<action_t,ChanceNode*>;
+}
+
+DecisionNode::~DecisionNode() {
+	//std::cout << "DecisionNode::~DecisionNode" << std::endl;
+	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+		delete i->second;
+	}
 }
 
 // print method for debugging purposes
@@ -189,6 +195,13 @@ ChanceNode::ChanceNode(action_t action) :
 		SearchNode() {
 	m_action = action;
 	//m_children = std::unordered_map<obsrew_t,DecisionNode*>();
+}
+
+ChanceNode::~ChanceNode() {
+	//std::cout << "ChanceNode::~ChanceNode" << std::endl;
+	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+		delete i->second;
+	}
 }
 
 action_t ChanceNode::getAction(void) const {

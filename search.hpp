@@ -6,8 +6,8 @@
 
 #include "main.hpp"
 
+// Observation/Reward pair hashing function for storage in unordered_map
 class or_hasher {
-
 public:
     size_t operator()(const obsrew_t & p) const {
         return p.first*100 + p.second*10000;
@@ -26,7 +26,6 @@ class SearchNode {
 
 public:
 
-	// constructor
 	SearchNode(void);
 
 	// determine the expected reward from this node
@@ -37,7 +36,6 @@ public:
 
 protected:
 
-	// bool m_chance_node; // true if this node is a chance node, false otherwise
 	double m_mean;      // the expected reward of this node
 	visits_t m_visits;  // number of times the search node has been visited
 };
@@ -48,11 +46,15 @@ public:
 
 	DecisionNode(obsrew_t obsrew);
 
+	~DecisionNode();
+
+	// print the node contents
 	void print() const;
 
+	// return the observation/reward pair
 	obsrew_t getObsRew(void) const;
 
-	// add a new child node
+	// add a new child chance node
 	bool addChild(ChanceNode* child);
 
 	// perform a sample run through this node and it's children,
@@ -66,8 +68,9 @@ public:
 	action_t bestAction(Agent &agent) const;
 
 private:
-	obsrew_t m_obsrew; // observation associated with decision nodes
-	chance_map_t m_children; // list of child nodes
+
+	obsrew_t m_obsrew; // observation/reward pair
+	chance_map_t m_children; // list of child chance nodes
 };
 
 class ChanceNode: public SearchNode {
@@ -76,9 +79,12 @@ public:
 
 	ChanceNode(action_t action);
 
+	~ChanceNode();
+
+	// return the action
 	action_t getAction(void) const;
 
-    // add a new child node
+    // add a new child decision node
 	bool addChild(DecisionNode* child);
 
     // perform a sample run through this node and it's children,
@@ -86,13 +92,16 @@ public:
 	reward_t sample(Agent &agent, unsigned int dfr);
 
 private:
-	action_t m_action;  // action associated with chance nodes
-	decision_map_t m_children; // list of child nodes
+
+	action_t m_action;
+	decision_map_t m_children; // list of child decision nodes
 };
 
 // determine the best action by searching ahead
 extern action_t search(Agent &agent, double timeout);
 
+// simulate a path through a hypothetical future for the agent within its
+// internal model of the world, returning the accumulated reward.
 static reward_t playout(Agent &agent, unsigned int playout_len);
 
 #endif // __SEARCH_HPP__
