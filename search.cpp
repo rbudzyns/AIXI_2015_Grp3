@@ -38,7 +38,8 @@ DecisionNode::DecisionNode(obsrew_t obsrew) :
 
 DecisionNode::~DecisionNode() {
 	//std::cout << "DecisionNode::~DecisionNode" << std::endl;
-	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end();
+			i++) {
 		delete i->second;
 	}
 }
@@ -161,7 +162,8 @@ ChanceNode::ChanceNode(action_t action) :
 
 ChanceNode::~ChanceNode() {
 	//std::cout << "ChanceNode::~ChanceNode" << std::endl;
-	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
+			i++) {
 		delete i->second;
 	}
 }
@@ -230,7 +232,7 @@ extern action_t search(Agent &agent, double timeout) {
 		root.sample(agent, 0u);
 		agent.modelRevert(mu);
 		//std::cout << "After FULL Model Revert++++++++++++++++++++" << std::endl;
-    	//agent.getContextTree()->debugTree();
+		//agent.getContextTree()->debugTree();
 
 		endTime = clock();
 		iter++;

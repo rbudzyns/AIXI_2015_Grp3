@@ -83,7 +83,7 @@ public:
 
 	~ChanceNode();
 
-    // add a new child decision node
+	// add a new child decision node
 	bool addChild(DecisionNode* child);
 
 	// get action label
