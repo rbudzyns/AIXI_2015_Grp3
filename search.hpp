@@ -2,22 +2,22 @@
 #define __SEARCH_HPP__
 
 #include <unordered_map>
-#include <utility>
 
+#include "agent.hpp"
 #include "main.hpp"
 
 // Observation/Reward pair hashing function for storage in unordered_map
 class or_hasher {
 public:
-    size_t operator()(const obsrew_t & p) const {
-        return p.first*100 + p.second*10000;
-    }
+	size_t operator()(const obsrew_t & p) const {
+		return p.first * 100 + p.second * 10000;
+	}
 };
 class ChanceNode;
 class DecisionNode;
 
-typedef std::unordered_map<obsrew_t,DecisionNode*,or_hasher> decision_map_t;
-typedef std::unordered_map<action_t,ChanceNode*> chance_map_t;
+typedef std::unordered_map<obsrew_t, DecisionNode*, or_hasher> decision_map_t;
+typedef std::unordered_map<action_t, ChanceNode*> chance_map_t;
 typedef unsigned long long visits_t;
 
 class Agent;
@@ -44,20 +44,21 @@ class DecisionNode: SearchNode {
 
 public:
 
+	// constructor
 	DecisionNode(obsrew_t obsrew);
 
 	~DecisionNode();
 
-	// print the node contents
+	// print node data for debugging purposes
 	void print() const;
 
-	// return the observation/reward pair
-	obsrew_t getObsRew(void) const;
+	// get (observation,reward) label
+	obsrew_t obsRew(void) const;
 
 	// add a new child chance node
 	bool addChild(ChanceNode* child);
 
-	// perform a sample run through this node and it's children,
+	// perform a sample run through this node and its children,
 	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr);
 
@@ -77,18 +78,19 @@ class ChanceNode: public SearchNode {
 
 public:
 
+	// constructor
 	ChanceNode(action_t action);
 
 	~ChanceNode();
 
-	// return the action
-	action_t getAction(void) const;
-
     // add a new child decision node
 	bool addChild(DecisionNode* child);
 
-    // perform a sample run through this node and it's children,
-    // returning the accumulated reward from this sample run
+	// get action label
+	action_t action(void) const;
+
+	// perform a sample run through this node and it's children,
+	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr);
 
 private:

@@ -31,5 +31,6 @@
 .cproject
 .project
 /Debug/
+/Report/
 
 log.*
