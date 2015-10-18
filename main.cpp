@@ -182,126 +182,23 @@ void testPredict() {
 
 void testAgentAndPredict(Agent *agent) {
 	symbol_list_t sym_list;
-	/*
-	 action_t action = 0x5;
-	 percept_t obs = 0x0795;
-	 percept_t rew = 0xE;
-	 */
-	action_t action = 0x1;
-	percept_t obs = 0x0795;
-	percept_t rew = 0xE;
+
+	action_t action = 0;
+	percept_t obs = 5;
+	percept_t rew = 2;
 	ModelUndo *mu = new ModelUndo(*agent);
 
 	agent->modelUpdate(obs, rew);
 
-//agent->getContextTree()->debugTree();
-
 	agent->modelUpdate(action);
 	agent->getContextTree()->debugTree();
 
 	agent->modelUpdate(obs, rew);
-
-// agent->getContextTree()->debugTree();
-
 	agent->modelUpdate(action);
-//agent->getContextTree()->debugTree();
 
 	agent->modelRevert(*mu);
 	agent->getContextTree()->debugTree();
 }
-
-#ifdef __DEBUG__
-
-/* 
- * Main() for Debuging 
- * Usage: g++ -o aixi *.cpp -D__DEBUG__
- */
-
-int main(int argc, char *argv[]) {
-
-// Load configuration options
-	options_t options;
-
-// Default configuration values
-
-	options["environment"] = "test";
-	options["ct-depth"] = "3";
-	options["agent-horizon"] = "16";
-	options["exploration"] = "0";// do not explore
-	options["explore-decay"] = "1.0";// exploration rate does not decay
-
-// Set up the environment
-	Environment *env;
-
-// TODO: instantiate the environment based on the "environment-name"
-// option. For any environment you do not implement you may delete the
-// corresponding if statement.
-// NOTE: you may modify the options map in order to set quantities such as
-// the reward-bits for each particular environment. See the coin-flip
-// experiment for an example.
-
-	std::string environment_name = options["environment"];
-	if (environment_name == "coin-flip") {
-		env = new CoinFlip(options);
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-	}
-	else if (environment_name == "test") {
-		//env = new CoinFlip(options);
-		options["ct-depth"] = "3";
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-		options["action-bits"] = "1";
-	}
-	else if (environment_name == "1d-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "cheese-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "extended-tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "4x4-grid") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tictactoe") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "biased-rock-paper-scissor") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "kuhn-poker") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "pacman") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else {
-		std::cerr << "ERROR: unknown environment '" << environment_name << "'" << std::endl;
-		return -1;
-	}
-
-// Set up the agent
-
-	Agent ai(options);
-
-	testAgentAndPredict(&ai);
-	/*
-	 // Run the main agent/environment interaction loop
-	 mainLoop(ai, *env, options);
-	 aixi::log.close();
-	 compactLog.close();
-	 */
-	return 0;
-}
-
-#else 
 
 /* 
  * Main function
@@ -422,14 +319,16 @@ int main(int argc, char *argv[]) {
 	Agent ai(options);
 
 // Run the main agent/environment interaction loop
-
-	mainLoop(ai, *env, options);
+	bool testing = true;
+	if (testing) {
+		testAgentAndPredict(&ai);
+	} else {
+		mainLoop(ai, *env, options);
+	}
 
 	aixi::log.close();
 	compactLog.close();
 
 	return 0;
 }
-
-#endif
 
