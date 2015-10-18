@@ -41,7 +41,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
-	for (unsigned int cycle = 1; cycle <= 100; cycle++) {
+	for (unsigned int cycle = 1; cycle <= 10000; cycle++) {
 
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
@@ -55,7 +55,20 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Reward = " << reward << std::endl;
 
 		// Update agent's environment model with the new percept
+		int foo = 100;
+		if (cycle > foo) {
+			double bar = ai.getProbNextSymbol();
+			if (isnan(bar)) {
+				return;
+			}
+			std::cout << "before model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
+		}
+
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
+		if (cycle > foo) {
+			std::cout << "after model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
+		}
+
 		//std::cout << "Hello" << std::endl;
 
 		//std::cout << "Model update with real OR bits ^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
@@ -79,10 +92,18 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Send an action to the environment
 		env.performAction(action); // TODO: implement for each environment
+		if (cycle > foo) {
+			std::cout << "after action performed head prob: " << ai.getProbNextSymbol() << std::endl;
+		}
 		//std::cout << "Action performed======================"<<std::endl;
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
+		if (cycle > foo) {
+			std::cout << "after model update with action (" << action << ") head prob: " << ai.getProbNextSymbol() << std::endl;
+		}
+
+
 		//ai.getContextTree()->debugTree();
 		//ai.getContextTree()->printRootKTAndWeight();
 		//std::cout << "Model update with performed action *******************"<<std::endl;
@@ -109,7 +130,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		if (cycle % 1 == 0) {
 
 			std::cout << "cycle: " << cycle << std::endl;
-			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
+//			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
 			//std::cout << "average reward: " << ai.averageReward() << std::endl;
 
 			if (explore) {

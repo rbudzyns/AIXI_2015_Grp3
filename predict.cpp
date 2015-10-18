@@ -44,24 +44,45 @@ void CTNode::updateLogProbability(void) {
 	if (m_child[0] == NULL) {
 		if (m_child[1] == NULL) {
 			m_log_prob_weighted = m_log_prob_est;
+			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		} else {
 			m_log_prob_weighted = log2(
 					pow(2, m_child[1]->m_log_prob_weighted - m_log_prob_est)
 							+ 1) + m_log_prob_est - 1;
+			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		}
 	} else {
 		if (m_child[1] == NULL) {
 			m_log_prob_weighted = log2(
 					pow(2, m_child[0]->m_log_prob_weighted - m_log_prob_est)
 							+ 1) + m_log_prob_est - 1;
+			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		} else {
-			m_log_prob_weighted = log2(
-					pow(2,
-							m_child[0]->m_log_prob_weighted
-									+ m_child[1]->m_log_prob_weighted
-									- m_log_prob_est) + 1) + m_log_prob_est - 1;
+			double aaa = m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est;
+			assert(!isnan(aaa) && !isinf(aaa));
+			double bbb = pow(2, aaa) + 1;
+			if (isnan(bbb) || isinf(bbb)) {
+				std::cout << "root counts: " << m_count[0] << "," << m_count[1] << std::endl;
+				std::cout << "child0 counts: " << m_child[0]->m_count[0] << "," << m_child[0]->m_count[1] << std::endl;
+				std::cout << "child1 counts: " << m_child[1]->m_count[0] << "," << m_child[1]->m_count[1] << std::endl;
+				std::cout << "aaa is: child0weighted " << m_child[0]->m_log_prob_weighted << " + child1weighted" << m_child[1]->m_log_prob_weighted << " - kt " << m_log_prob_est << std::endl;
+				std::cout << "aaa is: " << aaa << std::endl;
+				double var1 = pow(10,300);
+				double var2 = pow(10,300)-0.5;
+				double var3 = var1 - var2;
+				std::cout << "floating point error is: " << var3 << std::endl;
+			}
+			assert(!isnan(bbb) && !isinf(bbb));
+			double ccc = log2(bbb) + m_log_prob_est - 1;
+			assert(!isnan(bbb) && !isinf(bbb));
+			m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
+			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		}
 	}
+	if (isnan(m_log_prob_weighted)) {
+		std::cout << "Hello nan updateWeightedProbability" << std::endl;
+	}
+	assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 }
 
 // Update the node after having observed a new symbol.
@@ -69,7 +90,14 @@ void CTNode::update(const symbol_t symbol) {
 	//std::cout << "----------------------Update"<<std::endl;
 	// Update the KT estimate for this node
 	//Add(As log(P)) the log probabilities, equation 23,24
+	double foo = logKTMul(symbol);
+	if (isnan(foo)) {
+		std::cout << "Hello nan ktMul" << std::endl;
+	}
 	m_log_prob_est += logKTMul(symbol);
+	if (isnan(m_log_prob_est)) {
+		std::cout << "Hello nan kt update" << std::endl;
+	}
 
 	// Update the weighted probability of this node    
 	// Update 0 or 1 counter for this node  
@@ -230,6 +258,14 @@ double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
 
 	//std::cout << "getLogProbNextSymbolGivenH After update"<<std::endl;
 	new_log_block_prob = logBlockProbability();
+	double foo = new_log_block_prob - last_log_block_prob;
+	if (isnan(foo)) {
+		std::cout << "nan getLogProbNextSymbolGivenH: " << "new " << new_log_block_prob << " last " << last_log_block_prob << std::endl;
+	}
+	if (isinf(foo)) {
+		std::cout << "inf getLogProbNextSymbolGivenH: " << "new " << new_log_block_prob << " last " << last_log_block_prob << std::endl;
+	}
+	assert(!isnan(foo) && !isinf(foo));
 	prob_log_next_bit = new_log_block_prob - last_log_block_prob;
 	// Remove the recently added 0, which was used for calculating the root prob
 	revert();
@@ -250,6 +286,11 @@ double ContextTree::getLogProbNextSymbolGivenHWithUpdate(symbol_t sym) {
 	new_log_block_prob = logBlockProbability();
 	prob_log_next_bit = new_log_block_prob - last_log_block_prob;
 	// Remove the recently added 0, which was used for calculating the root prob
+
+
+	if (isnan(prob_log_next_bit)) {
+		std::cout << "Hello nan getLogProbNextSymbolGivenHWithUpdate" << std::endl;
+	}
 
 	return prob_log_next_bit;
 }

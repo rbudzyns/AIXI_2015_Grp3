@@ -72,7 +72,12 @@ size_t Agent::maxTreeDepth(void) {
 }
 
 double Agent::getProbNextSymbol(void) {
-	return pow(2, m_ct->getLogProbNextSymbolGivenH(1));
+	// return pow(2, m_ct->getLogProbNextSymbolGivenH(1));
+	double foo = m_ct->getLogProbNextSymbolGivenH(1);
+	if (isnan(foo) || isinf(foo)) {
+		std::cout << "nan or inf in getProbNextSymbol" << std::endl;
+	}
+	return foo;
 }
 
 // the length of the stored history for an agent
