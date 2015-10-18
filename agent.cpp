@@ -118,14 +118,12 @@ percept_t* Agent::genPerceptAndUpdate(void) {
 	symbol_list_t symbol_list(m_obs_bits + m_rew_bits);
 
 	m_ct->genRandomSymbolsAndUpdate(symbol_list, m_obs_bits + m_rew_bits);
-//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " Before Decoding" << std::endl;
 
 	percept[0] = decode(symbol_list, m_obs_bits);
 	for (int i = 0; i < m_rew_bits; i++) {
 		symbol_list[i] = symbol_list[i + m_obs_bits];
 	}
 	percept[1] = decode(symbol_list, m_rew_bits);
-//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After Decoding" << std::endl;
 
 // Update other properties
 	m_total_reward += percept[1];
@@ -158,17 +156,11 @@ void Agent::modelUpdate(action_t action) {
 	assert(isActionOk(action));
 	assert(m_last_update_percept == true);
 
-//std::cout << "Model Update"<<std::endl;
 // Update internal model
 	symbol_list_t action_syms;
 	encodeAction(action_syms, action);
-//std::cout << "In Model update ACTION------Start----------" << std::endl;
 
-// m_ct->update(action_syms);
 	m_ct->updateHistory(action_syms);
-
-//m_ct->debugTree();
-//std::cout << "In Model update ACTION........End........\n" << std::endl;
 
 	m_time_cycle++;
 	m_last_update_percept = false;
@@ -180,10 +172,8 @@ bool Agent::modelRevert(const ModelUndo &mu) {
 
 	int n_cycles = m_time_cycle - mu.lifetime();
 
-//std::cout << "Model Revert"<<std::endl;
-
 	for (int i = 0; i < n_cycles; i++) {
-		//m_ct->debugTree();
+
 		for (int j = 0; j < m_obs_bits + m_rew_bits; j++) {
 			m_ct->revert();
 			m_ct->revertHistory(m_ct->historySize() - 1);

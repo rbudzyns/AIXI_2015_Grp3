@@ -50,11 +50,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Get a percept from the environment
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
-		//std::cout << "Reward = " << reward << std::endl;
 
 		// Update agent's environment model with the new percept
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-		//std::cout << "Hello" << std::endl;
 
 		// Determine best exploitive action, or explore
 		action_t action;
@@ -70,18 +68,13 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				action = ai.genRandomAction();
 			}
 		}
-		//std::cout << "Agent performed action: " << action << std::endl;
 
 		// Send an action to the environment
 		env.performAction(action);		// TODO: implement for each environment
-		//std::cout << "Action performed======================"<<std::endl;
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action);				// TODO: implement in agent.cpp
-		//ai.getContextTree()->debugTree();
-		//ai.getContextTree()->printRootKTAndWeight();
-		//std::cout << "Model update with performed action *******************"<<std::endl;
-		//ai.getContextTree()->debugTree();
+
 		// Log this turn
 		aixi::log << "-----" << std::endl;
 		aixi::log << "cycle: " << cycle << std::endl;
@@ -99,7 +92,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				<< ai.reward() << ", " << ai.averageReward() << std::endl;
 
 		// Print to standard output when cycle == 2^n
-		// if ((cycle & (cycle - 1)) == 0) {
 		if (cycle % 1000 == 0) {
 			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
 			std::cout << "cycle: " << cycle << std::endl;
