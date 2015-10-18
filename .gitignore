@@ -31,6 +31,11 @@
 .cproject
 .project
 /Debug/
+<<<<<<< HEAD
 /Report/
 
+=======
+/Docs/
+/Report/
+>>>>>>> predict1
 log.*

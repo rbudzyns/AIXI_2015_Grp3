@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "main.hpp"
+#include "predict.hpp"
 
 class ContextTree;
 

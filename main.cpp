@@ -41,7 +41,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 	for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
-
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetiment" << std::endl;
@@ -64,21 +63,27 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			explored = true;
 			action = ai.genRandomAction();
 		} else {
-			if (ai.historySize() > ai.maxTreeDepth()) {
-				action = search(ai, 0.005);
+			if (ai.historySize() >= ai.maxTreeDepth()) {
+				action = search(ai, 0.01);
 			} else {
 				std::cout << "Generating random action" << std::endl;
 				action = ai.genRandomAction();
 			}
 		}
+		//std::cout << "Agent performed action: " << action << std::endl;
 
 		// Send an action to the environment
-		env.performAction(action); // TODO: implement for each environment
+		env.performAction(action);		// TODO: implement for each environment
+		//std::cout << "Action performed======================"<<std::endl;
 
 		// Update agent's environment model with the chosen action
-		ai.modelUpdate(action); // TODO: implement in agent.cpp
-
+		ai.modelUpdate(action);				// TODO: implement in agent.cpp
+		//ai.getContextTree()->debugTree();
+		//ai.getContextTree()->printRootKTAndWeight();
+		//std::cout << "Model update with performed action *******************"<<std::endl;
+		//ai.getContextTree()->debugTree();
 		// Log this turn
+		aixi::log << "-----" << std::endl;
 		aixi::log << "cycle: " << cycle << std::endl;
 		aixi::log << "observation: " << observation << std::endl;
 		aixi::log << "reward: " << reward << std::endl;
@@ -101,6 +106,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			std::cout << "average reward: " << ai.averageReward() << std::endl;
 			if (explore) {
 				std::cout << "explore rate: " << explore_rate << std::endl;
+
 			}
 		}
 
@@ -110,7 +116,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	}
 
-	// Print summary to standard output
 	std::cout << std::endl << std::endl << "SUMMARY" << std::endl;
 	std::cout << "agent lifetime: " << ai.lifetime() << std::endl;
 	std::cout << "average reward: " << ai.averageReward() << std::endl;
@@ -188,16 +193,18 @@ void testAgentAndPredict(Agent *agent) {
 	ModelUndo *mu = new ModelUndo(*agent);
 
 	agent->modelUpdate(obs, rew);
-	//agent->getContextTree()->debugTree();
+
+//agent->getContextTree()->debugTree();
 
 	agent->modelUpdate(action);
 	agent->getContextTree()->debugTree();
 
 	agent->modelUpdate(obs, rew);
-	// agent->getContextTree()->debugTree();
+
+// agent->getContextTree()->debugTree();
 
 	agent->modelUpdate(action);
-	//agent->getContextTree()->debugTree();
+//agent->getContextTree()->debugTree();
 
 	agent->modelRevert(*mu);
 	agent->getContextTree()->debugTree();
@@ -212,25 +219,27 @@ void testAgentAndPredict(Agent *agent) {
 
 int main(int argc, char *argv[]) {
 
-	// Load configuration options
+// Load configuration options
 	options_t options;
 
-	// Default configuration values
+// Default configuration values
+
 	options["environment"] = "test";
 	options["ct-depth"] = "3";
 	options["agent-horizon"] = "16";
 	options["exploration"] = "0";// do not explore
 	options["explore-decay"] = "1.0";// exploration rate does not decay
 
-	// Set up the environment
+// Set up the environment
 	Environment *env;
 
-	// TODO: instantiate the environment based on the "environment-name"
-	// option. For any environment you do not implement you may delete the
-	// corresponding if statement.
-	// NOTE: you may modify the options map in order to set quantities such as
-	// the reward-bits for each particular environment. See the coin-flip
-	// experiment for an example.
+// TODO: instantiate the environment based on the "environment-name"
+// option. For any environment you do not implement you may delete the
+// corresponding if statement.
+// NOTE: you may modify the options map in order to set quantities such as
+// the reward-bits for each particular environment. See the coin-flip
+// experiment for an example.
+
 	std::string environment_name = options["environment"];
 	if (environment_name == "coin-flip") {
 		env = new CoinFlip(options);
@@ -278,7 +287,8 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	// Set up the agent
+// Set up the agent
+
 	Agent ai(options);
 
 	testAgentAndPredict(&ai);
@@ -306,24 +316,26 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	// Set up logging
+// Set up logging
+
 	std::string log_file = argc < 3 ? "log" : argv[2];
 	aixi::log.open((log_file + ".log").c_str());
 	compactLog.open((log_file + ".csv").c_str());
 
-	// Print header to compactLog
 	compactLog
 			<< "cycle, observation, reward, action, explored, explore_rate, total reward, average reward"
 			<< std::endl;
 
 	options_t options;
-	// Default configuration values
+// Default configuration values
+
 	options["ct-depth"] = "3";
 	options["agent-horizon"] = "16";
-	options["exploration"] = "0";     // do not explore
-	options["explore-decay"] = "1.0"; // exploration rate does not decay
+	options["exploration"] = "0";		// do not explore
+	options["explore-decay"] = "1.0";		// exploration rate does not decay
 
-	// Read configuration options
+// Read configuration options
+
 	std::ifstream conf(argv[1]);
 	if (!conf.is_open()) {
 		std::cerr << "ERROR: Could not open file '" << argv[1]
@@ -333,15 +345,16 @@ int main(int argc, char *argv[]) {
 	processOptions(conf, options);
 	conf.close();
 
-	// Set up the environment
+// Set up the environment
 	Environment *env;
 
-	// TODO: instantiate the environment based on the "environment-name"
-	// option. For any environment you do not implement you may delete the
-	// corresponding if statement.
-	// NOTE: you may modify the options map in order to set quantities such as
-	// the reward-bits for each particular environment. See the coin-flip
-	// experiment for an example.
+// TODO: instantiate the environment based on the "environment-name"
+// option. For any environment you do not implement you may delete the
+// corresponding if statement.
+// NOTE: you may modify the options map in order to set quantities such as
+// the reward-bits for each particular environment. See the coin-flip
+// experiment for an example.
+
 	std::string environment_name = options["environment"];
 	if (environment_name == "coin-flip") {
 		env = new CoinFlip(options);
@@ -362,7 +375,9 @@ int main(int argc, char *argv[]) {
 	 *                  1 = listen
 	 *                  2 = open left door
 	 *                  3 = open right door
+
 	 *
+
 	 * observations:    0 = nothing known
 	 *                  1 = tiger behind right door
 	 *                  2 = tiger behind left door
@@ -381,7 +396,9 @@ int main(int argc, char *argv[]) {
 		options["reward-bits"] = "3";
 	}
 	/*
+
 	 Action
+
 	 0 : rock
 	 1 : paper
 	 2 : scissors
@@ -401,10 +418,11 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	// Set up the agent
+// Set up the agent
 	Agent ai(options);
 
-	// Run the main agent/environment interaction loop
+// Run the main agent/environment interaction loop
+
 	mainLoop(ai, *env, options);
 
 	aixi::log.close();

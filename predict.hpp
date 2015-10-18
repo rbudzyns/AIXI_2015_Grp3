@@ -48,6 +48,7 @@ private:
 	~CTNode(void);
 
 	// compute the logarithm of the KT-estimator update multiplier
+
 	double logKTMul(symbol_t sym) const; // TODO: implement in predict.cpp
 
 	//TODO: implement in predict.cpp
@@ -91,6 +92,8 @@ public:
 	// add a symbol to the history without updating the context tree.
 	void updateHistory(const symbol_list_t &symbol_list);
 
+	void updateHistory(const symbol_t sym);
+
 	//Recalculate the log weighted probability for this node.
 	void updateLogProbability(void);
 
@@ -125,6 +128,7 @@ public:
 	void printTree(CTNode *node);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
+	void printRootKTAndWeight(void);
 
 	// get the n'th history symbol, NULL if doesn't exist
 	const symbol_t *nthHistorySymbol(size_t n) const;
