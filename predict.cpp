@@ -226,7 +226,7 @@ double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
 	last_log_block_prob = logBlockProbability();
 	// To calculate the root probability as if the next symbol was 0
 	update(sym);
-	m_history.push_back(sym);
+	//m_history.push_back(sym);
 
 	//std::cout << "getLogProbNextSymbolGivenH After update"<<std::endl;
 	new_log_block_prob = logBlockProbability();
@@ -277,7 +277,7 @@ void ContextTree::genRandomSymbolsAndUpdate(symbol_list_t &symbols,
 
 		update(sym);
 		//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After update" << std::endl;
-		m_history.push_back(sym);
+		//m_history.push_back(sym);
 		//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After history pushback" << std::endl;
 		symbols[i] = sym;
 		//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " After store sym" << std::endl;

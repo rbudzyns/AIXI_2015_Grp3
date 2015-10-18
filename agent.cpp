@@ -141,8 +141,9 @@ void Agent::modelUpdate(percept_t observation, percept_t reward) {
 	//std::cout << "In Model update PERCEPT................\n" << std::endl;
 	if (m_ct->historySize() >= m_ct->depth()) {
 		m_ct->update(percept);
+	} else {
+		m_ct->updateHistory(percept);
 	}
-	//m_ct->updateHistory(percept);
 
 	// Update other properties
 	m_total_reward += reward;
