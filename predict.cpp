@@ -53,6 +53,8 @@ void CTNode::updateLogProbability(void) {
 //			m_log_prob_weighted = log2(
 //					pow(2, m_child[1]->m_log_prob_weighted - m_log_prob_est)
 //							+ 1) + m_log_prob_est - 1;
+			assert(!isnan(m_log_prob_est - m_child[1]->m_log_prob_weighted));
+			assert(!isinf(m_log_prob_est - m_child[1]->m_log_prob_weighted));
 			m_log_prob_weighted = log2(
 					pow(2, m_log_prob_est - m_child[1]->m_log_prob_weighted)
 							+ 1) + m_child[1]->m_log_prob_weighted - 1;
@@ -64,33 +66,54 @@ void CTNode::updateLogProbability(void) {
 //					pow(2, m_child[0]->m_log_prob_weighted - m_log_prob_est)
 //							+ 1) + m_log_prob_est - 1;
 			m_log_prob_weighted = log2(
-					pow(2,  m_log_prob_est - m_child[0]->m_log_prob_weighted)
+					pow(2, m_log_prob_est - m_child[0]->m_log_prob_weighted)
 							+ 1) + m_child[0]->m_log_prob_weighted - 1;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		} else {
-//			double aaa = m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est;
-//			assert(!isnan(aaa) && !isinf(aaa));
-//			double bbb = pow(2, aaa) + 1;
-//			if (isnan(bbb) || isinf(bbb)) {
-//				std::cout << "root counts: " << m_count[0] << "," << m_count[1] << std::endl;
-//				std::cout << "child0 counts: " << m_child[0]->m_count[0] << "," << m_child[0]->m_count[1] << std::endl;
-//				std::cout << "child1 counts: " << m_child[1]->m_count[0] << "," << m_child[1]->m_count[1] << std::endl;
-//				std::cout << "aaa is: child0weighted " << m_child[0]->m_log_prob_weighted << " + child1weighted" << m_child[1]->m_log_prob_weighted << " - kt " << m_log_prob_est << std::endl;
-//				std::cout << "aaa is: " << aaa << std::endl;
-//				double var1 = pow(10,300);
-//				double var2 = pow(10,300)-pow(10,30);
-//				double var3 = var1 - var2;
-//				std::cout << "floating point error is: " << var3 << std::endl;
-//			}
-//			assert(!isnan(bbb) && !isinf(bbb));
-//			double ccc = log2(bbb) + m_log_prob_est - 1;
-//			assert(!isnan(bbb) && !isinf(bbb));
-//			m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
-			m_log_prob_weighted = log2(pow(2,  m_log_prob_est - (m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted)) + 1) + (m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted) - 1;
+			double logKTSub01Weighted = m_log_prob_est
+					- (m_child[0]->m_log_prob_weighted
+							+ m_child[1]->m_log_prob_weighted);
+			assert(!isnan(logKTSub01Weighted) && !isinf(logKTSub01Weighted));
+			double TwoPow = pow(2, logKTSub01Weighted) + 1;
+			if (isnan(TwoPow) || isinf(TwoPow)) {
+				std::cout << "root counts: " << m_count[0] << "," << m_count[1]
+						<< std::endl;
+				std::cout << "child0 counts: " << m_child[0]->m_count[0] << ","
+						<< m_child[0]->m_count[1] << std::endl;
+				std::cout << "child1 counts: " << m_child[1]->m_count[0] << ","
+						<< m_child[1]->m_count[1] << std::endl;
+				std::cout << "logKTSub01Weighted is: child0weighted "
+						<< m_child[0]->m_log_prob_weighted
+						<< " + child1weighted"
+						<< m_child[1]->m_log_prob_weighted << " - kt "
+						<< m_log_prob_est << std::endl;
+				std::cout << "logKTSub01Weighted is: " << logKTSub01Weighted
+						<< std::endl;
+				double var1 = pow(10, 300);
+				double var2 = pow(10, 300) - pow(10, 30);
+				double var3 = var1 - var2;
+				std::cout << "floating point error is: " << var3 << std::endl;
+			}
+			assert(!isnan(TwoPow) && !isinf(TwoPow));
+			double ccc = log2(TwoPow) + m_log_prob_est - 1;
+			assert(!isnan(TwoPow) && !isinf(TwoPow));
+//			m_log_prob_weighted = log2(
+//					pow(2,
+//							m_child[0]->m_log_prob_weighted
+//									+ m_child[1]->m_log_prob_weighted
+//									- m_log_prob_est) + 1) + m_log_prob_est - 1;
+			m_log_prob_weighted = log2(
+					pow(2,
+							m_log_prob_est
+									- (m_child[0]->m_log_prob_weighted
+											+ m_child[1]->m_log_prob_weighted))
+							+ 1)
+					+ (m_child[0]->m_log_prob_weighted
+							+ m_child[1]->m_log_prob_weighted) - 1;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		}
 	}
-	if (isnan(m_log_prob_weighted)) {
+	if (isnan (m_log_prob_weighted)) {
 		std::cout << "Hello nan updateWeightedProbability" << std::endl;
 	}
 	assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
@@ -106,7 +129,7 @@ void CTNode::update(const symbol_t symbol) {
 		std::cout << "Hello nan ktMul" << std::endl;
 	}
 	m_log_prob_est += logKTMul(symbol);
-	if (isnan(m_log_prob_est)) {
+	if (isnan (m_log_prob_est)) {
 		std::cout << "Hello nan kt update" << std::endl;
 	}
 
@@ -276,10 +299,14 @@ double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
 	new_log_block_prob = logBlockProbability();
 	double foo = new_log_block_prob - last_log_block_prob;
 	if (isnan(foo)) {
-		std::cout << "nan getLogProbNextSymbolGivenH: " << "new " << new_log_block_prob << " last " << last_log_block_prob << std::endl;
+		std::cout << "nan getLogProbNextSymbolGivenH: " << "new "
+				<< new_log_block_prob << " last " << last_log_block_prob
+				<< std::endl;
 	}
 	if (isinf(foo)) {
-		std::cout << "inf getLogProbNextSymbolGivenH: " << "new " << new_log_block_prob << " last " << last_log_block_prob << std::endl;
+		std::cout << "inf getLogProbNextSymbolGivenH: " << "new "
+				<< new_log_block_prob << " last " << last_log_block_prob
+				<< std::endl;
 	}
 	assert(!isnan(foo) && !isinf(foo));
 	prob_log_next_bit = new_log_block_prob - last_log_block_prob;
@@ -288,7 +315,7 @@ double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
 	revertHistory(m_history.size() - 1);
 
 	//std::cout << "getLogProbNextSymbolGivenH After revert"<<std::endl;
-	std::cout << "getLogProbNextSymbolGivenH: " << prob_log_next_bit << std::endl;
+	//std::cout << "getLogProbNextSymbolGivenH: " << prob_log_next_bit << std::endl;
 
 	return prob_log_next_bit;
 }
@@ -304,9 +331,9 @@ double ContextTree::getLogProbNextSymbolGivenHWithUpdate(symbol_t sym) {
 	prob_log_next_bit = new_log_block_prob - last_log_block_prob;
 	// Remove the recently added 0, which was used for calculating the root prob
 
-
 	if (isnan(prob_log_next_bit)) {
-		std::cout << "Hello nan getLogProbNextSymbolGivenHWithUpdate" << std::endl;
+		std::cout << "Hello nan getLogProbNextSymbolGivenHWithUpdate"
+				<< std::endl;
 	}
 
 	return prob_log_next_bit;
@@ -389,7 +416,7 @@ void ContextTree::debugTree1() {
 
 void ContextTree::printTree1(CTNode *node) {
 	int i = 0;
-	while(i < m_depth) {
+	while (i < m_depth) {
 
 	}
 }
