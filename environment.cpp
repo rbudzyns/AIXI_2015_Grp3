@@ -183,7 +183,7 @@ void CheeseMaze::envReset()
 
 bool CheeseMaze::isFinished() const
 {
-	return &current_node == &cheese_node ? 1 : 0;
+	return current_node == cheese_node ? 1 : 0;
 }
 
 
