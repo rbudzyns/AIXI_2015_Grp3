@@ -41,11 +41,10 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 
-	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
 	action_t action = 0;
 	double running_tot = 0;
-	for (unsigned int cycle = 1; cycle <= 100000; cycle++) {
 
+	for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetiment" << std::endl;
@@ -56,40 +55,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
-		int maxeroo = 36;
-
-//		if (cycle == maxeroo) {
-//			return;
-//		}
-
-//		if (cycle < maxeroo - 1) {
-//			observation = 1;
-//			reward = (action == 1 ? 1 : 0);
-//		} else {
-//			observation = 0;
-//			reward = 0;
-//		}
-
-		//std::cout << "Reward = " << reward << std::endl;
-
 		// Update agent's environment model with the new percept
-		int foo = maxeroo - 10;
-//		if (cycle > foo) {
-//			double bar = ai.getProbNextSymbol();
-//			if (isnan(bar)) {
-//				return;
-//			}
-//			std::cout << "before model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
-//		}
 
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-//		if (cycle > foo) {
-//			std::cout << "after model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
-//		}
-
-		//std::cout << "Hello" << std::endl;
-
-		//std::cout << "Model update with real OR bits ^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
 
 		// Determine best exploitive action, or explore
 
@@ -101,42 +69,20 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 			if (ai.historySize() >= ai.maxTreeDepth()) {
 				action = search(ai, 0.05);
-				//action = ai.genRandomAction();
 
 			} else {
-				std::cout << "Generating random action" << std::endl;
 				action = ai.genRandomAction();
+				std::cout << "Generating random action: " << action
+						<< std::endl;
 			}
 		}
 
-		//action = 1;
-		//std::cout << "Agent performed action: " << action << std::endl;
-
 		// Send an action to the environment
 		env.performAction(action);		// TODO: implement for each environment
-//		if (cycle > foo) {
-//			std::cout << "after action performed head prob: " << ai.getProbNextSymbol() << std::endl;
-//		}
-				//std::cout << "Action performed======================"<<std::endl;
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
-//		if (cycle > foo) {
-//			//ai.getContextTree()->print();
-//			//ai.getContextTree()->debugTree1();
-////			std::cout  << "observation: (" << observation << "),"
-////					<< " reward (" << reward << "), "
-////					<< " action: (" << action << "), "
-////					<< " head prob: (" << pow(2, ai.getProbNextSymbol()) << ")"
-////					<< std::endl;
-//		}
-
-		//ai.getContextTree()->debugTree();
-		//ai.getContextTree()->printRootKTAndWeight();
-		//std::cout << "Model update with performed action *******************"<<std::endl;
-		//ai.getContextTree()->debugTree();
 		// Log this turn
-		aixi::log << "-----" << std::endl;
 
 		aixi::log << "cycle: " << cycle << std::endl;
 		aixi::log << "observation: " << observation << std::endl;
@@ -152,9 +98,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				<< action << ", " << explored << ", " << explore_rate << ", "
 				<< ai.reward() << ", " << ai.averageReward() << std::endl;
 
-		//std::cout << "Current cycle : " << cycle << std::endl;
-		// Print to standard output when cycle == 2^n
-		// if ((cycle & (cycle - 1)) == 0) {
 		if (cycle > 100) {
 			running_tot += ai.getProbNextSymbol();
 		}
@@ -228,143 +171,6 @@ void processOptions(std::ifstream &in, options_t &options) {
 
 	}
 }
-
-void testPredict() {
-	ContextTree* ct = new ContextTree(30);
-	symbol_list_t sym_list;
-
-	encode(sym_list, 1031234, 30);
-	ct->update(sym_list);
-	ct->updateHistory(sym_list);
-	ct->debugTree();
-
-	ct->revert();
-	ct->updateHistory(sym_list);
-	ct->debugTree();
-}
-
-void testAgentAndPredict(Agent *agent) {
-	symbol_list_t sym_list;
-	/*
-	 action_t action = 0x5;
-	 percept_t obs = 0x0795;
-	 percept_t rew = 0xE;
-	 */
-	action_t action = 0x1;
-	percept_t obs = 0x0795;
-	percept_t rew = 0xE;
-	ModelUndo *mu = new ModelUndo(*agent);
-
-	agent->modelUpdate(obs, rew);
-
-//agent->getContextTree()->debugTree();
-
-	agent->modelUpdate(action);
-	agent->getContextTree()->debugTree();
-
-	agent->modelUpdate(obs, rew);
-
-// agent->getContextTree()->debugTree();
-
-	agent->modelUpdate(action);
-//agent->getContextTree()->debugTree();
-
-	agent->modelRevert(*mu);
-	agent->getContextTree()->debugTree();
-}
-
-#ifdef __DEBUG__
-
-/* 
- * Main() for Debuging 
- * Usage: g++ -o aixi *.cpp -D__DEBUG__
- */
-
-int main(int argc, char *argv[]) {
-
-// Load configuration options
-	options_t options;
-
-// Default configuration values
-
-	options["environment"] = "test";
-	options["ct-depth"] = "3";
-	options["agent-horizon"] = "16";
-	options["exploration"] = "0";// do not explore
-	options["explore-decay"] = "1.0";// exploration rate does not decay
-
-// Set up the environment
-	Environment *env;
-
-// TODO: instantiate the environment based on the "environment-name"
-// option. For any environment you do not implement you may delete the
-// corresponding if statement.
-// NOTE: you may modify the options map in order to set quantities such as
-// the reward-bits for each particular environment. See the coin-flip
-// experiment for an example.
-
-	std::string environment_name = options["environment"];
-	if (environment_name == "coin-flip") {
-		env = new CoinFlip(options);
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-	}
-	else if (environment_name == "test") {
-		//env = new CoinFlip(options);
-		options["ct-depth"] = "3";
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-		options["action-bits"] = "1";
-	}
-	else if (environment_name == "1d-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "cheese-maze") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "extended-tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "4x4-grid") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "tictactoe") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "biased-rock-paper-scissor") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "kuhn-poker") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else if (environment_name == "pacman") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	else {
-		std::cerr << "ERROR: unknown environment '" << environment_name << "'" << std::endl;
-		return -1;
-	}
-
-// Set up the agent
-
-	Agent ai(options);
-
-	testAgentAndPredict(&ai);
-	/*
-	 // Run the main agent/environment interaction loop
-	 mainLoop(ai, *env, options);
-	 aixi::log.close();
-	 compactLog.close();
-	 */
-	return 0;
-}
-
-#else 
 
 /* 
  * Main function

@@ -133,7 +133,6 @@ public:
 	void printTree1(std::vector<CTNode*> node_list, int cur_depth, int type);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
-	void printRootKTAndWeight(void);
 
 	// get the n'th history symbol, NULL if doesn't exist
 	const symbol_t *nthHistorySymbol(size_t n) const;
