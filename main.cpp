@@ -42,6 +42,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	// Agent/environment interaction loop
 	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
 	action_t action = 0;
+	double running_tot = 0;
 	for (unsigned int cycle = 1; cycle <= 100000; cycle++) {
 
 		// check for agent termination
@@ -53,19 +54,19 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Get a percept from the environment
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
-		int maxeroo = 1000;
+		int maxeroo = 36;
 
-		if (cycle == maxeroo) {
-			return;
-		}
+//		if (cycle == maxeroo) {
+//			return;
+//		}
 
-		if (cycle < maxeroo - 1) {
-			observation = 1;
-			reward = (action == 1 ? 1 : 0);
-		} else {
-			observation = 0;
-			reward = 0;
-		}
+//		if (cycle < maxeroo - 1) {
+//			observation = 1;
+//			reward = (action == 1 ? 1 : 0);
+//		} else {
+//			observation = 0;
+//			reward = 0;
+//		}
 
 		//std::cout << "Reward = " << reward << std::endl;
 
@@ -90,23 +91,14 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Determine best exploitive action, or explore
 
-		if (cycle > foo) {
-			//ai.getContextTree()->print();
-			ai.getContextTree()->debugTree1();
-			std::cout << "action: (" << action << "), observation: ("
-					<< observation << "), reward = (" << reward
-					<< "), head prob: " << " " << pow(2, ai.getProbNextSymbol())
-					<< std::endl;
-		}
-
 		bool explored = false;
 		if (explore && rand01() < explore_rate) {
 			explored = true;
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				//action = search(ai, 0.01);
-				action = ai.genRandomAction();
+				action = search(ai, 0.03);
+				//action = ai.genRandomAction();
 			} else {
 				std::cout << "Generating random action" << std::endl;
 				action = ai.genRandomAction();
@@ -124,6 +116,16 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
+//		if (cycle > foo) {
+//			//ai.getContextTree()->print();
+//			//ai.getContextTree()->debugTree1();
+////			std::cout  << "observation: (" << observation << "),"
+////					<< " reward (" << reward << "), "
+////					<< " action: (" << action << "), "
+////					<< " head prob: (" << pow(2, ai.getProbNextSymbol()) << ")"
+////					<< std::endl;
+//		}
+
 
 		//ai.getContextTree()->debugTree();
 		//ai.getContextTree()->printRootKTAndWeight();
@@ -148,14 +150,18 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Current cycle : " << cycle << std::endl;
 		// Print to standard output when cycle == 2^n
 		// if ((cycle & (cycle - 1)) == 0) {
-		if (cycle % 1 == 0) {
+		if (cycle > 100) {
+			running_tot += ai.getProbNextSymbol();
+		}
+		if (cycle % 500 == 0) {
 
 			std::cout << "cycle: " << cycle << std::endl;
-//			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
-			//std::cout << "average reward: " << ai.averageReward() << std::endl;
+			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
+			std::cout << "avg head prob: " << running_tot/(cycle-100) << std::endl;
+			std::cout << "average reward: " << ai.averageReward() << std::endl;
 
 			if (explore) {
-				//std::cout << "explore rate: " << explore_rate << std::endl;
+				std::cout << "explore rate: " << explore_rate << std::endl;
 			}
 		}
 

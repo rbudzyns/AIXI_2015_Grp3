@@ -174,10 +174,13 @@ action_t DecisionNode::bestAction(Agent &agent) const {
 		action_t a = 1;
 		//std::cout << "BestAction" << std::endl;
 		for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+			//std::cout << " BestAction " << (it->second)->getAction() << " = " << (it->second)->expectation();
 			if ((it->second)->expectation() > max_val) {
 				a = it->first;
+				max_val = (it->second)->expectation();
 			}
 		}
+		//std::cout << std::endl;
 		return a;
 	} else {
 		std::cout << "Generating random action in bestAction." << std::endl;
@@ -305,5 +308,7 @@ extern action_t search(Agent &agent, double timeout) {
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 	//std::cout << "Done searching" << std::endl;
-	return root.bestAction(agent);
+	action_t action = root.bestAction(agent);
+	//std::cout << "Taking action (" << action << ")" << std::endl;
+	return action;
 }

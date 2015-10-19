@@ -414,12 +414,16 @@ void ContextTree::debugTree1() {
 	//std::cout << "\nPreorder list of weighted probabilites" << std::endl;
 	std::vector<CTNode*> node_list;
 	node_list.push_back(m_root);
+	std::cout << "Weighted..." << std::endl;
 	printTree1(node_list, 0, 0);
 	std::cout << std::endl;
+	std::cout << "Est..." << std::endl;
 	printTree1(node_list, 0, 1);
 	std::cout << std::endl;
+	std::cout << "Zeros..." << std::endl;
 	printTree1(node_list, 0, 2);
 	std::cout << std::endl;
+	std::cout << "Ones..." << std::endl;
 	printTree1(node_list, 0, 3);
 	std::cout << std::endl;
 	//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
