@@ -42,7 +42,7 @@ double Agent::UCBWeight(void) const {
 	return m_UCBWeight;
 }
 
-// the total accumulated reward across an agents lifespan
+// the total accumulated reward across an agent's lifespan
 reward_t Agent::reward(void) const {
 	return m_total_reward;
 }
@@ -235,6 +235,10 @@ double Agent::perceptProbability(percept_t observation,
 	return pow(2, log_probability);
 }
 
+ContextTree * Agent::contextTree() {
+	return m_ct;
+}
+
 // action sanity check
 bool Agent::isActionOk(action_t action) const {
 	return action < m_actions;
@@ -271,9 +275,6 @@ percept_t Agent::decodeReward(const symbol_list_t &symlist) const {
 	return decode(symlist, m_rew_bits);
 }
 
-ContextTree * Agent::getContextTree() {
-	return m_ct;
-}
 // used to revert an agent to a previous state
 ModelUndo::ModelUndo(const Agent &agent) {
 

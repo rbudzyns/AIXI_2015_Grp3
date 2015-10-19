@@ -18,6 +18,7 @@ std::ofstream log;        // A verbose human-readable log
 }
 std::ofstream compactLog; // A compact comma-separated value log
 
+void processOptions(std::ifstream &in, options_t &options);
 // The main agent/environment interaction loop
 void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
@@ -128,53 +129,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 }
 
-// Populate the 'options' map based on 'key=value' pairs from an input stream
-void processOptions(std::ifstream &in, options_t &options) {
-	std::string line;
-	size_t pos;
-
-	for (int lineno = 1; in.good(); lineno++) {
-		std::getline(in, line);
-
-		// Ignore # comments
-		if ((pos = line.find('#')) != std::string::npos) {
-			line = line.substr(0, pos);
-		}
-
-		// Remove whitespace
-		while ((pos = line.find(" ")) != std::string::npos)
-			line.erase(line.begin() + pos);
-		while ((pos = line.find("\t")) != std::string::npos)
-			line.erase(line.begin() + pos);
-
-		// Split into key/value pair at the first '='
-		pos = line.find('=');
-		std::string key = line.substr(0, pos);
-		std::string value = line.substr(pos + 1);
-
-		// Check that we have parsed a valid key/value pair. Warn on failure or
-		// set the appropriate option on success.
-		if (pos == std::string::npos) {
-			std::cerr << "WARNING: processOptions skipping line " << lineno
-					<< " (no '=')" << std::endl;
-		} else if (key.size() == 0) {
-			std::cerr << "WARNING: processOptions skipping line " << lineno
-					<< " (no key)" << std::endl;
-		} else if (value.size() == 0) {
-			std::cerr << "WARNING: processOptions skipping line " << lineno
-					<< " (no value)" << std::endl;
-		} else {
-			options[key] = value; // Success!
-			std::cout << "OPTION: '" << key << "' = '" << value << "'"
-					<< std::endl;
-		}
-
-	}
-}
-
-/* 
- * Main function
- */
 int main(int argc, char *argv[]) {
 
 	if (argc < 2 || argc > 3) {
@@ -230,35 +184,22 @@ int main(int argc, char *argv[]) {
 	std::string environment_name = options["environment"];
 	if (environment_name == "coin-flip") {
 		env = new CoinFlip(options);
-		options["agent-actions"] = "2";
-		options["observation-bits"] = "1";
-		options["reward-bits"] = "1";
-	} else if (environment_name == "1d-maze") {
-		// TODO: instantiate "env" (if appropriate)
 	} else if (environment_name == "cheese-maze") {
 		env = new CheeseMaze(options);
-		options["agent-actions"] = "4";
-		options["observation-bits"] = "4";
-		options["reward-bits"] = "5";
-	} else if (environment_name == "tiger") {
-		// TODO: instantiate "env" (if appropriate)
-	}
-	/*actions:          0 = stand
-	 *                  1 = listen
-	 *                  2 = open left door
-	 *                  3 = open right door
-	 
-	 * observations:    0 = nothing known
-	 *                  1 = tiger behind right door
-	 *                  2 = tiger behind left door
-	 */
-	else if (environment_name == "extended-tiger") {
+	} else if (environment_name == "extended-tiger") {
+		/*actions:          0 = stand
+		 *                  1 = listen
+		 *                  2 = open left door
+		 *                  3 = open right door
+
+		 * observations:    0 = nothing known
+		 *                  1 = tiger behind right door
+		 *                  2 = tiger behind left door
+		 */
 		env = new ExtTiger(options);
 		options["agent-actions"] = "4";
 		options["observation-bits"] = "2";
 		options["reward-bits"] = "8";
-	} else if (environment_name == "4x4-grid") {
-		// TODO: instantiate "env" (if appropriate)
 	} else if (environment_name == "tictactoe") {
 		env = new TicTacToe(options);
 		options["agent-actions"] = "9";
@@ -275,11 +216,6 @@ int main(int argc, char *argv[]) {
 	 */
 	else if (environment_name == "biased-rock-paper-scissor") {
 		env = new BRockPaperScissors(options);
-		options["agent-actions"] = "3";
-		options["observation-bits"] = "3";
-		options["reward-bits"] = "3";
-	} else if (environment_name == "kuhn-poker") {
-		// TODO: instantiate "env" (if appropriate)
 	} else if (environment_name == "pacman") {
 		// TODO: instantiate "env" (if appropriate)
 	} else {
@@ -292,8 +228,13 @@ int main(int argc, char *argv[]) {
 	Agent ai(options);
 
 // Run the main agent/environment interaction loop
+	int n_episodes = 10;
+	for (int i = 0; i < n_episodes; i++) {
+		mainLoop(ai, *env, options);
+		env->envReset();
+		ai.newEpisode();
 
-	mainLoop(ai, *env, options);
+	}
 
 	aixi::log.close();
 	compactLog.close();
@@ -301,5 +242,46 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-#endif
+// Populate the 'options' map based on 'key=value' pairs from an input stream
+void processOptions(std::ifstream &in, options_t &options) {
+	std::string line;
+	size_t pos;
 
+	for (int lineno = 1; in.good(); lineno++) {
+		std::getline(in, line);
+
+		// Ignore # comments
+		if ((pos = line.find('#')) != std::string::npos) {
+			line = line.substr(0, pos);
+		}
+
+		// Remove whitespace
+		while ((pos = line.find(" ")) != std::string::npos)
+			line.erase(line.begin() + pos);
+		while ((pos = line.find("\t")) != std::string::npos)
+			line.erase(line.begin() + pos);
+
+		// Split into key/value pair at the first '='
+		pos = line.find('=');
+		std::string key = line.substr(0, pos);
+		std::string value = line.substr(pos + 1);
+
+		// Check that we have parsed a valid key/value pair. Warn on failure or
+		// set the appropriate option on success.
+		if (pos == std::string::npos) {
+			std::cerr << "WARNING: processOptions skipping line " << lineno
+					<< " (no '=')" << std::endl;
+		} else if (key.size() == 0) {
+			std::cerr << "WARNING: processOptions skipping line " << lineno
+					<< " (no key)" << std::endl;
+		} else if (value.size() == 0) {
+			std::cerr << "WARNING: processOptions skipping line " << lineno
+					<< " (no value)" << std::endl;
+		} else {
+			options[key] = value; // Success!
+			std::cout << "OPTION: '" << key << "' = '" << value << "'"
+					<< std::endl;
+		}
+
+	}
+}

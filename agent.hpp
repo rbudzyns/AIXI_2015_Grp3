@@ -84,7 +84,7 @@ public:
 	// get the agent's probability of receiving a particular percept
 	double perceptProbability(percept_t observation, percept_t reward) const; // TODO: implement in agent.cpp
 
-	ContextTree * getContextTree();
+	ContextTree * contextTree();
 private:
 	// action sanity check
 	bool isActionOk(action_t action) const;
