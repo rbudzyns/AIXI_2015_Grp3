@@ -41,8 +41,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
+	action_t action = 0;
 	for (unsigned int cycle = 1; cycle <= 100000; cycle++) {
-		action_t action;
+
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetiment" << std::endl;
@@ -52,12 +53,13 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Get a percept from the environment
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
+		int maxeroo = 1000;
 
-		if (cycle == 100001) {
+		if (cycle == maxeroo) {
 			return;
 		}
 
-		if (cycle < 100000) {
+		if (cycle < maxeroo - 1) {
 			observation = 1;
 			reward = (action == 1 ? 1 : 0);
 		} else {
@@ -68,7 +70,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Reward = " << reward << std::endl;
 
 		// Update agent's environment model with the new percept
-		int foo = 2;
+		int foo = maxeroo - 10;
 //		if (cycle > foo) {
 //			double bar = ai.getProbNextSymbol();
 //			if (isnan(bar)) {
@@ -87,6 +89,15 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Model update with real OR bits ^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
 
 		// Determine best exploitive action, or explore
+
+		if (cycle > foo) {
+			//ai.getContextTree()->print();
+			ai.getContextTree()->debugTree1();
+			std::cout << "action: (" << action << "), observation: ("
+					<< observation << "), reward = (" << reward
+					<< "), head prob: " << " " << pow(2, ai.getProbNextSymbol())
+					<< std::endl;
+		}
 
 		bool explored = false;
 		if (explore && rand01() < explore_rate) {
@@ -113,14 +124,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
-
-		if (cycle > foo) {
-			//ai.getContextTree()->print();
-			//ai.getContextTree()->debugTree1();
-			std::cout << "observation: (" << observation << "), action: ("
-					<< action << "), head prob: " << "| "
-					<< pow(2, ai.getProbNextSymbol()) << std::endl;
-		}
 
 		//ai.getContextTree()->debugTree();
 		//ai.getContextTree()->printRootKTAndWeight();

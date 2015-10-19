@@ -414,12 +414,19 @@ void ContextTree::debugTree1() {
 	//std::cout << "\nPreorder list of weighted probabilites" << std::endl;
 	std::vector<CTNode*> node_list;
 	node_list.push_back(m_root);
-	printTree1(node_list, 0);
+	printTree1(node_list, 0, 0);
+	std::cout << std::endl;
+	printTree1(node_list, 0, 1);
+	std::cout << std::endl;
+	printTree1(node_list, 0, 2);
+	std::cout << std::endl;
+	printTree1(node_list, 0, 3);
 	std::cout << std::endl;
 	//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
 }
 
-void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth) {
+void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth,
+		int type) {
 	int i = 0;
 
 	int n_next_level = pow(2, cur_depth + 1);
@@ -435,7 +442,16 @@ void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth) {
 	while (i < n_cur_level) {
 		node = node_list[i];
 		if (node != NULL) {
-			data[i] = node->m_log_prob_weighted;
+			if (type == 0) {
+				data[i] = node->m_log_prob_weighted;
+			} else if (type == 1) {
+				data[i] = node->m_log_prob_est;
+			} else if (type == 2) {
+				data[i] = node->m_count[0];
+			} else {
+				data[i] = node->m_count[1];
+			}
+
 			next_list[i * 2] = node->m_child[1];
 			next_list[i * 2 + 1] = node->m_child[0];
 		} else {
@@ -461,7 +477,7 @@ void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth) {
 		i++;
 	}
 	std::cout << std::endl;
-	printTree1(next_list, cur_depth + 1);
+	printTree1(next_list, cur_depth + 1, type);
 }
 
 void ContextTree::printTree(CTNode *node) {

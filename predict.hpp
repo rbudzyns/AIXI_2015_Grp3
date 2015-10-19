@@ -130,7 +130,7 @@ public:
 	void debugTree(void);
 	void debugTree1(void);
 	void printTree(CTNode *node);
-	void printTree1(std::vector<CTNode*> node_list, int cur_depth);
+	void printTree1(std::vector<CTNode*> node_list, int cur_depth, int type);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
 	void printRootKTAndWeight(void);
