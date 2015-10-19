@@ -158,20 +158,6 @@ void processOptions(std::ifstream &in, options_t &options) {
 	}
 }
 
-void testPredict() {
-	ContextTree* ct = new ContextTree(30);
-	symbol_list_t sym_list;
-
-	encode(sym_list, 1031234, 30);
-	ct->update(sym_list);
-	ct->updateHistory(sym_list);
-	ct->debugTree();
-
-	ct->revert();
-	ct->updateHistory(sym_list);
-	ct->debugTree();
-}
-
 void testAgentAndPredict(Agent *agent) {
 	symbol_list_t sym_list;
 
