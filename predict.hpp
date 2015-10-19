@@ -19,6 +19,9 @@ class CTNode {
 	friend class ContextTree; // i.e. ContextTree can access private members of CTNode
 
 public:
+
+	void print(void) const;
+
 	// log weighted blocked probability
 	weight_t logProbWeighted(void) const {
 		return m_log_prob_weighted;
@@ -47,7 +50,7 @@ private:
 
 	~CTNode(void);
 
-	// compute the logarithm of the KT-estimator update multiplier
+	// compute the logarithm of the KT-estimator update multiplier   
 	double logKTMul(symbol_t sym) const; // TODO: implement in predict.cpp
 
 	//TODO: implement in predict.cpp
@@ -81,6 +84,8 @@ public:
 
 	~ContextTree(void);
 
+	void print(void);
+
 	// clear the entire context tree
 	void clear(void);
 
@@ -90,6 +95,7 @@ public:
 	void update(const symbol_list_t &symbol_list); // TODO: implement in predict.cpp
 	// add a symbol to the history without updating the context tree.
 	void updateHistory(const symbol_list_t &symbol_list);
+	void updateHistory(const symbol_t sym);
 
 	//Recalculate the log weighted probability for this node.
 	void updateLogProbability(void);
@@ -122,9 +128,12 @@ public:
 	void walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path,
 			CTNode **current);
 	void debugTree(void);
+	void debugTree1(void);
 	void printTree(CTNode *node);
+	void printTree1(std::vector<CTNode*> node_list, int cur_depth, int type);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
+	void printRootKTAndWeight(void);
 
 	// get the n'th history symbol, NULL if doesn't exist
 	const symbol_t *nthHistorySymbol(size_t n) const;
@@ -152,6 +161,7 @@ private:
 	// ND: For updating the CT
 	size_t m_update_partial_count;
 	std::vector<symbol_t> m_update_partial_list;
+
 };
 
 #endif // __PREDICT_HPP__

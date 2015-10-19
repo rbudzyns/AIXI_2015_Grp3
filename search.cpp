@@ -38,7 +38,8 @@ DecisionNode::DecisionNode(obsrew_t obsrew) :
 
 DecisionNode::~DecisionNode() {
 	//std::cout << "DecisionNode::~DecisionNode" << std::endl;
-	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end();
+			i++) {
 		delete i->second;
 	}
 }
@@ -141,11 +142,15 @@ action_t DecisionNode::bestAction(Agent &agent) const {
 	if (m_children.size() > 0) {
 		reward_t max_val = 0;
 		action_t a = 1;
-		for (auto & it : m_children) {
-			if ((it.second)->expectation() > max_val) {
-				a = it.first;
+		for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+			//std::cout << " BestAction " << (it->second)->getAction() << " = " << (it->second)->expectation();
+			if ((it->second)->expectation() > max_val) {
+				a = it->first;
+				max_val = (it->second)->expectation();
+
 			}
 		}
+		//std::cout << std::endl;
 		return a;
 	} else {
 		std::cout << "Warning: generating random action in bestAction."
@@ -161,7 +166,8 @@ ChanceNode::ChanceNode(action_t action) :
 
 ChanceNode::~ChanceNode() {
 	//std::cout << "ChanceNode::~ChanceNode" << std::endl;
-	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
+	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
+			i++) {
 		delete i->second;
 	}
 }
@@ -227,11 +233,18 @@ extern action_t search(Agent &agent, double timeout) {
 	int iter = 0;
 	do {
 		ModelUndo mu = ModelUndo(agent);
+
 		root.sample(agent, 0u);
 		agent.modelRevert(mu);
+		//std::cout << "After FULL Model Revert++++++++++++++++++++" << std::endl;
+
 		endTime = clock();
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < timeout);
 
-	return root.bestAction(agent);
+	//std::cout << "Done searching" << std::endl;
+	action_t action = root.bestAction(agent);
+	//std::cout << "Taking action (" << action << ")" << std::endl;
+	return action;
+
 }

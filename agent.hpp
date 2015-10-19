@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "main.hpp"
+#include "predict.hpp"
 
 class ContextTree;
 
@@ -47,7 +48,7 @@ public:
 	size_t horizon(void) const;
 
 	// generate an action uniformly at random
-	action_t genRandomAction(void) const;
+	action_t genRandomAction(void);
 
 	// generate a percept distributed according
 	// to our history statistics
