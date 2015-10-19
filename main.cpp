@@ -58,7 +58,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Update agent's environment model with the new percept
 
-		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
+		ai.modelUpdate(observation, reward);
 
 		// Determine best exploitive action, or explore
 
@@ -79,10 +79,10 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		}
 
 		// Send an action to the environment
-		env.performAction(action);		// TODO: implement for each environment
+		env.performAction(action);
 
 		// Update agent's environment model with the chosen action
-		ai.modelUpdate(action); // TODO: implement in agent.cpp
+		ai.modelUpdate(action);
 		// Log this turn
 
 		aixi::log << "cycle: " << cycle << std::endl;
@@ -99,22 +99,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				<< action << ", " << explored << ", " << explore_rate << ", "
 				<< ai.reward() << ", " << ai.averageReward() << std::endl;
 
-		if (cycle > 100) {
-			running_tot += ai.getProbNextSymbol();
-		}
-		if (cycle % 500 == 0) {
-
-			std::cout << "cycle: " << cycle << std::endl;
-			std::cout << "head prob: " << ai.getProbNextSymbol() << std::endl;
-			std::cout << "avg head prob: " << running_tot / (cycle - 100)
-					<< std::endl;
-			std::cout << "average reward: " << ai.averageReward() << std::endl;
-
-			if (explore) {
-				std::cout << "explore rate: " << explore_rate << std::endl;
-			}
-		}
-
 		// Update exploration rate
 		if (explore)
 			explore_rate *= explore_decay;
@@ -123,7 +107,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 // Print summary to standard output
 
-	std::cout << std::endl << std::endl << "SUMMARY" << std::endl;
+	std::cout << std::endl << std::endl << "Episode finished. Summary:"
+			<< std::endl;
 	std::cout << "agent lifetime: " << ai.lifetime() << std::endl;
 	std::cout << "average reward: " << ai.averageReward() << std::endl;
 
@@ -174,7 +159,6 @@ int main(int argc, char *argv[]) {
 // Set up the environment
 	Environment *env;
 
-// TODO: instantiate the environment based on the "environment-name"
 // option. For any environment you do not implement you may delete the
 // corresponding if statement.
 // NOTE: you may modify the options map in order to set quantities such as
@@ -187,37 +171,13 @@ int main(int argc, char *argv[]) {
 	} else if (environment_name == "cheese-maze") {
 		env = new CheeseMaze(options);
 	} else if (environment_name == "extended-tiger") {
-		/*actions:          0 = stand
-		 *                  1 = listen
-		 *                  2 = open left door
-		 *                  3 = open right door
-
-		 * observations:    0 = nothing known
-		 *                  1 = tiger behind right door
-		 *                  2 = tiger behind left door
-		 */
 		env = new ExtTiger(options);
-		options["agent-actions"] = "4";
-		options["observation-bits"] = "2";
-		options["reward-bits"] = "8";
 	} else if (environment_name == "tictactoe") {
 		env = new TicTacToe(options);
-		options["agent-actions"] = "9";
-		options["observation-bits"] = "18";
-		options["reward-bits"] = "3";
-	}
-	/*
-
-	 Action 
-
-	 0 : rock
-	 1 : paper
-	 2 : scissors
-	 */
-	else if (environment_name == "biased-rock-paper-scissor") {
+	} else if (environment_name == "biased-rock-paper-scissor") {
 		env = new BRockPaperScissors(options);
 	} else if (environment_name == "pacman") {
-		// TODO: instantiate "env" (if appropriate)
+		env = new Pacman(options);
 	} else {
 		std::cerr << "ERROR: unknown environment '" << environment_name << "'"
 				<< std::endl;
@@ -228,12 +188,11 @@ int main(int argc, char *argv[]) {
 	Agent ai(options);
 
 // Run the main agent/environment interaction loop
-	int n_episodes = 10;
+	int n_episodes = 100;
 	for (int i = 0; i < n_episodes; i++) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		ai.newEpisode();
-
 	}
 
 	aixi::log.close();
