@@ -97,7 +97,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				action = search(ai, 0.03);
+				action = search(ai, 0.05);
 				//action = ai.genRandomAction();
 			} else {
 				std::cout << "Generating random action" << std::endl;
