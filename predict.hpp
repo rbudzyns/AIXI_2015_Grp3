@@ -130,7 +130,7 @@ public:
 	void debugTree(void);
 	void debugTree1(void);
 	void printTree(CTNode *node);
-	void printTree1(CTNode *node);
+	void printTree1(std::vector<CTNode*> node_list, int cur_depth);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
 	void printRootKTAndWeight(void);
@@ -162,7 +162,6 @@ private:
 	size_t m_update_partial_count;
 	std::vector<symbol_t> m_update_partial_list;
 
-	double print_out[7];
 };
 
 #endif // __PREDICT_HPP__

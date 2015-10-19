@@ -3,6 +3,9 @@
 
 #include <cassert>
 #include <cmath>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <unistd.h>
 
 CTNode::CTNode(void) :
 		m_log_prob_est(0.0), m_log_prob_weighted(0.0) {
@@ -409,16 +412,56 @@ void ContextTree::debugTree1() {
 	count = 0;
 	std::cout << std::endl;
 	//std::cout << "\nPreorder list of weighted probabilites" << std::endl;
-	printTree1 (m_root);
+	std::vector<CTNode*> node_list;
+	node_list.push_back(m_root);
+	printTree1(node_list, 0);
 	std::cout << std::endl;
 	//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
 }
 
-void ContextTree::printTree1(CTNode *node) {
+void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth) {
 	int i = 0;
-	while (i < m_depth) {
 
+	int n_next_level = pow(2, cur_depth + 1);
+	int n_cur_level = pow(2, cur_depth);
+	CTNode * node;
+	std::vector<CTNode*> next_list(n_next_level);
+	std::vector<double> data(n_next_level);
+
+	if (cur_depth > m_depth) {
+		return;
 	}
+
+	while (i < n_cur_level) {
+		node = node_list[i];
+		if (node != NULL) {
+			data[i] = node->m_log_prob_weighted;
+			next_list[i * 2] = node->m_child[1];
+			next_list[i * 2 + 1] = node->m_child[0];
+		} else {
+			data[i] = -1.234;
+			next_list[i * 2] = NULL;
+			next_list[i * 2 + 1] = NULL;
+		}
+		i++;
+	}
+	i = 0;
+	int n_pad = 80 / (n_cur_level + 1);
+	char pad[n_pad + 1];
+
+	while (i < n_pad - 1) {
+		pad[i] = 0x20;
+		i++;
+	}
+	pad[i] = 0;
+
+	i = 0;
+	while (i < n_cur_level) {
+		std::cout << pad << data[i];
+		i++;
+	}
+	std::cout << std::endl;
+	printTree1(next_list, cur_depth + 1);
 }
 
 void ContextTree::printTree(CTNode *node) {
