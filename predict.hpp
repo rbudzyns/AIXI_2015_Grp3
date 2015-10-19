@@ -137,9 +137,6 @@ private:
     CTNode *m_root;      // the root node of the context tree
     size_t m_depth;      // the maximum depth of the context tree
 
-    // ND: For updating the CT
-    size_t m_update_partial_count;
-    std::vector<symbol_t> m_update_partial_list;
 };
 
 #endif // __PREDICT_HPP__
