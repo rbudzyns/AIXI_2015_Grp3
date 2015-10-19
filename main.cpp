@@ -43,8 +43,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	// Agent/environment interaction loop
 
 	action_t action = 0;
-	double running_tot = 0;
-
 	for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
