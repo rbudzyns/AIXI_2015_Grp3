@@ -19,6 +19,9 @@ class CTNode {
 	friend class ContextTree; // i.e. ContextTree can access private members of CTNode
 
 public:
+
+	void print(void) const;
+
 	// log weighted blocked probability
 	weight_t logProbWeighted(void) const {
 		return m_log_prob_weighted;
@@ -81,6 +84,8 @@ public:
 
 	~ContextTree(void);
 
+	void print(void);
+
 	// clear the entire context tree
 	void clear(void);
 
@@ -123,7 +128,9 @@ public:
 	void walkAndGeneratePath(int bit_fix, std::vector<CTNode*> &context_path,
 			CTNode **current);
 	void debugTree(void);
+	void debugTree1(void);
 	void printTree(CTNode *node);
+	void printTree1(CTNode *node);
 	void printInTree(CTNode *node);
 	void printPreTree(CTNode *node);
 	void printRootKTAndWeight(void);
@@ -154,6 +161,8 @@ private:
 	// ND: For updating the CT
 	size_t m_update_partial_count;
 	std::vector<symbol_t> m_update_partial_list;
+
+	double print_out[7];
 };
 
 #endif // __PREDICT_HPP__

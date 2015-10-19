@@ -19,6 +19,10 @@ CTNode::~CTNode(void) {
 		delete m_child[1];
 }
 
+void CTNode::print(void) const {
+	std::cout << "Printing node..." << std::endl;
+}
+
 // number of descendants of a node in the context tree
 size_t CTNode::size(void) const {
 
@@ -46,36 +50,43 @@ void CTNode::updateLogProbability(void) {
 			m_log_prob_weighted = m_log_prob_est;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		} else {
+//			m_log_prob_weighted = log2(
+//					pow(2, m_child[1]->m_log_prob_weighted - m_log_prob_est)
+//							+ 1) + m_log_prob_est - 1;
 			m_log_prob_weighted = log2(
-					pow(2, m_child[1]->m_log_prob_weighted - m_log_prob_est)
-							+ 1) + m_log_prob_est - 1;
+					pow(2, m_log_prob_est - m_child[1]->m_log_prob_weighted)
+							+ 1) + m_child[1]->m_log_prob_weighted - 1;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		}
 	} else {
 		if (m_child[1] == NULL) {
+//			m_log_prob_weighted = log2(
+//					pow(2, m_child[0]->m_log_prob_weighted - m_log_prob_est)
+//							+ 1) + m_log_prob_est - 1;
 			m_log_prob_weighted = log2(
-					pow(2, m_child[0]->m_log_prob_weighted - m_log_prob_est)
-							+ 1) + m_log_prob_est - 1;
+					pow(2,  m_log_prob_est - m_child[0]->m_log_prob_weighted)
+							+ 1) + m_child[0]->m_log_prob_weighted - 1;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		} else {
-			double aaa = m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est;
-			assert(!isnan(aaa) && !isinf(aaa));
-			double bbb = pow(2, aaa) + 1;
-			if (isnan(bbb) || isinf(bbb)) {
-				std::cout << "root counts: " << m_count[0] << "," << m_count[1] << std::endl;
-				std::cout << "child0 counts: " << m_child[0]->m_count[0] << "," << m_child[0]->m_count[1] << std::endl;
-				std::cout << "child1 counts: " << m_child[1]->m_count[0] << "," << m_child[1]->m_count[1] << std::endl;
-				std::cout << "aaa is: child0weighted " << m_child[0]->m_log_prob_weighted << " + child1weighted" << m_child[1]->m_log_prob_weighted << " - kt " << m_log_prob_est << std::endl;
-				std::cout << "aaa is: " << aaa << std::endl;
-				double var1 = pow(10,300);
-				double var2 = pow(10,300)-0.5;
-				double var3 = var1 - var2;
-				std::cout << "floating point error is: " << var3 << std::endl;
-			}
-			assert(!isnan(bbb) && !isinf(bbb));
-			double ccc = log2(bbb) + m_log_prob_est - 1;
-			assert(!isnan(bbb) && !isinf(bbb));
-			m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
+//			double aaa = m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est;
+//			assert(!isnan(aaa) && !isinf(aaa));
+//			double bbb = pow(2, aaa) + 1;
+//			if (isnan(bbb) || isinf(bbb)) {
+//				std::cout << "root counts: " << m_count[0] << "," << m_count[1] << std::endl;
+//				std::cout << "child0 counts: " << m_child[0]->m_count[0] << "," << m_child[0]->m_count[1] << std::endl;
+//				std::cout << "child1 counts: " << m_child[1]->m_count[0] << "," << m_child[1]->m_count[1] << std::endl;
+//				std::cout << "aaa is: child0weighted " << m_child[0]->m_log_prob_weighted << " + child1weighted" << m_child[1]->m_log_prob_weighted << " - kt " << m_log_prob_est << std::endl;
+//				std::cout << "aaa is: " << aaa << std::endl;
+//				double var1 = pow(10,300);
+//				double var2 = pow(10,300)-pow(10,30);
+//				double var3 = var1 - var2;
+//				std::cout << "floating point error is: " << var3 << std::endl;
+//			}
+//			assert(!isnan(bbb) && !isinf(bbb));
+//			double ccc = log2(bbb) + m_log_prob_est - 1;
+//			assert(!isnan(bbb) && !isinf(bbb));
+//			m_log_prob_weighted = log2(pow(2, m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted - m_log_prob_est) + 1) + m_log_prob_est - 1;
+			m_log_prob_weighted = log2(pow(2,  m_log_prob_est - (m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted)) + 1) + (m_child[0]->m_log_prob_weighted + m_child[1]->m_log_prob_weighted) - 1;
 			assert(!isnan(m_log_prob_weighted) && !isinf(m_log_prob_weighted));
 		}
 	}
@@ -134,6 +145,11 @@ void ContextTree::clear(void) {
 	if (m_root)
 		delete m_root;
 	m_root = new CTNode();
+}
+
+void ContextTree::print(void) {
+	std::cout << "Printing tree..." << std::endl;
+	m_root->print();
 }
 
 void ContextTree::update(const symbol_t sym) {
@@ -272,6 +288,7 @@ double ContextTree::getLogProbNextSymbolGivenH(symbol_t sym) {
 	revertHistory(m_history.size() - 1);
 
 	//std::cout << "getLogProbNextSymbolGivenH After revert"<<std::endl;
+	std::cout << "getLogProbNextSymbolGivenH: " << prob_log_next_bit << std::endl;
 
 	return prob_log_next_bit;
 }
@@ -354,6 +371,27 @@ void ContextTree::debugTree() {
 	printTree (m_root);
 	std::cout << std::endl;
 	//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
+}
+
+void ContextTree::debugTree1() {
+	std::cout << "History : " << "C0 = " << m_root->m_count[0] << " C1 = "
+			<< m_root->m_count[1] << std::endl;
+	for (int i = 0; i < m_history.size(); i++) {
+		std::cout << m_history.at(i);
+	}
+	count = 0;
+	std::cout << std::endl;
+	//std::cout << "\nPreorder list of weighted probabilites" << std::endl;
+	printTree1 (m_root);
+	std::cout << std::endl;
+	//std::cout << __FILE__ << " " <<  __LINE__ << " " << __func__ << " " << "----------------------------" << std::endl;
+}
+
+void ContextTree::printTree1(CTNode *node) {
+	int i = 0;
+	while(i < m_depth) {
+
+	}
 }
 
 void ContextTree::printTree(CTNode *node) {

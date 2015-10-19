@@ -41,7 +41,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	// Agent/environment interaction loop
 	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
-	for (unsigned int cycle = 1; cycle <= 10000; cycle++) {
+	for (unsigned int cycle = 1; cycle <= 1000; cycle++) {
 
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
@@ -55,19 +55,19 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		//std::cout << "Reward = " << reward << std::endl;
 
 		// Update agent's environment model with the new percept
-		int foo = 100;
-		if (cycle > foo) {
-			double bar = ai.getProbNextSymbol();
-			if (isnan(bar)) {
-				return;
-			}
-			std::cout << "before model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
-		}
+		int foo = 2;
+//		if (cycle > foo) {
+//			double bar = ai.getProbNextSymbol();
+//			if (isnan(bar)) {
+//				return;
+//			}
+//			std::cout << "before model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
+//		}
 
 		ai.modelUpdate(observation, reward); // TODO: implement in agent.cpp
-		if (cycle > foo) {
-			std::cout << "after model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
-		}
+//		if (cycle > foo) {
+//			std::cout << "after model update with o_r head prob: " << ai.getProbNextSymbol() << std::endl;
+//		}
 
 		//std::cout << "Hello" << std::endl;
 
@@ -82,7 +82,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				action = search(ai, 0.01);
+				//action = search(ai, 0.01);
+				action = ai.genRandomAction();
 			} else {
 				std::cout << "Generating random action" << std::endl;
 				action = ai.genRandomAction();
@@ -92,15 +93,17 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 		// Send an action to the environment
 		env.performAction(action); // TODO: implement for each environment
-		if (cycle > foo) {
-			std::cout << "after action performed head prob: " << ai.getProbNextSymbol() << std::endl;
-		}
+//		if (cycle > foo) {
+//			std::cout << "after action performed head prob: " << ai.getProbNextSymbol() << std::endl;
+//		}
 		//std::cout << "Action performed======================"<<std::endl;
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action); // TODO: implement in agent.cpp
 		if (cycle > foo) {
-			std::cout << "after model update with action (" << action << ") head prob: " << ai.getProbNextSymbol() << std::endl;
+			//ai.getContextTree()->print();
+			ai.getContextTree()->debugTree1();
+			std::cout << "after model update with action (" << action << ") head prob: " << pow(2,ai.getProbNextSymbol()) << std::endl;
 		}
 
 
