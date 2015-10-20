@@ -193,7 +193,7 @@ ExtTiger::ExtTiger(options_t &options)
 		strExtract(options["listen-p"], p);
 	}
 	assert(0.0 <= p);
-	assert(p >= 1.0);
+	assert(p <= 1.0);
 
 	standing = 0; //player is sitting
 	tiger = rand01() < 0.5 ? 1 : 2; //tiger behind left door with 0.5 probability.
