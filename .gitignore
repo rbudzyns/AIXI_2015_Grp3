@@ -31,11 +31,11 @@
 .cproject
 .project
 /Debug/
-<<<<<<< HEAD
-/Report/
 
-=======
+
+
 /Docs/
 /Report/
->>>>>>> predict1
 log.*
+
+/final_report/.ipynb_checkpoints/
