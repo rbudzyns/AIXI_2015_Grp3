@@ -16,6 +16,7 @@ Agent::Agent(options_t & options) {
 	strExtract(options["ct-depth"], m_max_tree_depth);
 	strExtract<unsigned int>(options["reward-bits"], m_rew_bits);
 	strExtract(options["timeout"], m_timeout);
+	strExtract(options["UCB-weight"], m_UCBWeight);
 
 	// calculate the number of bits needed to represent the action
 	for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
@@ -25,7 +26,6 @@ Agent::Agent(options_t & options) {
 	m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
 	reset();
 
-	m_UCBWeight = 1.0;
 }
 
 // destruct the agent and the corresponding context tree

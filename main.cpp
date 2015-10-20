@@ -140,11 +140,12 @@ int main(int argc, char *argv[]) {
 
 // Default configuration values
 
-	options["ct-depth"] = "3";
-	options["agent-horizon"] = "16";
-	options["exploration"] = "0";		// do not explore
+	options["ct-depth"] = "3";				// max context tree depth
+	options["agent-horizon"] = "16";		// agent max search horizon
+	options["exploration"] = "0";			// do not explore
 	options["explore-decay"] = "1.0";		// exploration rate does not decay
-	options["timeout"] = "0.5"; // timeout
+	options["timeout"] = "0.5"; 			// timeout
+	options["UCB-weight"] = "1.41"; 		// UCB weight
 
 // Read configuration options
 
