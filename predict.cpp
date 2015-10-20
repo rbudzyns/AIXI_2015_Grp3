@@ -143,6 +143,11 @@ ContextTree::~ContextTree(void) {
 		delete m_root;
 }
 
+// reset the history to the last ct-depth size of history
+void ContextTree::resetHistory(void) {
+	m_history.erase(m_history.begin(), m_history.begin() + (m_history.size() - m_depth) );
+}
+
 // clear the entire context tree
 void ContextTree::clear(void) {
 	m_history.clear();
@@ -328,9 +333,8 @@ void ContextTree::debugTree() {
 	}
 	count = 0;
 	std::cout << std::endl;
-
-	printTree (m_root);
-	std::cout << std::endl;
+	//printTree (m_root);
+	//std::cout << std::endl;
 
 }
 
@@ -417,7 +421,7 @@ void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth,
 
 void ContextTree::printTree(CTNode *node) {
 	std::cout << "Count " << ++count << " Node Weighted probability "
-			<< node->m_log_prob_weighted << std::endl;
+		<< node->m_log_prob_weighted << std::endl;
 
 	if (node->m_child[1] != NULL)
 		printTree(node->m_child[1]);

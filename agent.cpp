@@ -49,7 +49,7 @@ reward_t Agent::reward(void) const {
 
 // the average reward received by the agent at each time step
 reward_t Agent::averageReward(void) const {
-	return lifetime() > 0 ? reward() / reward_t(lifetime()) : 0.0;
+	return lifetime() > 0 ? reward() / reward_t(lifetime()+1) : 0.0;
 }
 
 // maximum reward in a single time instant
@@ -198,6 +198,7 @@ void Agent::reset(void) {
 void Agent::newEpisode(void) {
 	m_time_cycle = 0;
 	m_total_reward = 0.0;
+	m_ct->resetHistory();
 }
 
 // probability of selecting an action according to the

@@ -43,17 +43,22 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	// Agent/environment interaction loop
 
 	action_t action = 0;
+	//for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
 	int cycle = 1;
 	while (true) {
+		//std::cout << "HistSize: " << ai.historySize() << " MaxTreeDepth: " << ai.maxTreeDepth() << std::endl;
+
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
-			aixi::log << "info: terminating lifetiment" << std::endl;
+			aixi::log << "info: terminating lifetime" << std::endl;
 			break;
 		}
 
 		// Get a percept from the environment
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
+		//std::cout << "Reward = " << reward << std::endl;
+
 
 		// Update agent's environment model with the new percept
 
@@ -70,18 +75,26 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			explored = true;
 			action = ai.genRandomAction();
 		} else {
-
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				action = search(ai, 0.05);
+				action = search(ai, 0.1);
+				//action = ai.genRandomAction();
 
 			} else {
 				action = ai.genRandomAction();
-				std::cout << "Generating random action: " << action
-						<< std::endl;
+				// std::cout << "Generating random action: " << action
+				//		<< std::endl;
 			}
 		}
 
 		// Send an action to the environment
+//		if (cycle == 1)
+//			action = 1; // move right 3, 3, 3, 2, 2, 2, 1, 1
+//		if (cycle == 2)
+//			action = 2; // move down  1, 2, 0, 0, 1, 3, 0, 3
+//		if (cycle == 3)
+//			action = 2; // move down
+//
+//		std::cout << "Performing action " << action << std::endl;
 		env.performAction(action);
 
 		// Update agent's environment model with the chosen action
@@ -106,14 +119,14 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		if (explore)
 			explore_rate *= explore_decay;
 
-		cycle++;
+        cycle++;
 	}
 
 // Print summary to standard output
 
 	std::cout << std::endl << std::endl << "Episode finished. Summary:"
 			<< std::endl;
-	std::cout << "agent lifetime: " << ai.lifetime() << std::endl;
+	std::cout << "agent lifetime: " << ai.lifetime()+1 << std::endl;
 	std::cout << "average reward: " << ai.averageReward() << std::endl;
 
 }
@@ -146,8 +159,8 @@ int main(int argc, char *argv[]) {
 
 	options["ct-depth"] = "3";
 	options["agent-horizon"] = "16";
-	options["exploration"] = "0"; // do not explore
-	options["explore-decay"] = "1.0"; // exploration rate does not decay
+	options["exploration"] = "0";		// do not explore
+	options["explore-decay"] = "1.0";		// exploration rate does not decay
 
 // Read configuration options
 
@@ -192,11 +205,13 @@ int main(int argc, char *argv[]) {
 	Agent ai(options);
 
 // Run the main agent/environment interaction loop
-	int n_episodes = 100;
+	int n_episodes = 1000;
 	for (int i = 0; i < n_episodes; i++) {
 		mainLoop(ai, *env, options);
 		env->envReset();
+		ai.contextTree()->debugTree();
 		ai.newEpisode();
+		ai.contextTree()->debugTree();
 	}
 
 	aixi::log.close();

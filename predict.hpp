@@ -86,6 +86,9 @@ public:
 
 	void print(void);
 
+	// reset the history to the last ct-depth size of history
+	void resetHistory(void);
+
 	// clear the entire context tree
 	void clear(void);
 
