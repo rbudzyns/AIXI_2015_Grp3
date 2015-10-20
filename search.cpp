@@ -10,9 +10,6 @@
 #include "util.hpp"
 
 // search options
-static const visits_t MinVisitsBeforeExpansion = 1;
-static const unsigned int MaxDistanceFromRoot = 20;
-static size_t MaxSearchNodes;
 static const int MaxBranchFactor = 100;
 
 // constructor
@@ -71,7 +68,7 @@ bool DecisionNode::addChild(ChanceNode* child) {
 // returning the accumulated reward from this sample run
 reward_t DecisionNode::sample(Agent &agent, unsigned int dfr) {
 	reward_t reward;
-	if (dfr == MaxDistanceFromRoot) { // horizon has been reached
+	if (dfr == agent.horizon()) { // horizon has been reached
 		return 0;
 	} else if (m_visits == 0) {
 		reward = playout(agent, agent.horizon() - dfr);
@@ -188,7 +185,7 @@ bool ChanceNode::addChild(DecisionNode* child) {
 // returning the accumulated reward from this sample run
 reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	reward_t reward;
-	if (dfr == MaxDistanceFromRoot) { // horizon has been reached
+	if (dfr == agent.horizon()) { // horizon has been reached
 		return 0;
 	} else {
 		percept_t* percept = agent.genPerceptAndUpdate();
