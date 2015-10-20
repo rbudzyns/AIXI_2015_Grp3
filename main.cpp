@@ -43,7 +43,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	// Agent/environment interaction loop
 
 	action_t action = 0;
-	for (unsigned int cycle = 1; !env.isFinished(); cycle++) {
+	int cycle = 1;
+	while (true) {
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetiment" << std::endl;
@@ -57,6 +58,10 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Update agent's environment model with the new percept
 
 		ai.modelUpdate(observation, reward);
+
+		if (env.isFinished()) {
+			break;
+		}
 
 		// Determine best exploitive action, or explore
 
@@ -101,6 +106,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		if (explore)
 			explore_rate *= explore_decay;
 
+		cycle++;
 	}
 
 // Print summary to standard output
@@ -140,8 +146,8 @@ int main(int argc, char *argv[]) {
 
 	options["ct-depth"] = "3";
 	options["agent-horizon"] = "16";
-	options["exploration"] = "0";		// do not explore
-	options["explore-decay"] = "1.0";		// exploration rate does not decay
+	options["exploration"] = "0"; // do not explore
+	options["explore-decay"] = "1.0"; // exploration rate does not decay
 
 // Read configuration options
 

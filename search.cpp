@@ -11,7 +11,7 @@
 
 // search options
 static const visits_t MinVisitsBeforeExpansion = 1;
-static const unsigned int MaxDistanceFromRoot = 100;
+static const unsigned int MaxDistanceFromRoot = 10;
 static size_t MaxSearchNodes;
 static const int MaxBranchFactor = 100;
 
