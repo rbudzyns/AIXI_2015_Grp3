@@ -15,6 +15,7 @@ Agent::Agent(options_t & options) {
 	strExtract(options["observation-bits"], m_obs_bits);
 	strExtract(options["ct-depth"], m_max_tree_depth);
 	strExtract<unsigned int>(options["reward-bits"], m_rew_bits);
+	strExtract(options["timeout"], m_timeout);
 
 	// calculate the number of bits needed to represent the action
 	for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
@@ -49,7 +50,7 @@ reward_t Agent::reward(void) const {
 
 // the average reward received by the agent at each time step
 reward_t Agent::averageReward(void) const {
-	return lifetime() > 0 ? reward() / reward_t(lifetime()+1) : 0.0;
+	return lifetime() > 0 ? reward() / reward_t(lifetime() + 1) : 0.0;
 }
 
 // maximum reward in a single time instant
@@ -199,6 +200,10 @@ void Agent::newEpisode(void) {
 	m_time_cycle = 0;
 	m_total_reward = 0.0;
 	m_ct->resetHistory();
+}
+
+double Agent::timeout(void) {
+	return m_timeout;
 }
 
 // probability of selecting an action according to the

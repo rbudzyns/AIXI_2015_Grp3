@@ -71,7 +71,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				action = search(ai, 0.1);
+				action = search(ai);
 			} else {
 				action = ai.genRandomAction();
 				// std::cout << "Generating random action: " << action
@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
 	options["agent-horizon"] = "16";
 	options["exploration"] = "0";		// do not explore
 	options["explore-decay"] = "1.0";		// exploration rate does not decay
+	options["timeout"] = "0.5"; // timeout
 
 // Read configuration options
 

@@ -77,6 +77,8 @@ public:
 	// reset, but don't kill the CTW;
 	void newEpisode(void);
 
+	double timeout(void);
+
 	// probability of selecting an action according to the
 	// agent's internal model of it's own behaviour
 	double getPredictedActionProb(action_t action); // TODO: implement in agent.cpp
@@ -105,6 +107,7 @@ private:
 	unsigned int m_obs_bits;     // number of bits to represent an observation
 	unsigned int m_rew_bits;     // number of bits to represent a reward
 	size_t m_horizon;            // length of the search horizon
+	double m_timeout;			 // timeout value for MC search
 
 	// the max CTW tree depth
 	size_t m_max_tree_depth;
