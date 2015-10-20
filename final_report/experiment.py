@@ -1,7 +1,6 @@
 # imports and setup 
 import numpy as np
 import matplotlib.pyplot as plt
-% matplotlib inline
 import pandas as pd
 
 # cheese-maze-1 and cheese-maze 2 run with exploration=0.1, cheese value = default, ct-depth=256, horizon=16.
