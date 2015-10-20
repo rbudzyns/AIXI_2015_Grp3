@@ -44,7 +44,12 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	action_t action = 0;
 	int cycle = 1;
+
+	//double total_head_prob = 0.0;
+
 	while (true) {
+		//std::cout << "HistSize: " << ai.historySize() << " MaxTreeDepth: " << ai.maxTreeDepth() << std::endl;
+
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetime" << std::endl;
@@ -71,7 +76,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
+
 				action = search(ai);
+
 			} else {
 				action = ai.genRandomAction();
 				// std::cout << "Generating random action: " << action
@@ -102,6 +109,14 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		if (explore)
 			explore_rate *= explore_decay;
 
+//		std::cout << "agent lifetime: " << ai.lifetime() + 1 << std::endl;
+//		std::cout << "average reward: " << ai.averageReward() << std::endl;
+//		int cyclebits = 16;
+//		int buffer = 300*cyclebits;
+//		if(cycle > buffer) {
+//			total_head_prob += ai.getProbNextSymbol();
+//			std::cout<< total_head_prob/(cycle-buffer)<<std::endl;
+//		}
 		cycle++;
 	}
 
@@ -188,13 +203,18 @@ int main(int argc, char *argv[]) {
 // Set up the agent
 	Agent ai(options);
 
+//	mainLoop(ai, *env, options);
+
 // Run the main agent/environment interaction loop
-	int n_episodes = 1000;
+	int n_episodes = 10000;
 	for (int i = 0; i < n_episodes; i++) {
 		mainLoop(ai, *env, options);
 		env->envReset();
+		//ai.contextTree()->debugTree();
 		ai.newEpisode();
+		//ai.contextTree()->debugTree();
 	}
+
 
 	aixi::log.close();
 	compactLog.close();

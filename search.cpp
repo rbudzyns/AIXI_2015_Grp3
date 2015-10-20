@@ -190,13 +190,14 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	} else {
 		percept_t* percept = agent.genPerceptAndUpdate();
 		obsrew_t o_r = std::make_pair(percept[0], percept[1]);
-		delete percept;
+
 		bool found = m_children.count(o_r);
 		if (!found) {
 			DecisionNode* decision_node = new DecisionNode(o_r);
 			addChild(decision_node);
 		}
 		reward = percept[1] + m_children[o_r]->sample(agent, dfr + 1);
+		delete percept;
 	}
 	m_mean = (1.0 / (m_visits + 1)) * (reward + m_visits * m_mean);
 	m_visits++;
@@ -228,8 +229,10 @@ extern action_t search(Agent &agent) {
 	int iter = 0;
 	do {
 		ModelUndo mu = ModelUndo(agent);
+
 		root.sample(agent, 0u);
 		agent.modelRevert(mu);
+
 		endTime = clock();
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < agent.timeout());

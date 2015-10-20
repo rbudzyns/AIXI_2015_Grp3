@@ -124,12 +124,10 @@ void CTNode::update(const symbol_t symbol) {
 void CTNode::revert(const symbol_t symbol) {
 	m_count[symbol]--;
 	if (m_count[0] == 0 && m_count[1] == 0) {
-		m_log_prob_est = 0.0;
-		m_log_prob_weighted = 0.0;
-	} else {
-		m_log_prob_est -= logKTMul(symbol);
-		updateLogProbability();
+		return;
 	}
+	m_log_prob_est -= logKTMul(symbol);
+	updateLogProbability();
 }
 
 // create a context tree of specified maximum depth
@@ -225,14 +223,24 @@ void ContextTree::walkAndGeneratePath(int bit_fix,
 void ContextTree::revert(void) {
 	std::vector<CTNode*> context_path;
 	CTNode* current = m_root;
+	int cur_depth = m_depth;
 
 	walkAndGeneratePath(-1, context_path, &current);
 
 	while (context_path.empty() != true) {
 		// Update the nodes along the context path bottom up
 		current->revert(m_history.at(m_history.size() - 1));
-		current = context_path.back();
-		context_path.pop_back();
+
+		if (current->m_count[0] == 0 && current->m_count[1] == 0) {
+			delete current;
+			current = context_path.back();
+			context_path.pop_back();
+			current->m_child[m_history.at(m_history.size() - cur_depth -1)] = NULL;
+		} else {
+			current = context_path.back();
+			context_path.pop_back();
+		}
+		cur_depth--;
 	}
 	current->revert(m_history.at(m_history.size() - 1));
 }
@@ -349,11 +357,11 @@ void ContextTree::debugTree1() {
 
 	std::vector<CTNode*> node_list;
 	node_list.push_back(m_root);
-	std::cout << "Weighted..." << std::endl;
-	printTree1(node_list, 0, 0);
-	std::cout << std::endl;
-	std::cout << "Est..." << std::endl;
-	printTree1(node_list, 0, 1);
+//	std::cout << "Weighted..." << std::endl;
+//	printTree1(node_list, 0, 0);
+//	std::cout << std::endl;
+//	std::cout << "Est..." << std::endl;
+//	printTree1(node_list, 0, 1);
 	std::cout << std::endl;
 	std::cout << "Zeros..." << std::endl;
 	printTree1(node_list, 0, 2);
