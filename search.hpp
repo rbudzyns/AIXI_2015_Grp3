@@ -83,7 +83,7 @@ public:
 
 	~ChanceNode();
 
-    // add a new child decision node
+	// add a new child decision node
 	bool addChild(DecisionNode* child);
 
 	// get action label
@@ -100,7 +100,7 @@ private:
 };
 
 // determine the best action by searching ahead
-extern action_t search(Agent &agent, double timeout);
+extern action_t search(Agent &agent);
 
 // simulate a path through a hypothetical future for the agent within its
 // internal model of the world, returning the accumulated reward.
