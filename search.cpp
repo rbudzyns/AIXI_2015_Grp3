@@ -11,7 +11,7 @@
 
 // search options
 static const visits_t MinVisitsBeforeExpansion = 1;
-static const unsigned int MaxDistanceFromRoot = 10;
+static const unsigned int MaxDistanceFromRoot = 20;
 static size_t MaxSearchNodes;
 static const int MaxBranchFactor = 100;
 
@@ -193,6 +193,7 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	} else {
 		percept_t* percept = agent.genPerceptAndUpdate();
 		obsrew_t o_r = std::make_pair(percept[0], percept[1]);
+		delete percept;
 		bool found = m_children.count(o_r);
 		if (!found) {
 			DecisionNode* decision_node = new DecisionNode(o_r);
@@ -215,6 +216,7 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 		agent.modelUpdate(a);
 		percept_t* percept = agent.genPerceptAndUpdate();
 		reward += percept[1];
+		delete percept;
 	}
 
 	return reward;
