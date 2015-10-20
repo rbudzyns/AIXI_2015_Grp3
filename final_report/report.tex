@@ -63,12 +63,34 @@ The report archive should contian the following:
 \begin{verbatim}
 MC-AIXI-CTW-Grp3.zip
     \report
-        This report
-        Latex files
-        Plot pngs
+        report.pdf // this report
+        report.tex
+        cheesemaze_01.png // results plots
+        extended_tiger_01.png
+        biased_rock_paper_scissor_01.png
+        tic_tac_toe_01.png
+        pacman_01.png
     \src
-        C++ source code
-        Environment configuration files
+        main.hpp
+        main.cpp
+        environment.hpp
+        environment.cpp
+        agent.hpp
+        agent.cpp
+        search.hpp
+        search.cpp
+        predict.hpp
+        predict.cpp
+        util.hpp
+        util.cpp
+        README.md
+        cheesemaze.conf // environment configuration files
+        rockpaper.conf
+        tictactoe.conf
+        coinflip.conf
+        tiger.conf
+
+        
 \end{verbatim}
 
 \subsection{User Manual}
@@ -84,6 +106,12 @@ MC-AIXI-CTW-Grp3.zip
 
 \subsection{Monte Carlo Tree Search (MCTS) Algorithm}
 
+\begin{enumerate}[a)]
+\item Source code files
+\item Class structure (SearchNode, DecisionNode, ChanceNode, ...)
+\item Description of the algorithm (Veness...)
+\end{enumerate}
+
 \subsection{Context Tree Weighting (CTW)}
 
 \section{Simulation Results}
@@ -91,15 +119,17 @@ MC-AIXI-CTW-Grp3.zip
 \begin{itemize}
 \item Experimental setup ... \\
 Any simulation provided should include detailed description of experimental setup; selected parameters of algorithms and examples; and concise interpretations of obtained simulation results. \\
-\begin{table}[htbp!]
-\centering
-\label{my-label}
-\begin{tabular}{l|l|l}
+
+\begin{tabular}{|l|l|l|c}
+\hline
 Environment & MCTS & CTW \\
 \hline
-1 & m = ? & ct-depth = ?
+1 & $m = 100$      & $\text{ct-depth} = 96$ \\
+\hline
+  & $C = \sqrt{2}$ &  \\
+\hline
 \end{tabular}
-\end{table}
+
 \item Plots ... \\
 \includegraphics[scale=0.4]{./cheesemaze_01}
 \item Interpretation of Results
