@@ -40,3 +40,5 @@ log.*
 /final_report/report.log
 /final_report/report.aux
 /final_report/report.synctex.gz
+/final_report/#report.lyx#
+/final_report/*.eps
