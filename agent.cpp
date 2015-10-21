@@ -24,6 +24,11 @@ Agent::Agent(options_t & options) {
 	}
 
 	m_ct = new ContextTree(strExtract<unsigned int>(options["ct-depth"]));
+
+	// build a new uct
+	obsrew_t o_r = std::make_pair(NULL, NULL);
+	m_st = new DecisionNode(o_r);
+
 	reset();
 
 }
@@ -279,6 +284,18 @@ action_t Agent::decodeAction(const symbol_list_t &symlist) const {
 // Decodes the reward from a list of symbols
 percept_t Agent::decodeReward(const symbol_list_t &symlist) const {
 	return decode(symlist, m_rew_bits);
+}
+
+// return the search tree
+DecisionNode * Agent::searchTree() {
+	return m_st;
+}
+
+// reset the search tree to a new root node
+void Agent::searchTreeReset() {
+	delete m_st;
+	obsrew_t o_r = std::make_pair(NULL, NULL);
+	m_st = new DecisionNode(o_r);
 }
 
 // used to revert an agent to a previous state
