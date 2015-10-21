@@ -30,3 +30,4 @@
 # Eclipse
 .cproject
 .project
+/Debug/

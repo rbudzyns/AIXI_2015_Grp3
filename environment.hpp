@@ -90,7 +90,7 @@ private:
 };
 
 //Extented Tiger environment.It maps the location of tiger using a integer variable tiger.
-//If tiger is 2 then tiger is behind left door and 1 if tiger is behind right door.
+//If tiger is true then tiger is behind left door and false if tiger is behind right door.
 //The gold pot is obviously behind the other door.
 //Agent state is mapped using boolean variable sitting. 1 for standing, 0 for sitting.
 class ExtTiger : public Environment{
@@ -101,9 +101,18 @@ public:
 	//actions of the agent and set up percept based on action;
 	virtual void performAction(action_t action);
 	
+	//Check if the environment is finished
+	virtual bool isFinished(void) const;
+
+	//reset the environment
+	virtual void envReset(void);
+
+	//shift the percepts
+	percept_t getReward(void) const;
+
 private:
 	double p; //probability of listening correctly
-	unsigned int tiger; //position of tiger
+	bool tiger; //position of tiger
 	bool standing; //player is standing
 };
 
@@ -366,6 +375,41 @@ private:
 			}
 		}
 		return sight.to_ulong() & INT_MAX;
+	}
+
+	bool isCaught()
+	{
+
+		for(int i = 0; i<4; i++)
+		{
+			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y); //ghost is active and pacman does not have power pill
+				if(ghost[i].state && !pacman.state)
+					return 1;
+				else if(pacman.state) //pacman under effect of power pill
+					ghost[i].state = 0;
+		}
+		return 0;
+	}
+
+	void manMove(int ghostNo)
+	{
+		for(int i=3; i>=0; i--) //iterate through all possible neighbours
+		{
+			/* maze[][].wall is encoded so that if the bit is zero then that particular cell is free
+			 * since the encoding is dependent on the initial data, any errors in the initialisation will
+			 * cause inconsistency problems. We have not a of as of now checked for such problems in the
+			 * constructor.
+			 */
+			if((maze[ghost[ghostNo].x][ghost[ghostNo].y].wall & (1 << i)) == 0)
+			{
+				return; //TODO: need to add code for shortest path move
+			}
+		}
+	}
+
+	int manhattan_dist(int ghostNo)
+	{
+		return (abs(ghost[ghostNo].x -pacman.x) - abs(ghost[ghostNo].y - pacman.y));
 	}
 };
 

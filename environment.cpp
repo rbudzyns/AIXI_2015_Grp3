@@ -76,7 +76,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 	std::stack <node*> nodes;
 	do
 	{		
-		if(maze_conf[i] == ',')
+		if(maze_conf[i] == ',' || maze_conf[i] == '\0')
 		{
 			num[j] = '\0';
 			std::istringstream(num)>>per;
@@ -146,9 +146,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			num[j]=maze_conf[i];
 			j++;
 		}
-		i++;
-	}while(maze_conf[i] != '\0');
-	num[j]='\0';
+	}while(maze_conf[i++] != '\0');
 
 	current_node = mouse_start;
 	//setting initial observation
@@ -199,10 +197,10 @@ ExtTiger::ExtTiger(options_t &options)
 	assert(p>=1.0);
 	
 	standing = 0; //player is sitting
-	tiger = rand01() < 0.5 ? 1 : 2; //tiger behind left door with 0.5 probability.
+	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
 	//initial observation
 	m_observation = 0;
-	m_reward = 100;
+	m_reward = 0;
 }
 
 
@@ -211,29 +209,55 @@ void ExtTiger::performAction(action_t action)
 {
 	switch(action)
 	{
+		/*
+		 * Agent tries to stand
+		 * STATE	REWARD
+		 * sitting	-1
+		 * standing	-10
+		 */
 		case 0:
-		m_reward = standing ? 90 : 99;
+		m_reward = standing ? -10 : -1;
 		standing = 1;
 		break;
 		
+		/*
+		 * Agent ties to open left door
+		 * STATE								REWARD
+		 * sitting								-10
+		 * standing(tiger behind left door) 	-100
+		 * standing(tiger behind right door)	 30
+		 */
 		case 2:
 		if(standing){
-			m_reward = tiger == 2 ? 0 : 130;
+			m_reward = tiger ? -100 : 30;
 		}
 		else{
-			m_reward = 90;
+			m_reward = -10;
 		}
 		break;
 		
+		/*
+		 * Agent tries to open right door
+		 * STATE								REWARD
+		 * sitting								-10
+		 * Standing(tiger behind left door)		 30
+		 * Standing(tiger behind right door)	-100
+		 */
 		case 3:
 		if(standing){
-			m_reward = tiger == 2 ? 130 : 0;
+			m_reward = tiger ? 30 : -100;
 		}
 		else{
-			m_reward = 90;
+			m_reward = -10;
 		}
 		break;
 		
+		/*
+		 * Agent tries to listen
+		 * STATE									REWARD
+		 * sitting									-1
+		 * standing									-10
+		 */
 		case 1:
 		if(!standing){
 			if(tiger == 1)
@@ -241,12 +265,33 @@ void ExtTiger::performAction(action_t action)
 			else
 				m_observation = rand01() < p ? 2 : 1;
 			
-			m_reward = 99;
+			m_reward = -1;
 		}
 		else{
-			m_reward = 90;
+			m_reward = -10;
 		}
 	}
+}
+
+//check if the environment is finished
+bool ExtTiger::isFinished() const{
+	if(m_reward == 30 ||m_reward == -100)
+		return 1;
+	else
+		return 0;
+}
+
+//reset the enviroment
+void ExtTiger::envReset(){
+	standing = 0; //player is sitting
+	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
+	//initial observation
+	m_observation = 0;
+	m_reward = 0;
+}
+
+percept_t ExtTiger::getReward() const{
+	return (int)m_reward+100;
 }
 
 /*Tic Tac Toe environment.*/
@@ -456,7 +501,71 @@ Pacman::Pacman(options_t &options)
 
 void Pacman::performAction(action_t action)
 {
-	return;
+	m_reward = 0;
+	switch(action)
+	{
+	case 0:
+		if(maze[pacman.x -1][pacman.y].isFreeCell)
+		{
+			pacman.x--;
+			if(!isCaught())
+				m_reward += -1;
+			else //pacman ran into the ghost
+				m_reward += -50;
+		}
+		else //pacman ran into the wall
+			m_reward += -10;
+		break;
+	case 1:
+		if(maze[pacman.x][pacman.y+1].isFreeCell)
+		{
+			pacman.y++;
+			if(!isCaught())
+				m_reward += -1;
+				else //pacman ran into the ghost
+				m_reward += -50;
+		}
+		else //pacman ran into the wall
+			m_reward += -10;
+		break;
+	case 2:
+		if(maze[pacman.x + 1][pacman.y].isFreeCell)
+		{
+			pacman.x++;
+			if(!isCaught())
+				m_reward += -1;
+				else //pacman ran into the ghost
+				m_reward += -50;
+		}
+		else //pacman ran into the wall
+			m_reward += -10;
+		break;
+	case 3:
+		if(maze[pacman.x][pacman.y-1].isFreeCell)
+		{
+			pacman.y--;
+			if(!isCaught())
+				m_reward += -1;
+				else //pacman ran into the ghost
+				m_reward += -50;
+		}
+		else //pacman ran into the wall
+			m_reward += -10;
+	}
+
+	for(int i=0; i<4; i++)
+	{
+		if(ghost[i].state)
+		{
+			if(manhattan_dist(i) < 5)
+			{
+				return;
+				//TODO: implement manMove(i) in environment.hpp
+			}
+			else
+				return;	//TODO: random move
+		}
+	}
 }
 
 bool Pacman::isFinished(void) const
