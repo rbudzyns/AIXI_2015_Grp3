@@ -107,9 +107,6 @@ public:
 	//reset the environment
 	virtual void envReset(void);
 
-	//shift the percepts
-	percept_t getReward(void) const;
-
 private:
 	double p; //probability of listening correctly
 	bool tiger; //position of tiger
@@ -168,8 +165,8 @@ private:
 		for (int i = 0; i < 9; i++)
 		{
 			if (board[i] == 0)
-				if (count++ == move)
-				{
+				if (count++ == move) {
+					board[i] = 1;
 					freeCells--;
 					return;
 				}
@@ -382,7 +379,7 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y); //ghost is active and pacman does not have power pill
+			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y) //ghost is active and pacman does not have power pill
 				if(ghost[i].state && !pacman.state)
 					return 1;
 				else if(pacman.state) //pacman under effect of power pill

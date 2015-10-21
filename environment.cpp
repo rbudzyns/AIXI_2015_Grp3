@@ -194,13 +194,13 @@ ExtTiger::ExtTiger(options_t &options)
 		strExtract(options["listen-p"],p);
 	}
 	assert(0.0<=p);
-	assert(p>=1.0);
+	assert(p<=1.0);
 	
 	standing = 0; //player is sitting
 	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
 	//initial observation
 	m_observation = 0;
-	m_reward = 0;
+	m_reward = 100;
 }
 
 
@@ -271,11 +271,12 @@ void ExtTiger::performAction(action_t action)
 			m_reward = -10;
 		}
 	}
+	m_reward = (int)m_reward + 100;
 }
 
 //check if the environment is finished
 bool ExtTiger::isFinished() const{
-	if(m_reward == 30 ||m_reward == -100)
+	if(m_reward == 130 ||m_reward == 0)
 		return 1;
 	else
 		return 0;
@@ -287,12 +288,9 @@ void ExtTiger::envReset(){
 	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
 	//initial observation
 	m_observation = 0;
-	m_reward = 0;
+	m_reward = 100;
 }
 
-percept_t ExtTiger::getReward() const{
-	return (int)m_reward+100;
-}
 
 /*Tic Tac Toe environment.*/
 TicTacToe::TicTacToe(options_t &options)
@@ -318,6 +316,7 @@ void TicTacToe::performAction(action_t action)
 	else
 	{
 		board[action] = 2;
+		freeCells--;
 		if (check_winner() == 2) //agent won the game
 		{
 			m_reward = 5;
