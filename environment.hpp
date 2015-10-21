@@ -107,9 +107,6 @@ public:
 	//reset the environment
 	virtual void envReset(void);
 
-	//shift the percepts
-	percept_t getReward(void) const;
-
 private:
 	double p; //probability of listening correctly
 	bool tiger; //position of tiger
@@ -168,8 +165,8 @@ private:
 		for (int i = 0; i < 9; i++)
 		{
 			if (board[i] == 0)
-				if (count++ == move)
-				{
+				if (count++ == move) {
+					board[i] = 1;
 					freeCells--;
 					return;
 				}
@@ -178,36 +175,33 @@ private:
 
 	int check_winner()
 	{
-		if (freeCells <= 4)
+		if (board[0] != 0)
 		{
-			if (board[0] != 0)
-			{
-				if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
-					|| (board[0] == board[4] && board[4] == board[8]))
-					return board[0];
-			}
-			else if (board[1] != 0)
-			{
-				if (board[1] == board[4] && board[4] == board[7])
-					return board[1];
-			}
-			else if (board[2] != 0)
-			{
-				if ((board[2] == board[5] && board[5] == board[8]) || (board[2] == board[4] && board[4] == board[6]))
-					return board[2];
-			}
-			else if (board[3] != 0)
-			{
-				if (board[3] == board[4] && board[4] == board[5])
-					return board[3];
-			}
-			else if (board[6] != 0)
-			{
-				if (board[6] == board[7] && board[7] == board[8])
-					return board[6];
-			}
+			if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
+				|| (board[0] == board[4] && board[4] == board[8]))
+				return board[0];
 		}
-		return 0;
+		else if (board[1] != 0)
+		{
+			if (board[1] == board[4] && board[4] == board[7])
+				return board[1];
+		}
+		else if (board[2] != 0)
+		{
+			if ((board[2] == board[5] && board[5] == board[8]) || (board[2] == board[4] && board[4] == board[6]))
+				return board[2];
+		}
+		else if (board[3] != 0)
+		{
+			if (board[3] == board[4] && board[4] == board[5])
+				return board[3];
+		}
+		else if (board[6] != 0)
+		{
+			if (board[6] == board[7] && board[7] == board[8])
+				return board[6];
+		}
+	return 0;
 	}
 };
 
@@ -382,7 +376,7 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y); //ghost is active and pacman does not have power pill
+			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y) //ghost is active and pacman does not have power pill
 				if(ghost[i].state && !pacman.state)
 					return 1;
 				else if(pacman.state) //pacman under effect of power pill
