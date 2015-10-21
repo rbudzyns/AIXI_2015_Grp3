@@ -56,11 +56,11 @@ public:
 
 	// generate a percept distributed according
 	// to our history statistics
-	percept_t* genPercept(void) const; // TODO: implement in agent.cpp
+	percept_t* genPercept(void) const;
 
 	// generate a percept distributed to our history statistics, and
 	// update our mixture environment model with it
-	percept_t* genPerceptAndUpdate(void); // TODO: implement in agent.cpp
+	percept_t* genPerceptAndUpdate(void);
 
 	// update the internal agent's model of the world
 	// due to receiving a percept or performing an action
@@ -69,7 +69,7 @@ public:
 
 	// revert the agent's internal model of the world
 	// to that of a previous time cycle, false on failure
-	bool modelRevert(const ModelUndo &mu); // TODO: implement in agent.cpp
+	bool modelRevert(const ModelUndo &mu);
 
 	size_t maxTreeDepth(void);
 
@@ -85,10 +85,10 @@ public:
 
 	// probability of selecting an action according to the
 	// agent's internal model of it's own behaviour
-	double getPredictedActionProb(action_t action); // TODO: implement in agent.cpp
+	double getPredictedActionProb(action_t action);
 
 	// get the agent's probability of receiving a particular percept
-	double perceptProbability(percept_t observation, percept_t reward) const; // TODO: implement in agent.cpp
+	double perceptProbability(percept_t observation, percept_t reward) const;
 
 	ContextTree * contextTree();
 

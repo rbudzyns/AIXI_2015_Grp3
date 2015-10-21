@@ -59,15 +59,17 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
-		aixi::log << "cycle: " << global_cycles_g << std::endl;
-		aixi::log << "observation: " << observation << std::endl;
-		aixi::log << "reward: " << reward << std::endl;
-
 		// Update agent's environment model with the new percept
 
 		ai.modelUpdate(observation, reward);
 
 		if (env.isFinished()) {
+			aixi::log << "cycle: " << global_cycles_g << std::endl;
+			aixi::log << "observation: " << observation << std::endl;
+			aixi::log << "reward: " << reward << std::endl;
+			compactLog << global_cycles_g << ", " << cycle << ", " << observation << ", " << reward << ", " << explore_g << ", "
+							<< "endgame" << ", " << "endgame" << ", " << "endgame" << ", " << ai.reward() << ", " << ai.averageReward() << std::endl;
+			global_cycles_g++;
 			break;
 		}
 
@@ -111,12 +113,16 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		aixi::log << "action: " << action << std::endl;
 		aixi::log << "explored: " << (explored ? "yes" : "no") << std::endl;
 		aixi::log << "explore_rate_g: " << explore_rate_g << std::endl;
+		aixi::log << "cycle: " << cycle << std::endl;
+		aixi::log << "global_cycle: " << global_cycles_g << std::endl;
+		aixi::log << "observation: " << observation << std::endl;
+		aixi::log << "reward: " << reward << std::endl;
 		aixi::log << "total reward: " << ai.reward() << std::endl;
 		aixi::log << "average reward: " << ai.averageReward() << std::endl;
 
 		// Log the data in a more compact form
-		compactLog << global_cycles_g << ", " << observation << ", " << reward << ", "
-				<< action << ", " << explored << ", " << explore_rate_g << ", "
+		compactLog  << global_cycles_g << ", " << cycle << ", " << observation << ", " << reward << ", "
+				<< action << ", " << explore_g << ", " << explored << ", " << explore_rate_g << ", "
 				<< ai.reward() << ", " << ai.averageReward() << std::endl;
 
 		// Update exploration rate
@@ -163,7 +169,7 @@ int main(int argc, char *argv[]) {
 // Print header to compactLog
 
 	compactLog
-			<< "cycle, observation, reward, action, explored, explore_rate_g, total reward, average reward"
+			<< "global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward"
 			<< std::endl;
 
 	options_t options;
@@ -238,7 +244,7 @@ int main(int argc, char *argv[]) {
 		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
 	}
 
-	for (int i = 0; i < def_total_cycles_g * total_cycles_mult_g; i++) {
+	for (int i = 0; i < 2*def_total_cycles_g * total_cycles_mult_g ; i++) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
