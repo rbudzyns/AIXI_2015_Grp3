@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
 		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
 	}
 
-	for (int i = 0; i < 2*def_total_cycles_g * total_cycles_mult_g ; i++) {
+	while (global_cycles_g < 2*def_total_cycles_g * total_cycles_mult_g) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
