@@ -276,7 +276,7 @@ void ExtTiger::performAction(action_t action)
 
 //check if the environment is finished
 bool ExtTiger::isFinished() const{
-	if(m_reward == 30 ||m_reward == -100)
+	if(m_reward == 130 ||m_reward == 0)
 		return 1;
 	else
 		return 0;
@@ -316,6 +316,7 @@ void TicTacToe::performAction(action_t action)
 	else
 	{
 		board[action] = 2;
+		freeCells--;
 		if (check_winner() == 2) //agent won the game
 		{
 			m_reward = 5;
@@ -380,7 +381,7 @@ bool TicTacToe::isFinished() const
 BRockPaperScissors::BRockPaperScissors(options_t &options)
 {
 	move = (int)(rand01() * 3);
-	//return the initial precept
+	//return the initial percept
 	m_observation = 0;
 	m_reward = 1;
 }
@@ -568,5 +569,5 @@ void Pacman::performAction(action_t action)
 
 bool Pacman::isFinished(void) const
 {
-	return false; //TODO: implement isFinished functionality
+	return false;
 }
