@@ -147,7 +147,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			j++;
 		}
 	}while(maze_conf[i++] != '\0');
-
+	
 	current_node = mouse_start;
 	//setting initial observation
 	m_observation = current_node->percept;
@@ -174,14 +174,13 @@ void CheeseMaze::performAction(action_t action)
 void CheeseMaze::envReset()
 {
 	current_node = mouse_start;
-
 	m_reward = 10;
 	m_observation = current_node->percept;
 }
 
 bool CheeseMaze::isFinished() const
 {
-	return &current_node == &cheese_node ? 1 : 0;
+	return current_node == cheese_node ? 1 : 0;
 }
 
 
@@ -276,7 +275,7 @@ void ExtTiger::performAction(action_t action)
 
 //check if the environment is finished
 bool ExtTiger::isFinished() const{
-	if(m_reward == 30 ||m_reward == -100)
+	if(m_reward == 130 ||m_reward == 0)
 		return 1;
 	else
 		return 0;
@@ -316,6 +315,7 @@ void TicTacToe::performAction(action_t action)
 	else
 	{
 		board[action] = 2;
+		freeCells--;
 		if (check_winner() == 2) //agent won the game
 		{
 			m_reward = 5;
@@ -323,7 +323,7 @@ void TicTacToe::performAction(action_t action)
 			finished = 1;
 			return;
 		}
-		else if (--freeCells == 0) //game is a draw
+		else if (freeCells == 0) //game is a draw
 		{
 			m_reward = 4;
 			m_observation = calBoardVal();
@@ -340,10 +340,17 @@ void TicTacToe::performAction(action_t action)
 				finished = 1;
 				return;
 			}
-			else //game has not yet ended
+			else if (freeCells != 0) //game has not yet ended
 			{
 				m_reward = 3;
 				m_observation = calBoardVal();
+				return;
+			}
+			else
+			{
+				m_reward = 4;
+				m_observation = calBoardVal();
+				finished = 1;
 				return;
 			}
 		}
@@ -381,12 +388,13 @@ BRockPaperScissors::BRockPaperScissors(options_t &options)
 {
 	move = (int)(rand01() * 3);
 	//return the initial precept
-	m_observation = 0;
+	m_observation = move;
 	m_reward = 1;
 }
 
 void BRockPaperScissors::performAction(action_t action)
 {
+	move = m_reward == 0 ? move : (int)(rand01() * 3);
 	if (action != move)
 	{
 		switch (move)
@@ -407,8 +415,6 @@ void BRockPaperScissors::performAction(action_t action)
 	}
 
 	m_observation = move;
-	
-	move = m_reward == 0 ? move : (int)(rand01() * 3);
 }
 
 
@@ -459,10 +465,10 @@ Pacman::Pacman(options_t &options)
 					maze[i][j].contents = 1;
 				else
 					maze[i][j].contents = 0;
-			}
+		}
 			else
 				maze[i][j].wall = 15;
-		}
+	}
 	maze[9][0].wall = 10;
 	maze[9][18].wall = 10;
 	if (rand01() < 0.5)
@@ -471,7 +477,7 @@ Pacman::Pacman(options_t &options)
 		maze[9][0].contents = 0;
 	if (rand01() < 0.5)
 			maze[9][18].contents = 1;
-		else
+	else
 			maze[9][18].contents = 0;
 
 	maze[1][3].contents = 2;
@@ -498,8 +504,8 @@ Pacman::Pacman(options_t &options)
 }
 
 void Pacman::performAction(action_t action)
-{
-	m_reward = 0;
+	{
+		m_reward = 0;
 	switch(action)
 	{
 	case 0:
@@ -565,8 +571,8 @@ void Pacman::performAction(action_t action)
 		}
 	}
 }
-
+	
 bool Pacman::isFinished(void) const
 {
-	return false; //TODO: implement isFinished functionality
+	return false;
 }

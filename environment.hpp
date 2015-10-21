@@ -72,7 +72,7 @@ public:
 	
 	//Check with the environment if the agent has reached the goal;
 	virtual bool isFinished(void) const;
-
+	
 	//reset the environment
 	virtual void envReset(void);
 	
@@ -176,8 +176,8 @@ private:
 		for (int i = 0; i < 9; i++)
 		{
 			if (board[i] == 0)
-				if (count++ == move)
-				{
+				if (count++ == move) {
+					board[i] = 1;
 					freeCells--;
 					return;
 				}
@@ -186,8 +186,6 @@ private:
 
 	int check_winner()
 	{
-		if (freeCells <= 4)
-		{
 			if (board[0] != 0)
 			{
 				if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
@@ -214,7 +212,6 @@ private:
 				if (board[6] == board[7] && board[7] == board[8])
 					return board[6];
 			}
-		}
 		return 0;
 	}
 };
@@ -396,7 +393,7 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y); //ghost is active and pacman does not have power pill
+			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y) //ghost is active and pacman does not have power pill
 				if(ghost[i].state && !pacman.state)
 					return 1;
 				else if(pacman.state) //pacman under effect of power pill
@@ -407,8 +404,6 @@ private:
 
 	void manMove(int ghostNo)
 	{
-		int x = ghost[ghostNo].x;
-		int y = ghost[ghostNo].y;
 		for(int i=3; i>=0; i--) //iterate through all possible neighbours
 		{
 			/* maze[][].wall is encoded so that if the bit is zero then that particular cell is free
