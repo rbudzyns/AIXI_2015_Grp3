@@ -481,6 +481,44 @@ Thus, for each node we keep a value estimate
 \end_inset
 
  for all actions)
+\begin_inset Formula 
+\[
+a_{\text{UCB}}=\arg\max_{a\in\mathcal{A}}\left\{ \frac{1}{m\left(\beta-\alpha\right)}\hat{V}\left(ha\right)+C\sqrt{\frac{\log T\left(h\right)}{T\left(ha\right)}}\right\} ,
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ is the set of all permissible actions, 
+\begin_inset Formula $m$
+\end_inset
+
+ is the search horizon, 
+\begin_inset Formula $\beta-\alpha$
+\end_inset
+
+ is the difference between the minimal and maximal instantaneous reward,
+ and 
+\begin_inset Formula $C$
+\end_inset
+
+ is a parameter controlling the propensity of the agent to explore less
+ frequently-seen histories.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that the expectimax is a stochastic, partially observable game between
+ the agent and its environment.
+ In the following, call nodes corresponding to agent moves `decision nodes',
+ and nodes corresponding to Nature's moves `chance nodes'.
 \end_layout
 
 \begin_layout Subsubsection
@@ -488,15 +526,22 @@ Class structure
 \end_layout
 
 \begin_layout Standard
-We define a base 
+To represent our search nodes, we define a base 
 \begin_inset Formula ${\tt SearchNode}$
 \end_inset
 
- class
-\end_layout
+ class, from which ChanceNode and DecisionNode inherit.
+ ChanceNode and DecisionNode each have a 
+\begin_inset Formula ${\tt sample}$
+\end_inset
 
-\begin_layout Standard
-SearchNode, DecisionNode, ChanceNode.
+ method defined on them; each of these methods is mutually recursive.
+ For a given node 
+\begin_inset Formula $n$
+\end_inset
+
+, we keep its children in a dictionary keyed on the action or (observation,rewar
+d) used to generate each child.
 \end_layout
 
 \begin_layout Subsubsection
