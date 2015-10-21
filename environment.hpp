@@ -93,6 +93,16 @@ private:
 //If tiger is true then tiger is behind left door and false if tiger is behind right door.
 //The gold pot is obviously behind the other door.
 //Agent state is mapped using boolean variable sitting. 1 for standing, 0 for sitting.
+
+/*actions: 			0 = stand
+ * 					1 = listen
+ * 					2 = open left door
+ * 					3 = open right door
+ *
+ * observations:	0 = nothing known
+ * 					1 = tiger behind right door
+ * 					2 = tiger behind left door
+ */
 class ExtTiger : public Environment{
 public:
 	//setup initial environment for Cheese maze and sets up the inital percept for the agent.
@@ -107,8 +117,6 @@ public:
 	//reset the environment
 	virtual void envReset(void);
 
-	//shift the percepts
-	percept_t getReward(void) const;
 
 private:
 	double p; //probability of listening correctly
@@ -211,6 +219,12 @@ private:
 	}
 };
 
+/*
+Action
+		0 : rock
+		1 : paper
+		2 : scissors
+*/
 class BRockPaperScissors : public Environment
 {
 public:
@@ -393,6 +407,8 @@ private:
 
 	void manMove(int ghostNo)
 	{
+		int x = ghost[ghostNo].x;
+		int y = ghost[ghostNo].y;
 		for(int i=3; i>=0; i--) //iterate through all possible neighbours
 		{
 			/* maze[][].wall is encoded so that if the bit is zero then that particular cell is free
