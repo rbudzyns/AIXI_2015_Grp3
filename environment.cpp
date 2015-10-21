@@ -5,9 +5,10 @@
 #include <string>
 #include <bitset>
 #include <climits>
-
+#include "main.hpp"
 #include "util.hpp"
 
+using namespace aixi;
 
 class next;
 class next;
@@ -311,6 +312,12 @@ void TicTacToe::performAction(action_t action)
 	if (board[action] != 0 && freeCells != 0) //illegal move
 	{
 		m_reward = 0;
+		std::cout<< "illegal move ";
+		for(int r = 0; r<9; r++)
+			{
+				std::cout<< board[r] << " ";
+			}
+			std::cout << std::endl;
 		return; //Obverstaion will not change so there is no need to re-calculate
 	}
 	else
@@ -322,13 +329,25 @@ void TicTacToe::performAction(action_t action)
 			m_reward = 5;
 			m_observation = calBoardVal();
 			finished = 1;
+			std::cout<< "agent won ";
+			for(int r = 0; r<9; r++)
+			{
+				std::cout<< board[r] << " ";
+			}
+			std::cout << std::endl;
 			return;
 		}
-		else if (--freeCells == 0) //game is a draw
+		else if (freeCells == 0) //game is a draw
 		{
 			m_reward = 4;
 			m_observation = calBoardVal();
 			finished = 1;
+			std::cout << "game draw ";
+			for(int r = 0; r<9; r++)
+			{
+				std::cout<< board[r] << " ";
+			}
+			std::cout << std::endl;
 			return;
 		}
 		else
@@ -339,12 +358,37 @@ void TicTacToe::performAction(action_t action)
 				m_reward = 1;
 				m_observation = calBoardVal();
 				finished = 1;
+				std::cout << "agent lost ";
+				for(int r = 0; r<9; r++)
+				{
+					std::cout<< board[r] << " ";
+				}
+				std::cout << std::endl;
 				return;
 			}
-			else //game has not yet ended
+			else if (freeCells != 0) //game has not yet ended
 			{
 				m_reward = 3;
 				m_observation = calBoardVal();
+				std::cout << "game continues ";
+				for(int r = 0; r<9; r++)
+				{
+					std::cout<< board[r] << " ";
+				}
+				std::cout << std::endl;
+				return;
+			}
+			else
+			{
+				m_reward = 4;
+				m_observation = calBoardVal();
+				finished = 1;
+				std::cout << "game draw ";
+				for(int r = 0; r<9; r++)
+				{
+					std::cout<< board[r] << " ";
+				}
+				std::cout << std::endl;
 				return;
 			}
 		}
