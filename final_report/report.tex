@@ -5,6 +5,7 @@
 \usepackage[latin9]{inputenc}
 \usepackage{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=3cm,lmargin=1.5cm,rmargin=1.5cm}
+\usepackage{float}
 \usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -15,6 +16,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}
+\providecommand{\algorithmname}{Algorithm}
+\floatname{algorithm}{\protect\algorithmname}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 \usepackage{tikz}
@@ -22,11 +27,7 @@
 \renewcommand{\labelitemi}{$\diamond$}
 \newcommand{\T}{\rule{0pt}{2.6ex}}       % Top strut
 \newcommand{\B}{\rule[-1.2ex]{0pt}{0pt}} % Bottom strut
-
-
-
-
-
+\usepackage{algorithm,algpseudocode}
 
 \makeatother
 
@@ -78,31 +79,101 @@ and $\textsc{Cheesemaze}$.
 To build from source, run ${\tt g++\ *.cpp\ *.hpp\ -o\ aixi}$ \textbf{TODO
 check}
 
-To run, invoke ${\tt ./aixi\ envname}$.
+To run, invoke ${\tt ./aixi\ envname}$. 
 
 
 \section{MC-AIXI-CTW Implementation}
 
 
-\subsection{Monte Carlo Tree Search (MCTS) Algorithm}
-\begin{enumerate}
-\item High level description of algorithm
-\item Class structure
+\subsection{Main loop}
 
+For each agent-environment interaction cycle, we run the following
+for each experiment:
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Inputs:}}
+\renewcommand{\algorithmicensure}{\textbf{Outputs:}}
+\While{$cycle < max\_cycles$}
+\While{environment is not finished}
+\State{generate $(o,r)$ from environment}
+\State{update agent model with $(o,r)$}
+\If{explore}
+\State{$a \leftarrow randomAction()$}
+\Else
+\State{$a \leftarrow MCTS()$}
+\Comment{Monte Carlo Tree Search}
+\EndIf
+\State{perform action $a$}
+\State{update agent history with $a$}
+\State{$cycle++$}
+\EndWhile
+\State{reset environment}
+\EndWhile
+\end{algorithmic}
+
+\caption{Main loop.}
+
+
+\end{algorithm}
+
+
+The $MCTS$ algorithm follows as in Algorithms 1-4 in Veness et al.,
+and is found in ${\tt search.cpp}$. Model updates are handled in
+methods in ${\tt agent.cpp}$, which interfaces with the context tree
+defined in ${\tt predict.cpp}$.
+
+
+\subsection{Monte Carlo Tree Search (MCTS) Algorithm}
+
+
+\subsubsection{High level description}
+
+Since the environment is only partially observable, we have no explicit
+notion of state; instead, we only have a history of actions and percepts
+$h=\left(a_{1}o_{1}r_{1}\dots a_{n}o_{n}r_{n}\right)$. For the purposes
+of choosing the optimal action, we treat each possible (hypothetical)
+history as a node in the search tree, with the root being the tip
+of the current (realised) history. Each node is labelled by its history.
+The expected value of each node in the search tree is equal to the
+expected total (non-discounted) reward that would be accumulated from
+that node, where the expectation is under the agent's current policy
+and the agent's current model for the behavior of the environment. 
+
+Thus, for each node we keep a value estimate $\hat{V}$, and a count
+of the number of times $T$ that node has been visited in search.
+This is used to determine how we explore the search space using the
+UCB algorithm, which, for each decision node picks (assuming $T\left(ha\right)>0$
+for all actions)
+
+
+\subsubsection{Class structure}
+
+We define a base ${\tt SearchNode}$ class
 
 SearchNode, DecisionNode, ChanceNode.
 
-\item Code snippets
-\item Efficiency/performance
-\end{enumerate}
+
+\subsubsection{Code snippets}
+
+
+\subsubsection{Efficiency/performance}
+
 
 \subsection{Context Tree Weighting (CTW)}
-\begin{enumerate}
-\item High level description of algorithm
-\item Class structure
-\item Code snippets
-\item Efficiency/performance
-\end{enumerate}
+
+
+\subsubsection{High level description of algorithm}
+
+
+\subsubsection{Class structure}
+
+
+\subsubsection{Code snippets}
+
+
+\subsubsection{Efficiency/performance}
+
 
 \subsection{Environments}
 
