@@ -1,0 +1,5283 @@
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 0
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 1
+observation: 24576
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 2
+observation: 24840
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 3
+observation: 90504
+reward: 3
+total reward: 12
+average reward: 2.4
+cycle: 4
+observation: 90505
+reward: 5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 5
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 6
+observation: 4098
+reward: 3
+total reward: 6
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 7
+observation: 36882
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 8
+observation: 36882
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 9
+observation: 36882
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 10
+observation: 36882
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 11
+observation: 39186
+reward: 3
+total reward: 12
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 12
+observation: 39186
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 13
+observation: 39186
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 14
+observation: 39186
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 15
+observation: 170262
+reward: 3
+total reward: 15
+average reward: 1.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 16
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 17
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 18
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 1
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 19
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 20
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 21
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 22
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 23
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 24
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 25
+observation: 170262
+reward: 0
+total reward: 15
+average reward: 0.681818
+cycle: 26
+observation: 170326
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 27
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 28
+observation: 66
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 29
+observation: 18498
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 30
+observation: 84066
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 31
+observation: 84066
+reward: 0
+total reward: 12
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 32
+observation: 84066
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 33
+observation: 84066
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 34
+observation: 84066
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 35
+observation: 92514
+reward: 3
+total reward: 15
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 36
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 37
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 38
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 39
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 40
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 1
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 41
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 42
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 43
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 44
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 45
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 46
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 47
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 48
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 49
+observation: 92514
+reward: 0
+total reward: 15
+average reward: 0.625
+cycle: 50
+observation: 92518
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 51
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 52
+observation: 576
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 53
+observation: 8784
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 54
+observation: 8784
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 55
+observation: 25170
+reward: 3
+total reward: 12
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 56
+observation: 90714
+reward: 3
+total reward: 15
+average reward: 2.14286
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 57
+observation: 90714
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 58
+observation: 90714
+reward: 0
+total reward: 15
+average reward: 1.66667
+cycle: 59
+observation: 91738
+reward: 4
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 60
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 61
+observation: 132
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 62
+observation: 16518
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 63
+observation: 16518
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 64
+observation: 16518
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 65
+observation: 151686
+reward: 3
+total reward: 12
+average reward: 1.71429
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 66
+observation: 151686
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 67
+observation: 151686
+reward: 0
+total reward: 12
+average reward: 1.33333
+cycle: 68
+observation: 152214
+reward: 1
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 69
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 70
+observation: 65664
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 71
+observation: 65670
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 72
+observation: 65670
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 73
+observation: 84102
+reward: 3
+total reward: 12
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 74
+observation: 88230
+reward: 3
+total reward: 15
+average reward: 2.14286
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 75
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 76
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 77
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 78
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 79
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 80
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 81
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 82
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 1
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 83
+observation: 88230
+reward: 0
+total reward: 15
+average reward: 0.9375
+cycle: 84
+observation: 88486
+reward: 4
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 85
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 86
+observation: 98304
+reward: 3
+total reward: 6
+average reward: 2
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 87
+observation: 100353
+reward: 3
+total reward: 9
+average reward: 2.25
+cycle: 88
+observation: 100609
+reward: 5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 89
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 90
+observation: 1536
+reward: 3
+total reward: 6
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 91
+observation: 34368
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 92
+observation: 34368
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 93
+observation: 169536
+reward: 3
+total reward: 12
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 94
+observation: 169536
+reward: 0
+total reward: 12
+average reward: 1.71429
+cycle: 95
+observation: 169560
+reward: 1
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 96
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 97
+observation: 16896
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 98
+observation: 18948
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 99
+observation: 84612
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 100
+observation: 84612
+reward: 0
+total reward: 12
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 101
+observation: 84612
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 102
+observation: 92805
+reward: 3
+total reward: 15
+average reward: 1.875
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 103
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 104
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 105
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 106
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 107
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 108
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 109
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 1
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 110
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 111
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 112
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 113
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 114
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 115
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 116
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 117
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 118
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.625
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 24
+global_cycle: 119
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.6
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 25
+global_cycle: 120
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.576923
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 26
+global_cycle: 121
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.555556
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 27
+global_cycle: 122
+observation: 92805
+reward: 0
+total reward: 15
+average reward: 0.535714
+cycle: 123
+observation: 92821
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 124
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 125
+observation: 18432
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 126
+observation: 18438
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 127
+observation: 149574
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 128
+observation: 149574
+reward: 0
+total reward: 12
+average reward: 2
+cycle: 129
+observation: 154182
+reward: 1
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 130
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 131
+observation: 65568
+reward: 3
+total reward: 6
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 132
+observation: 65568
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 133
+observation: 69672
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 134
+observation: 70056
+reward: 3
+total reward: 12
+average reward: 2
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 135
+observation: 70056
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 136
+observation: 70056
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 137
+observation: 70056
+reward: 0
+total reward: 12
+average reward: 1.33333
+cycle: 138
+observation: 70057
+reward: 5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 139
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 140
+observation: 8208
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 141
+observation: 75792
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 142
+observation: 75792
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 143
+observation: 75858
+reward: 3
+total reward: 12
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 144
+observation: 92250
+reward: 3
+total reward: 15
+average reward: 2.14286
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 145
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 146
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 147
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 148
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 149
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 150
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 151
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 152
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 1
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 153
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 154
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 155
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 156
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 157
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 158
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 159
+observation: 92250
+reward: 0
+total reward: 15
+average reward: 0.681818
+cycle: 160
+observation: 92506
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 161
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 162
+observation: 8256
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 163
+observation: 8256
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 164
+observation: 8772
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 165
+observation: 10836
+reward: 3
+total reward: 12
+average reward: 2
+cycle: 166
+observation: 10837
+reward: 5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 167
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 168
+observation: 96
+reward: 3
+total reward: 6
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 169
+observation: 33120
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 170
+observation: 33120
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 171
+observation: 33120
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 172
+observation: 33120
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 173
+observation: 168288
+reward: 3
+total reward: 12
+average reward: 1.5
+cycle: 174
+observation: 168289
+reward: 5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 175
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 176
+observation: 36
+reward: 3
+total reward: 6
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 177
+observation: 2085
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 178
+observation: 137253
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 179
+observation: 137253
+reward: 0
+total reward: 12
+average reward: 2
+cycle: 180
+observation: 137317
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 181
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 182
+observation: 16386
+reward: 3
+total reward: 6
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 183
+observation: 16386
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 184
+observation: 16914
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 185
+observation: 25110
+reward: 3
+total reward: 12
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 186
+observation: 25110
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 187
+observation: 25110
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 188
+observation: 25110
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 189
+observation: 92694
+reward: 3
+total reward: 15
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 190
+observation: 92694
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 191
+observation: 92694
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 192
+observation: 92694
+reward: 0
+total reward: 15
+average reward: 1.15385
+cycle: 193
+observation: 92758
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 194
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 195
+observation: 66
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 196
+observation: 24642
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 197
+observation: 24642
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 198
+observation: 24642
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 199
+observation: 24642
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 200
+observation: 92226
+reward: 3
+total reward: 12
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 201
+observation: 92226
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 202
+observation: 92226
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 203
+observation: 92226
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 204
+observation: 92226
+reward: 0
+total reward: 12
+average reward: 1
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 205
+observation: 92226
+reward: 0
+total reward: 12
+average reward: 0.923077
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 206
+observation: 92754
+reward: 3
+total reward: 15
+average reward: 1.07143
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 207
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 1
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 208
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 209
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 210
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 211
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 212
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 213
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 214
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 215
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 216
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.625
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 24
+global_cycle: 217
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.6
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 25
+global_cycle: 218
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.576923
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 26
+global_cycle: 219
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.555556
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 27
+global_cycle: 220
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.535714
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 28
+global_cycle: 221
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.517241
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 29
+global_cycle: 222
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 30
+global_cycle: 223
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.483871
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 31
+global_cycle: 224
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.46875
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 32
+global_cycle: 225
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.454545
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 33
+global_cycle: 226
+observation: 92754
+reward: 0
+total reward: 15
+average reward: 0.441176
+cycle: 227
+observation: 92758
+reward: 4
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 228
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 229
+observation: 33024
+reward: 3
+total reward: 6
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 230
+observation: 98592
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 231
+observation: 102816
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 232
+observation: 102816
+reward: 0
+total reward: 12
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 233
+observation: 102816
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 234
+observation: 104868
+reward: 3
+total reward: 15
+average reward: 1.875
+cycle: 235
+observation: 104869
+reward: 5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 236
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 237
+observation: 1032
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 238
+observation: 33864
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 239
+observation: 33864
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 240
+observation: 33864
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 241
+observation: 33864
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 242
+observation: 33864
+reward: 0
+total reward: 9
+average reward: 1.125
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 243
+observation: 42312
+reward: 3
+total reward: 12
+average reward: 1.33333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 244
+observation: 42312
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 245
+observation: 107880
+reward: 3
+total reward: 15
+average reward: 1.36364
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 246
+observation: 107880
+reward: 0
+total reward: 15
+average reward: 1.25
+cycle: 247
+observation: 107881
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 248
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 249
+observation: 18432
+reward: 3
+total reward: 6
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 250
+observation: 22560
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 251
+observation: 22560
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 252
+observation: 22818
+reward: 3
+total reward: 12
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 253
+observation: 153954
+reward: 3
+total reward: 15
+average reward: 2.14286
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 254
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 255
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 256
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 257
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 258
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 259
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 260
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 261
+observation: 153954
+reward: 0
+total reward: 15
+average reward: 1
+cycle: 262
+observation: 153958
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 263
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 264
+observation: 576
+reward: 3
+total reward: 6
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 265
+observation: 1602
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 266
+observation: 26178
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 267
+observation: 26178
+reward: 0
+total reward: 12
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 268
+observation: 26178
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 269
+observation: 26178
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 270
+observation: 91722
+reward: 3
+total reward: 15
+average reward: 1.66667
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 271
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 272
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 273
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 274
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 275
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 276
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 1
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 277
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 278
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 279
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 280
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 281
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 282
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 283
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 284
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 285
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.625
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 24
+global_cycle: 286
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.6
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 25
+global_cycle: 287
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.576923
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 26
+global_cycle: 288
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.555556
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 27
+global_cycle: 289
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.535714
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 28
+global_cycle: 290
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.517241
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 29
+global_cycle: 291
+observation: 91722
+reward: 0
+total reward: 15
+average reward: 0.5
+cycle: 292
+observation: 91738
+reward: 4
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 293
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 294
+observation: 18
+reward: 3
+total reward: 6
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 295
+observation: 24594
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 296
+observation: 25170
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 297
+observation: 26202
+reward: 3
+total reward: 15
+average reward: 2.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 298
+observation: 26202
+reward: 0
+total reward: 15
+average reward: 2.14286
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 299
+observation: 26202
+reward: 0
+total reward: 15
+average reward: 1.875
+cycle: 300
+observation: 91738
+reward: 4
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 301
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 302
+observation: 6144
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 303
+observation: 6144
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 304
+observation: 6660
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 305
+observation: 104964
+reward: 3
+total reward: 12
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 306
+observation: 104964
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 307
+observation: 104982
+reward: 3
+total reward: 15
+average reward: 1.875
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 308
+observation: 104982
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 309
+observation: 104982
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 310
+observation: 104982
+reward: 0
+total reward: 15
+average reward: 1.36364
+cycle: 311
+observation: 105046
+reward: 4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 312
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 313
+observation: 16392
+reward: 3
+total reward: 6
+average reward: 2
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 314
+observation: 16392
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 315
+observation: 147720
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 316
+observation: 147720
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 317
+observation: 151818
+reward: 3
+total reward: 12
+average reward: 1.71429
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 318
+observation: 152970
+reward: 3
+total reward: 15
+average reward: 1.875
+cycle: 319
+observation: 152986
+reward: 4
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 320
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 321
+observation: 513
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 322
+observation: 131649
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 323
+observation: 139845
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 324
+observation: 158277
+reward: 3
+total reward: 15
+average reward: 2.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 325
+observation: 158277
+reward: 0
+total reward: 15
+average reward: 2.14286
+cycle: 326
+observation: 158293
+reward: 5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 327
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 328
+observation: 2052
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 329
+observation: 18564
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 330
+observation: 84132
+reward: 3
+total reward: 12
+average reward: 2.4
+cycle: 331
+observation: 84388
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 332
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 333
+observation: 16386
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 334
+observation: 16386
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 335
+observation: 81930
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 336
+observation: 81930
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 337
+observation: 90186
+reward: 3
+total reward: 12
+average reward: 1.71429
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 338
+observation: 90186
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 339
+observation: 90186
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 340
+observation: 90714
+reward: 3
+total reward: 15
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 341
+observation: 90714
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 342
+observation: 90714
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 343
+observation: 90714
+reward: 0
+total reward: 15
+average reward: 1.15385
+cycle: 344
+observation: 91738
+reward: 4
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 345
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 346
+observation: 1152
+reward: 3
+total reward: 6
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 347
+observation: 1152
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 348
+observation: 33921
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 349
+observation: 34185
+reward: 3
+total reward: 12
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 350
+observation: 34185
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 351
+observation: 34185
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 352
+observation: 169353
+reward: 3
+total reward: 15
+average reward: 1.66667
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 353
+observation: 169353
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 354
+observation: 169353
+reward: 0
+total reward: 15
+average reward: 1.36364
+cycle: 355
+observation: 169369
+reward: 4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 356
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 357
+observation: 32832
+reward: 3
+total reward: 6
+average reward: 2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 358
+observation: 33345
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 359
+observation: 34401
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 360
+observation: 34401
+reward: 0
+total reward: 12
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 361
+observation: 34401
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 362
+observation: 108129
+reward: 3
+total reward: 15
+average reward: 1.875
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 363
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 364
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 365
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 366
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 367
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 368
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 369
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 1
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 370
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 371
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 372
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 373
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 374
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 375
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 376
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 377
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 378
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.625
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 24
+global_cycle: 379
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.6
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 25
+global_cycle: 380
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.576923
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 26
+global_cycle: 381
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.555556
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 27
+global_cycle: 382
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.535714
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 28
+global_cycle: 383
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.517241
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 29
+global_cycle: 384
+observation: 108129
+reward: 0
+total reward: 15
+average reward: 0.5
+cycle: 385
+observation: 108133
+reward: 4
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 386
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 387
+observation: 264
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 388
+observation: 33033
+reward: 3
+total reward: 9
+average reward: 2.25
+cycle: 389
+observation: 98569
+reward: 5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 390
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 391
+observation: 8448
+reward: 3
+total reward: 6
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 392
+observation: 8592
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 393
+observation: 10641
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 394
+observation: 10641
+reward: 0
+total reward: 12
+average reward: 2
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 395
+observation: 10641
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 396
+observation: 10641
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 397
+observation: 158097
+reward: 3
+total reward: 15
+average reward: 1.66667
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 398
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 399
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 400
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 401
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 402
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 403
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 1
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 404
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 405
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 406
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 407
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 408
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 409
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 410
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 411
+observation: 158097
+reward: 0
+total reward: 15
+average reward: 0.652174
+cycle: 412
+observation: 158101
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 413
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 414
+observation: 16512
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 415
+observation: 20610
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 416
+observation: 22662
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 417
+observation: 153990
+reward: 3
+total reward: 15
+average reward: 2.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 418
+observation: 153990
+reward: 0
+total reward: 15
+average reward: 2.14286
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 419
+observation: 153990
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 420
+observation: 153990
+reward: 0
+total reward: 15
+average reward: 1.66667
+cycle: 421
+observation: 154006
+reward: 4
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 422
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 423
+observation: 384
+reward: 3
+total reward: 6
+average reward: 2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 424
+observation: 4482
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 425
+observation: 136578
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 426
+observation: 136578
+reward: 0
+total reward: 12
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 427
+observation: 152994
+reward: 3
+total reward: 15
+average reward: 2.14286
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 428
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 429
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 430
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 431
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 432
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 433
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 434
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 435
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 1
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 436
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 437
+observation: 152994
+reward: 0
+total reward: 15
+average reward: 0.882353
+cycle: 438
+observation: 152998
+reward: 4
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 439
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 440
+observation: 16512
+reward: 3
+total reward: 6
+average reward: 2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 441
+observation: 16530
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 442
+observation: 148626
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 443
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 2
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 444
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 445
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 446
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 447
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 448
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 449
+observation: 148626
+reward: 0
+total reward: 12
+average reward: 1
+cycle: 450
+observation: 157074
+reward: 1
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 451
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 452
+observation: 8256
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 453
+observation: 10320
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 454
+observation: 141396
+reward: 3
+total reward: 12
+average reward: 2.4
+cycle: 455
+observation: 141397
+reward: 5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 456
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 457
+observation: 18432
+reward: 3
+total reward: 6
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 458
+observation: 92160
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 459
+observation: 92304
+reward: 3
+total reward: 12
+average reward: 2.4
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 460
+observation: 92568
+reward: 3
+total reward: 15
+average reward: 2.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 461
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 2.14286
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 462
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.875
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 463
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.66667
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 464
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 465
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.36364
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 466
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 467
+observation: 92568
+reward: 0
+total reward: 15
+average reward: 1.15385
+cycle: 468
+observation: 92569
+reward: 5
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 469
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 470
+observation: 2112
+reward: 3
+total reward: 6
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 471
+observation: 137280
+reward: 3
+total reward: 9
+average reward: 2.25
+cycle: 472
+observation: 137281
+reward: 5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 473
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 474
+observation: 2049
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 475
+observation: 2049
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 476
+observation: 75777
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 477
+observation: 76293
+reward: 3
+total reward: 12
+average reward: 2
+cycle: 478
+observation: 76309
+reward: 5
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 479
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 480
+observation: 65568
+reward: 3
+total reward: 6
+average reward: 2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 481
+observation: 67620
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 482
+observation: 67620
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 483
+observation: 68133
+reward: 3
+total reward: 12
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 484
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1.71429
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 485
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 486
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 487
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 488
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 489
+observation: 68133
+reward: 0
+total reward: 12
+average reward: 1
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 490
+observation: 72357
+reward: 3
+total reward: 15
+average reward: 1.15385
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 491
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 492
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 1
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 493
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 494
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 495
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 496
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 497
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 498
+observation: 72357
+reward: 0
+total reward: 15
+average reward: 0.714286
+cycle: 499
+observation: 88741
+reward: 4
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 500
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 501
+observation: 2064
+reward: 3
+total reward: 6
+average reward: 2
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 502
+observation: 34833
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 503
+observation: 100497
+reward: 3
+total reward: 12
+average reward: 2.4
+cycle: 504
+observation: 100501
+reward: 5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 505
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 506
+observation: 8208
+reward: 3
+total reward: 6
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 507
+observation: 8208
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 508
+observation: 8337
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 509
+observation: 8337
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 510
+observation: 8337
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 511
+observation: 24729
+reward: 3
+total reward: 12
+average reward: 1.5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 512
+observation: 24729
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 513
+observation: 24729
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 514
+observation: 156825
+reward: 3
+total reward: 15
+average reward: 1.36364
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 515
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 1.25
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 516
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 1.15385
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 517
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 518
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 1
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 519
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 520
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 521
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.833333
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 522
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 523
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 524
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 525
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 526
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.652174
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 23
+global_cycle: 527
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.625
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 24
+global_cycle: 528
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.6
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 25
+global_cycle: 529
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.576923
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 26
+global_cycle: 530
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.555556
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 27
+global_cycle: 531
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.535714
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 28
+global_cycle: 532
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.517241
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 29
+global_cycle: 533
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 30
+global_cycle: 534
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.483871
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 31
+global_cycle: 535
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.46875
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 32
+global_cycle: 536
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.454545
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 33
+global_cycle: 537
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.441176
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 34
+global_cycle: 538
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.428571
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 35
+global_cycle: 539
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.416667
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 36
+global_cycle: 540
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.405405
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 37
+global_cycle: 541
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.394737
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 38
+global_cycle: 542
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.384615
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 39
+global_cycle: 543
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.375
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 40
+global_cycle: 544
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.365854
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 41
+global_cycle: 545
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.357143
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 42
+global_cycle: 546
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.348837
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 43
+global_cycle: 547
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.340909
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 44
+global_cycle: 548
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.333333
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 45
+global_cycle: 549
+observation: 156825
+reward: 0
+total reward: 15
+average reward: 0.326087
+cycle: 550
+observation: 157081
+reward: 4
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 551
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 552
+observation: 8196
+reward: 3
+total reward: 6
+average reward: 2
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 553
+observation: 8196
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 554
+observation: 8196
+reward: 0
+total reward: 6
+average reward: 1.2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 555
+observation: 10260
+reward: 3
+total reward: 9
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 556
+observation: 10260
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 557
+observation: 26646
+reward: 3
+total reward: 12
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 558
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 559
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 560
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 561
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 1
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 562
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 0.923077
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 563
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 0.857143
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 564
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 0.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 565
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 0.75
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 566
+observation: 26646
+reward: 0
+total reward: 12
+average reward: 0.705882
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 567
+observation: 27222
+reward: 3
+total reward: 15
+average reward: 0.833333
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 18
+global_cycle: 568
+observation: 27222
+reward: 0
+total reward: 15
+average reward: 0.789474
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 19
+global_cycle: 569
+observation: 27222
+reward: 0
+total reward: 15
+average reward: 0.75
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 20
+global_cycle: 570
+observation: 27222
+reward: 0
+total reward: 15
+average reward: 0.714286
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 21
+global_cycle: 571
+observation: 27222
+reward: 0
+total reward: 15
+average reward: 0.681818
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 22
+global_cycle: 572
+observation: 27222
+reward: 0
+total reward: 15
+average reward: 0.652174
+cycle: 573
+observation: 92758
+reward: 4
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 574
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 575
+observation: 2049
+reward: 3
+total reward: 6
+average reward: 2
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 576
+observation: 2085
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 577
+observation: 2085
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 578
+observation: 2085
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 579
+observation: 2085
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 580
+observation: 26661
+reward: 3
+total reward: 12
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 581
+observation: 26661
+reward: 0
+total reward: 12
+average reward: 1.33333
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 582
+observation: 26661
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 583
+observation: 26661
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 584
+observation: 26661
+reward: 0
+total reward: 12
+average reward: 1
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 585
+observation: 92325
+reward: 3
+total reward: 15
+average reward: 1.15385
+action: 8
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 586
+observation: 92325
+reward: 0
+total reward: 15
+average reward: 1.07143
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 587
+observation: 92325
+reward: 0
+total reward: 15
+average reward: 1
+cycle: 588
+observation: 92581
+reward: 5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 589
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 590
+observation: 288
+reward: 3
+total reward: 6
+average reward: 2
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 591
+observation: 288
+reward: 0
+total reward: 6
+average reward: 1.5
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 592
+observation: 24864
+reward: 3
+total reward: 9
+average reward: 1.8
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 593
+observation: 24864
+reward: 0
+total reward: 9
+average reward: 1.5
+cycle: 594
+observation: 24868
+reward: 5
+action: 0
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 595
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 596
+observation: 8193
+reward: 3
+total reward: 6
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 597
+observation: 9249
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 598
+observation: 9249
+reward: 0
+total reward: 9
+average reward: 1.8
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 5
+global_cycle: 599
+observation: 9249
+reward: 0
+total reward: 9
+average reward: 1.5
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 6
+global_cycle: 600
+observation: 9249
+reward: 0
+total reward: 9
+average reward: 1.28571
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 7
+global_cycle: 601
+observation: 9249
+reward: 0
+total reward: 9
+average reward: 1.125
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 8
+global_cycle: 602
+observation: 42021
+reward: 3
+total reward: 12
+average reward: 1.33333
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 9
+global_cycle: 603
+observation: 42021
+reward: 0
+total reward: 12
+average reward: 1.2
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 10
+global_cycle: 604
+observation: 42021
+reward: 0
+total reward: 12
+average reward: 1.09091
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 11
+global_cycle: 605
+observation: 42021
+reward: 0
+total reward: 12
+average reward: 1
+action: 4
+explored: yes
+explore_rate_g: 0.999
+cycle: 12
+global_cycle: 606
+observation: 42021
+reward: 0
+total reward: 12
+average reward: 0.923077
+action: 6
+explored: yes
+explore_rate_g: 0.999
+cycle: 13
+global_cycle: 607
+observation: 173349
+reward: 3
+total reward: 15
+average reward: 1.07143
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 14
+global_cycle: 608
+observation: 173349
+reward: 0
+total reward: 15
+average reward: 1
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 15
+global_cycle: 609
+observation: 173349
+reward: 0
+total reward: 15
+average reward: 0.9375
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 16
+global_cycle: 610
+observation: 173349
+reward: 0
+total reward: 15
+average reward: 0.882353
+action: 3
+explored: yes
+explore_rate_g: 0.999
+cycle: 17
+global_cycle: 611
+observation: 173349
+reward: 0
+total reward: 15
+average reward: 0.833333
+cycle: 612
+observation: 173413
+reward: 4
+action: 5
+explored: yes
+explore_rate_g: 0.999
+cycle: 1
+global_cycle: 613
+observation: 0
+reward: 3
+total reward: 3
+average reward: 1.5
+action: 7
+explored: yes
+explore_rate_g: 0.999
+cycle: 2
+global_cycle: 614
+observation: 1032
+reward: 3
+total reward: 6
+average reward: 2
+action: 2
+explored: yes
+explore_rate_g: 0.999
+cycle: 3
+global_cycle: 615
+observation: 148488
+reward: 3
+total reward: 9
+average reward: 2.25
+action: 1
+explored: yes
+explore_rate_g: 0.999
+cycle: 4
+global_cycle: 616
+observation: 156696
+reward: 3
+total reward: 12
+average reward: 2.4
