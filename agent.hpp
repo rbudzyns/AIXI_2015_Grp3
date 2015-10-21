@@ -96,10 +96,6 @@ public:
 
 	void searchTreeReset();
 
-	// prune the tree to the subtree of the root corresponding to
-	// the given action
-	void searchTreePrune(action_t action, obsrew_t obsrew);
-
 private:
 	// action sanity check
 	bool isActionOk(action_t action) const;

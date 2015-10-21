@@ -37,7 +37,6 @@ DecisionNode::~DecisionNode() {
 	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end();
 			i++) {
 		delete i->second;
-		m_children.erase(i);
 	}
 }
 
@@ -63,16 +62,6 @@ bool DecisionNode::addChild(ChanceNode* child) {
 	m_children.insert(p);
 
 	return true;
-}
-
-// get the child for the given action
-ChanceNode * DecisionNode::getChild(action_t action) {
-	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
-		if ((i->second)->action() == action) {
-			return i->second;
-		}
-	}
-    return 0;
 }
 
 // perform a sample run through this node and it's children,
@@ -163,16 +152,6 @@ action_t DecisionNode::bestAction(Agent &agent) const {
 	}
 }
 
-// prune all child chance nodes except the given action
-void DecisionNode::pruneAllBut(action_t action) {
-	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
-		if ((i->second)->action() != action) {
-			delete i->second;
-			m_children.erase(i);
-		}
-	}
-}
-
 ChanceNode::ChanceNode(action_t action) :
 		SearchNode() {
 	m_action = action;
@@ -183,7 +162,6 @@ ChanceNode::~ChanceNode() {
 	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
 			i++) {
 		delete i->second;
-		m_children.erase(i);
 	}
 }
 
@@ -201,16 +179,6 @@ bool ChanceNode::addChild(DecisionNode* child) {
 	m_children.insert(p);
 
 	return true;
-}
-
-// get the child for the given observation/reward
-DecisionNode * ChanceNode::getChild(obsrew_t obsrew) {
-	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
-		if ((i->second)->obsRew() == obsrew) {
-			return i->second;
-		}
-	}
-    return 0;
 }
 
 // perform a sample run through this node and it's children,
@@ -235,16 +203,6 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	m_visits++;
 
 	return reward;
-}
-
-// prune all child decision nodes except the given observation/reward
-void ChanceNode::pruneAllBut(obsrew_t obsrew) {
-	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end(); i++) {
-		if ((i->second)->obsRew() != obsrew) {
-			delete i->second;
-			m_children.erase(i);
-		}
-	}
 }
 
 // simulate a path through a hypothetical future for the agent within its

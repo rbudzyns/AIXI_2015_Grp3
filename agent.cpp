@@ -298,20 +298,6 @@ void Agent::searchTreeReset() {
 	m_st = new DecisionNode(o_r);
 }
 
-// prune the tree to the subtree of the root corresponding to
-// the given action
-void Agent::searchTreePrune(action_t action, obsrew_t obsrew) {
-	ChanceNode * chance_node = searchTree()->getChild(action);
-	if (chance_node != 0) {
-		searchTree()->pruneAllBut(action);
-		DecisionNode * new_root = chance_node->getChild(obsrew);
-		if (new_root != 0) {
-			chance_node->pruneAllBut(obsrew);
-			m_st = new_root;
-		}
-	}
-}
-
 // used to revert an agent to a previous state
 ModelUndo::ModelUndo(const Agent &agent) {
 
