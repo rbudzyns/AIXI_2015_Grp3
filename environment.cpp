@@ -86,7 +86,10 @@ CheeseMaze::CheeseMaze(options_t &options)
 			if(count == mouse_pos)
 				mouse_start = new_node;
 			if(count == cheese_pos)
+			{				
 				cheese_node = new_node;
+			//	std::cout<<"we got cheese" <<std::endl;
+			}
 			for(int k=0;k<4;k++)
 				new_node->next[k] = NULL;
 			//if stack is empty, meaning all edges will have to be connected
@@ -175,14 +178,13 @@ void CheeseMaze::performAction(action_t action)
 void CheeseMaze::envReset()
 {
 	current_node = mouse_start;
-
 	m_reward = 10;
 	m_observation = current_node->percept;
 }
 
 bool CheeseMaze::isFinished() const
 {
-	return &current_node == &cheese_node ? 1 : 0;
+	return current_node == cheese_node ? 1 : 0;
 }
 
 
