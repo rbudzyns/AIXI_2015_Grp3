@@ -145,13 +145,31 @@ of the number of times $T$ that node has been visited in search.
 This is used to determine how we explore the search space using the
 UCB algorithm, which, for each decision node picks (assuming $T\left(ha\right)>0$
 for all actions)
+\[
+a_{\text{UCB}}=\arg\max_{a\in\mathcal{A}}\left\{ \frac{1}{m\left(\beta-\alpha\right)}\hat{V}\left(ha\right)+C\sqrt{\frac{\log T\left(h\right)}{T\left(ha\right)}}\right\} ,
+\]
+
+
+where $\mathcal{A}$ is the set of all permissible actions, $m$ is
+the search horizon, $\beta-\alpha$ is the difference between the
+minimal and maximal instantaneous reward, and $C$ is a parameter
+controlling the propensity of the agent to explore less frequently-seen
+histories. 
+
+Note that the expectimax is a stochastic, partially observable game
+between the agent and its environment. In the following, call nodes
+corresponding to agent moves `decision nodes', and nodes corresponding
+to Nature's moves `chance nodes'.
 
 
 \subsubsection{Class structure}
 
-We define a base ${\tt SearchNode}$ class
-
-SearchNode, DecisionNode, ChanceNode.
+To represent our search nodes, we define a base ${\tt SearchNode}$
+class, from which ChanceNode and DecisionNode inherit. ChanceNode
+and DecisionNode each have a ${\tt sample}$ method defined on them;
+each of these methods is mutually recursive. For a given node $n$,
+we keep its children in a dictionary keyed on the action or (observation,reward)
+used to generate each child.
 
 
 \subsubsection{Code snippets}
@@ -250,6 +268,9 @@ Experimental setup ... \\
 \item Cross domain simulation on more difficult environments... 
 \item Separate CTW for Obs and Rews...
 \end{itemize}
+
+\section{Discussion and Conclusions}
+
 
 \section*{Appendix}
 
