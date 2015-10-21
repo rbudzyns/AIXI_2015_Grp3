@@ -44,8 +44,9 @@ Group 3}
 \date{October 2015}
 
 \maketitle
-We outline an implementation of Veness et al.'s Monte Carlo AIXI approximation\cite{veness-11},
-and report our simulation results on a number of toy domains.
+We outline an implementation of Veness et al.'s Monte Carlo AIXI approximation\cite{veness-11}
+(MC-AIXI-CTW), and report our simulation results on a number of toy
+domains.
 
 
 \section{Introduction}
@@ -63,9 +64,8 @@ model for the environment.
 
 Following Veness et al., we approximate $a_{k}^{\text{AIXI}}$ using
 Monte Carlo tree search (upper confidence bound) to approximate the
-expectimax, we compute a mixture over variable-order Markov models
-using the context-tree weighting algorithm. This approximation is
-denoted MC-AIXI-CTW.
+expectimax, and we compute a mixture over variable-order Markov models
+using the context-tree weighting algorithm. 
 
 We present a lightweight C++ implementation of MC-AIXI-CTW, along
 with implementations of a number of simple games: $\textsc{Pacman},\ $
@@ -73,44 +73,12 @@ $\textsc{Tic-Tac-Toe}$, $\textsc{Biased Rock-Paper-Scissor}$, $\textsc{Extended-
 and $\textsc{Cheesemaze}$.
 
 
-\subsection{Files}
+\section{User Manual}
 
-The report archive should contain the following: 
-\begin{verbatim}
+To build from source, run ${\tt g++\ *.cpp\ *.hpp\ -o\ aixi}$ \textbf{TODO
+check}
 
-MC-AIXI-CTW-Grp3.zip
-    \report
-        report.pdf // this report
-        report.tex
-        cheesemaze_01.png // results plots
-        extended_tiger_01.png
-        biased_rock_paper_scissor_01.png
-        tic_tac_toe_01.png
-        pacman_01.png
-    \src
-        main.hpp
-        main.cpp
-        environment.hpp
-        environment.cpp
-        agent.hpp
-        agent.cpp
-        search.hpp
-        search.cpp
-        predict.hpp
-        predict.cpp
-        util.hpp
-        util.cpp
-        README.md
-        cheesemaze.conf // environment configuration files
-        rockpaper.conf
-        tictactoe.conf
-        coinflip.conf
-        tiger.conf
-
-        
-\end{verbatim}
-
-\subsection{User Manual}
+To run, invoke ${\tt ./aixi\ envname}$.
 
 
 \section{MC-AIXI-CTW Implementation}
@@ -118,13 +86,23 @@ MC-AIXI-CTW-Grp3.zip
 
 \subsection{Monte Carlo Tree Search (MCTS) Algorithm}
 \begin{enumerate}
-\item Source code files 
-\item Class structure (SearchNode, DecisionNode, ChanceNode, ...) 
-\item Description of the algorithm (Veness...) 
+\item High level description of algorithm
+\item Class structure
+
+
+SearchNode, DecisionNode, ChanceNode.
+
+\item Code snippets
+\item Efficiency/performance
 \end{enumerate}
 
 \subsection{Context Tree Weighting (CTW)}
-
+\begin{enumerate}
+\item High level description of algorithm
+\item Class structure
+\item Code snippets
+\item Efficiency/performance
+\end{enumerate}
 
 \subsection{Environments}
 
@@ -156,13 +134,13 @@ interpretations of obtained simulation results. \\
 
 
 
-\begin{tabular}{|l|l|l|c}
+\begin{tabular}{|l|l|l|}
 \hline 
-Environment  & MCTS  & CTW  & \tabularnewline
+Environment  & MCTS  & CTW \tabularnewline
 \hline 
-1  & $m=100$  & $\text{ct-depth}=96$  & \tabularnewline
+1  & $m=100$  & $\text{ct-depth}=96$ \tabularnewline
 \hline 
- & $C=\sqrt{2}$  &  & \tabularnewline
+ & $C=\sqrt{2}$  & \tabularnewline
 \hline 
 \end{tabular}
 
@@ -196,16 +174,51 @@ Experimental setup ... \\
 
 
 \section{Cross Domain Simulation Results}
+\begin{itemize}
+\item Cheesemaze and Extended Tiger
+\item Cross domain simulation on more difficult environments... 
+\item Separate CTW for Obs and Rews...
+\end{itemize}
 
-Cheesemaze and Extended Tiger
+\section*{Appendix}
 
+\appendix
 
-\section{Possible Other things}
+\section{Files}
 
-Cross domain simulation on more difficult environments... \\
- Separate CTW for Obs and Rews...
+The report archive should contain the following: 
+\begin{verbatim}
 
- \bibliographystyle{unsrt}
+MC-AIXI-CTW-Grp3.zip
+    \report
+        report.pdf // this report
+        report.tex
+        cheesemaze_01.png // results plots
+        extended_tiger_01.png
+        biased_rock_paper_scissor_01.png
+        tic_tac_toe_01.png
+        pacman_01.png
+    \src
+        main.hpp
+        main.cpp
+        environment.hpp
+        environment.cpp
+        agent.hpp
+        agent.cpp
+        search.hpp
+        search.cpp
+        predict.hpp
+        predict.cpp
+        util.hpp
+        util.cpp
+        README.md
+        cheesemaze.conf // environment configuration files
+        rockpaper.conf
+        tictactoe.conf
+        coinflip.conf
+        tiger.conf
+\end{verbatim}
+\bibliographystyle{unsrt}
 \bibliography{report}
 
 \end{document}
