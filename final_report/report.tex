@@ -1,34 +1,16 @@
-%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
 \usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=3cm,lmargin=1.5cm,rmargin=1.5cm}
-\usepackage{array}
-\usepackage{multirow}
-\usepackage{enumerate}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{verbatim}
-\usepackage{appendix}
 \usepackage{mathtools}
-\usepackage{caption}
-\newcommand*\diff{\mathop{}\!\mathrm{d}}
-\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}} % Vectors
-\newcommand{\mat}[1]{\boldsymbol{\mathbf{#1}}} % Matrices
-\PassOptionsToPackage{normalem}{ulem}
-\usepackage{ulem}
-\usepackage{mathrsfs}
-
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-\usepackage{tikz-qtree}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
 
 \makeatletter
-\def\BState{\State\hskip-\ALG@thistlm}
-\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
 %% Because html converters don't know tabularnewline
@@ -38,29 +20,64 @@
 \usepackage{tikz}
 \usepackage{babel}
 \renewcommand{\labelitemi}{$\diamond$}
-\newcommand\T{\rule{0pt}{2.6ex}}       % Top strut
-\newcommand\B{\rule[-1.2ex]{0pt}{0pt}} % Bottom strut
+\newcommand{\T}{\rule{0pt}{2.6ex}}       % Top strut
+\newcommand{\B}{\rule[-1.2ex]{0pt}{0pt}} % Bottom strut
+
+
+
+
 
 
 \makeatother
 
+\usepackage{babel}
 \begin{document}
 
-\title{COMP8620: MC-AIXI-CTW\\Group 3}
-\author{Jarryd Martin, John Aslanides, Yadunandan Sannappa, Nrupendra Rao, Cheng Yu, Ryk Budzynski}
+\title{COMP8620: MC-AIXI-CTW\\
+Group 3}
+
+
+\author{Jarryd Martin, John Aslanides, Yadunandan Sannappa,\\
+ Nrupendra Rao, Cheng Yu, Ryk Budzynski}
+
+
 \date{October 2015}
 
 \maketitle
+We outline an implementation of Veness et al.'s Monte Carlo AIXI approximation\cite{veness-11},
+and report our simulation results on a number of toy domains.
+
 
 \section{Introduction}
 
-\subsection{Domains}
-The domains assigned to group 3 are as follows:
-$$\text{Pacman, Tic-Tac-Toe, Biased Rock-Paper-Scissor, Extended Tiger, Cheesemaze}$$
+Recall that the AIXI agent is defined by its actions, which for each
+cycle $k$ are given by 
+\[
+a_{k}^{\text{AIXI}}=\arg\max_{a_{k}}\sum_{o_{k}r_{k}}\cdots\max_{a_{m}}\sum_{o_{m}r_{m}}\left[r_{k}+\dots+r_{m}\right]\xi\left(o_{1}r_{1}\dots o_{m}r_{m}|a_{1}\dots a_{m}\right),
+\]
+
+
+where the $o_{n}$ and $r_{n}$ are the observation and reward provided
+by the environment at cycle $n$, and $\xi$ is a Bayesian mixture
+model for the environment. 
+
+Following Veness et al., we approximate $a_{k}^{\text{AIXI}}$ using
+Monte Carlo tree search (upper confidence bound) to approximate the
+expectimax, we compute a mixture over variable-order Markov models
+using the context-tree weighting algorithm. This approximation is
+denoted MC-AIXI-CTW.
+
+We present a lightweight C++ implementation of MC-AIXI-CTW, along
+with implementations of a number of simple games: $\textsc{Pacman},\ $
+$\textsc{Tic-Tac-Toe}$, $\textsc{Biased Rock-Paper-Scissor}$, $\textsc{Extended-Tiger}$,
+and $\textsc{Cheesemaze}$.
+
 
 \subsection{Files}
-The report archive should contian the following:
+
+The report archive should contain the following: 
 \begin{verbatim}
+
 MC-AIXI-CTW-Grp3.zip
     \report
         report.pdf // this report
@@ -95,63 +112,100 @@ MC-AIXI-CTW-Grp3.zip
 
 \subsection{User Manual}
 
+
 \section{MC-AIXI-CTW Implementation}
 
-\subsection{Environments}
-\subsubsection{Cheesemaze}
-\subsubsection{Extended Tiger}
-\subsubsection{Biased Rock-Paper-Scissor}
-\subsubsection{Tic-Tac-Toe}
-\subsubsection{Pacman}
 
 \subsection{Monte Carlo Tree Search (MCTS) Algorithm}
-
-\begin{enumerate}[a)]
-\item Source code files
-\item Class structure (SearchNode, DecisionNode, ChanceNode, ...)
-\item Description of the algorithm (Veness...)
+\begin{enumerate}
+\item Source code files 
+\item Class structure (SearchNode, DecisionNode, ChanceNode, ...) 
+\item Description of the algorithm (Veness...) 
 \end{enumerate}
 
 \subsection{Context Tree Weighting (CTW)}
 
+
+\subsection{Environments}
+
+
+\subsubsection{Cheesemaze}
+
+
+\subsubsection{Extended Tiger}
+
+
+\subsubsection{Biased Rock-Paper-Scissor}
+
+
+\subsubsection{Tic-Tac-Toe}
+
+
+\subsubsection{Pacman}
+
+
 \section{Simulation Results}
+
+
 \subsection{Cheesemaze}
 \begin{itemize}
 \item Experimental setup ... \\
-Any simulation provided should include detailed description of experimental setup; selected parameters of algorithms and examples; and concise interpretations of obtained simulation results. \\
+ Any simulation provided should include detailed description of experimental
+setup; selected parameters of algorithms and examples; and concise
+interpretations of obtained simulation results. \\
+
+
 
 \begin{tabular}{|l|l|l|c}
-\hline
-Environment & MCTS & CTW \\
-\hline
-1 & $m = 100$      & $\text{ct-depth} = 96$ \\
-\hline
-  & $C = \sqrt{2}$ &  \\
-\hline
+\hline 
+Environment  & MCTS  & CTW  & \tabularnewline
+\hline 
+1  & $m=100$  & $\text{ct-depth}=96$  & \tabularnewline
+\hline 
+ & $C=\sqrt{2}$  &  & \tabularnewline
+\hline 
 \end{tabular}
 
 \item Plots ... \\
-\includegraphics[scale=0.4]{./cheesemaze_01}
-\item Interpretation of Results
+ \includegraphics[scale=0.4]{cheesemaze_01} 
+\item Interpretation of Results 
 \end{itemize}
 
 \subsection{Extended Tiger}
+
 Experimental setup ... \\
-Plots ...
+ Plots ... 
+
+
 \subsection{Biased Rock-Paper-Scissor}
+
 Experimental setup ... \\
-Plots ...
+ Plots ... 
+
+
 \subsection{Tic-Tac-Toe}
+
 Experimental setup ... \\
-Plots ...
+ Plots ... 
+
+
 \subsection{Pacman}
+
 Experimental setup ... \\
-Plots ...
+ Plots ... 
+
+
 \section{Cross Domain Simulation Results}
+
 Cheesemaze and Extended Tiger
 
+
 \section{Possible Other things}
+
 Cross domain simulation on more difficult environments... \\
-Separate CTW for Obs and Rews...
+ Separate CTW for Obs and Rews...
+
+ \bibliographystyle{unsrt}
+\bibliography{report}
 
 \end{document}
