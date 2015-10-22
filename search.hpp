@@ -57,6 +57,8 @@ public:
 
 	void pruneAllBut(action_t action);
 
+	int getDecisionNodeInfo(void);
+
 	// add a new child chance node
 	bool addChild(ChanceNode* child);
 
@@ -93,6 +95,8 @@ public:
 	void pruneAllBut(obsrew_t obsrew);
 
 	DecisionNode* getChild(obsrew_t o_r);
+
+	int getChanceNodeInfo(void);
 
 	// get action label
 	action_t action(void) const;

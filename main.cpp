@@ -125,7 +125,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		aixi::log << "reward: " << reward << std::endl;
 		aixi::log << "total reward: " << ai.reward() << std::endl;
 		aixi::log << "average reward: " << ai.averageReward() << std::endl;
-
+		aixi::log << "Search tree size: "
+				<< ai.searchTree()->getDecisionNodeInfo() << std::endl;
+		aixi::log << "Global cycle number: " << global_cycles_g << std::endl;
 		// Log the data in a more compact form
 		compactLog << global_cycles_g << ", " << cycle << ", " << observation
 				<< ", " << reward << ", " << action << ", " << explore_g << ", "
@@ -144,6 +146,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 //			total_head_prob += ai.getProbNextSymbol();
 //			std::cout<< total_head_prob/(cycle-buffer)<<std::endl;
 //		}
+
 		cycle++;
 		global_cycles_g++;
 	}

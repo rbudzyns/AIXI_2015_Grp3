@@ -37,8 +37,8 @@ DecisionNode::~DecisionNode() {
 	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end();
 			i++) {
 		delete i->second;
-		m_children.erase(i);
 	}
+	m_children.clear();
 }
 
 // print method for debugging purposes
@@ -67,6 +67,14 @@ bool DecisionNode::addChild(ChanceNode* child) {
 
 ChanceNode * DecisionNode::getChild(action_t action) {
 	return m_children.count(action) ? m_children[action] : 0;
+}
+
+int DecisionNode::getDecisionNodeInfo(void) {
+	int n_nodes = 0;
+	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+		n_nodes += (it->second)->getChanceNodeInfo() + 1;
+	}
+	return n_nodes;
 }
 
 // perform a sample run through this node and it's children,
@@ -140,17 +148,20 @@ action_t DecisionNode::selectAction(Agent &agent) {
 
 // prune all child chance nodes except the given action
 void DecisionNode::pruneAllBut(action_t action) {
-	for (chance_map_t::iterator i = m_children.begin(); i != m_children.end();
-			i++) {
-		if ((i->second)->action() != action) {
-			delete i->second;
-			m_children.erase(i);
+	auto it = m_children.begin();
+
+	while (it != m_children.end()) {
+		if ((it->second)->action() != action) {
+			delete it->second;
+			it = m_children.erase(it);
+		} else {
+			it++;
 		}
 	}
 }
 
 // return the best action for a decision node
-action_t DecisionNode::bestAction(Agent &agent) const {
+action_t DecisionNode::bestAction(Agent & agent) const {
 	if (m_children.size() > 0) {
 		reward_t max_val = 0;
 		action_t a = 1;
@@ -178,8 +189,8 @@ ChanceNode::~ChanceNode() {
 	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
 			i++) {
 		delete i->second;
-		m_children.erase(i);
 	}
+	m_children.clear();
 }
 
 action_t ChanceNode::action(void) const {
@@ -200,13 +211,23 @@ bool ChanceNode::addChild(DecisionNode* child) {
 
 // prune all child decision nodes except the given observation/reward
 void ChanceNode::pruneAllBut(obsrew_t obsrew) {
-	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
-			i++) {
-		if ((i->second)->obsRew() != obsrew) {
-			delete i->second;
-			m_children.erase(i);
+	auto it = m_children.begin();
+	while (it != m_children.end()) {
+		if ((it->second)->obsRew() != obsrew) {
+			delete it->second;
+			it = m_children.erase(it);
+		} else {
+			it++;
 		}
 	}
+}
+
+int ChanceNode::getChanceNodeInfo(void) {
+	int n_nodes = 0;
+	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+		n_nodes += (it->second)->getDecisionNodeInfo() + 1;
+	}
+	return n_nodes;
 }
 
 DecisionNode * ChanceNode::getChild(obsrew_t o_r) {
@@ -278,7 +299,7 @@ extern action_t search(Agent &agent) {
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < agent.timeout());
 
 	action_t action = (agent.searchTree())->bestAction(agent);
-	//action_t action = root.bestAction(agent);
+//action_t action = root.bestAction(agent);
 
 	return action;
 }
