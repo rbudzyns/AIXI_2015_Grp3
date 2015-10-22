@@ -61,7 +61,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		percept_t reward = env.getReward();
 
 		obsrew_t o_r = std::make_pair(observation, reward);
-		ai.searchTreePrune(action, o_r);
+		ai.searchTreeReset();
+		//ai.searchTreePrune(action, o_r);
 
 		// Update agent's environment model with the new percept
 
@@ -265,7 +266,7 @@ int main(int argc, char *argv[]) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
-		ai.newEpisode();
+		//ai.newEpisode();
 		ai.searchTreeReset();
 		//ai.contextTree()->debugTree();
 	}
