@@ -55,8 +55,12 @@ public:
 	// get (observation,reward) label
 	obsrew_t obsRew(void) const;
 
+	void pruneAllBut(action_t action);
+
 	// add a new child chance node
 	bool addChild(ChanceNode* child);
+
+	ChanceNode* getChild(action_t a);
 
 	// perform a sample run through this node and its children,
 	// returning the accumulated reward from this sample run
@@ -85,6 +89,10 @@ public:
 
 	// add a new child decision node
 	bool addChild(DecisionNode* child);
+
+	void pruneAllBut(obsrew_t obsrew);
+
+	DecisionNode* getChild(obsrew_t o_r);
 
 	// get action label
 	action_t action(void) const;
