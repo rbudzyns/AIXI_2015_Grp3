@@ -68,15 +68,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		ai.modelUpdate(observation, reward);
 
 		if (env.isFinished()) {
-			aixi::log << "cycle: " << global_cycles_g << std::endl;
-			aixi::log << "observation: " << observation << std::endl;
-			aixi::log << "reward: " << reward << std::endl;
-			compactLog << global_cycles_g << ", " << cycle << ", "
-					<< observation << ", " << reward << ", " << action << ", "
-					<< explore_g << ", " << explored << ", " << explore_rate_g
-					<< ", " << ai.reward() << ", " << ai.averageReward() << ", "
-					<< env.isFinished() << std::endl;
-			global_cycles_g++;
 			dobreak = true;
 		}
 
