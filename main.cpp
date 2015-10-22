@@ -86,7 +86,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 						<< std::endl;
 				explore_g = false;
 				next_explore_switch_g += def_total_cycles_g
-						* total_cycles_mult_g * 2 / 5;
+						* total_cycles_mult_g / 5;
 			} else {
 				std::cout << "Starting training phase: " << global_cycles_g
 						<< std::endl;
