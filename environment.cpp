@@ -5,10 +5,9 @@
 #include <string>
 #include <bitset>
 #include <climits>
-#include "main.hpp"
+
 #include "util.hpp"
 
-using namespace aixi;
 
 class next;
 class next;
@@ -86,10 +85,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			if(count == mouse_pos)
 				mouse_start = new_node;
 			if(count == cheese_pos)
-			{				
 				cheese_node = new_node;
-			//	std::cout<<"we got cheese" <<std::endl;
-			}
 			for(int k=0;k<4;k++)
 				new_node->next[k] = NULL;
 			//if stack is empty, meaning all edges will have to be connected
@@ -151,7 +147,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 			j++;
 		}
 	}while(maze_conf[i++] != '\0');
-
+	
 	current_node = mouse_start;
 	//setting initial observation
 	m_observation = current_node->percept;
@@ -314,12 +310,6 @@ void TicTacToe::performAction(action_t action)
 	if (board[action] != 0 && freeCells != 0) //illegal move
 	{
 		m_reward = 0;
-		std::cout<< "illegal move ";
-		for(int r = 0; r<9; r++)
-			{
-				std::cout<< board[r] << " ";
-			}
-			std::cout << std::endl;
 		return; //Obverstaion will not change so there is no need to re-calculate
 	}
 	else
@@ -331,12 +321,6 @@ void TicTacToe::performAction(action_t action)
 			m_reward = 5;
 			m_observation = calBoardVal();
 			finished = 1;
-			std::cout<< "agent won ";
-			for(int r = 0; r<9; r++)
-			{
-				std::cout<< board[r] << " ";
-			}
-			std::cout << std::endl;
 			return;
 		}
 		else if (freeCells == 0) //game is a draw
@@ -344,12 +328,6 @@ void TicTacToe::performAction(action_t action)
 			m_reward = 4;
 			m_observation = calBoardVal();
 			finished = 1;
-			std::cout << "game draw ";
-			for(int r = 0; r<9; r++)
-			{
-				std::cout<< board[r] << " ";
-			}
-			std::cout << std::endl;
 			return;
 		}
 		else
@@ -360,24 +338,12 @@ void TicTacToe::performAction(action_t action)
 				m_reward = 1;
 				m_observation = calBoardVal();
 				finished = 1;
-				std::cout << "agent lost ";
-				for(int r = 0; r<9; r++)
-				{
-					std::cout<< board[r] << " ";
-				}
-				std::cout << std::endl;
 				return;
 			}
 			else if (freeCells != 0) //game has not yet ended
 			{
 				m_reward = 3;
 				m_observation = calBoardVal();
-				std::cout << "game continues ";
-				for(int r = 0; r<9; r++)
-				{
-					std::cout<< board[r] << " ";
-				}
-				std::cout << std::endl;
 				return;
 			}
 			else
@@ -385,12 +351,6 @@ void TicTacToe::performAction(action_t action)
 				m_reward = 4;
 				m_observation = calBoardVal();
 				finished = 1;
-				std::cout << "game draw ";
-				for(int r = 0; r<9; r++)
-				{
-					std::cout<< board[r] << " ";
-				}
-				std::cout << std::endl;
 				return;
 			}
 		}
@@ -427,13 +387,14 @@ bool TicTacToe::isFinished() const
 BRockPaperScissors::BRockPaperScissors(options_t &options)
 {
 	move = (int)(rand01() * 3);
-	//return the initial percept
-	m_observation = 0;
+	//return the initial precept
+	m_observation = move;
 	m_reward = 1;
 }
 
 void BRockPaperScissors::performAction(action_t action)
 {
+	move = m_reward == 0 ? move : (int)(rand01() * 3);
 	if (action != move)
 	{
 		switch (move)
@@ -454,8 +415,6 @@ void BRockPaperScissors::performAction(action_t action)
 	}
 
 	m_observation = move;
-	
-	move = m_reward == 0 ? move : (int)(rand01() * 3);
 }
 
 
@@ -463,6 +422,9 @@ void BRockPaperScissors::performAction(action_t action)
  */
 Pacman::Pacman(options_t &options)
 {
+	if (options.count("power-pill-time")>0) {
+		strExtract(options["power-pill-time"], power_pill_time);
+	}
 
 	//encoding the structure of the maze
 	bool maze1[21][19] = {
@@ -506,10 +468,10 @@ Pacman::Pacman(options_t &options)
 					maze[i][j].contents = 1;
 				else
 					maze[i][j].contents = 0;
-			}
+		}
 			else
 				maze[i][j].wall = 15;
-		}
+	}
 	maze[9][0].wall = 10;
 	maze[9][18].wall = 10;
 	if (rand01() < 0.5)
@@ -518,7 +480,7 @@ Pacman::Pacman(options_t &options)
 		maze[9][0].contents = 0;
 	if (rand01() < 0.5)
 			maze[9][18].contents = 1;
-		else
+	else
 			maze[9][18].contents = 0;
 
 	maze[1][3].contents = 2;
@@ -540,80 +502,215 @@ Pacman::Pacman(options_t &options)
 	pacman.state = 0;
 	maze[13][9].contents = 0;
 
+	power_pill_counter = 0;
+
+	finished = false;
+
 	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
-	m_reward = 0;
+	m_reward = 60;
 }
 
 void Pacman::performAction(action_t action)
 {
-	m_reward = 0;
-	switch(action)
-	{
-	case 0:
-		if(maze[pacman.x -1][pacman.y].isFreeCell)
-		{
-			pacman.x--;
-			if(!isCaught())
-				m_reward += -1;
-			else //pacman ran into the ghost
-				m_reward += -50;
-		}
-		else //pacman ran into the wall
-			m_reward += -10;
-		break;
-	case 1:
-		if(maze[pacman.x][pacman.y+1].isFreeCell)
-		{
-			pacman.y++;
-			if(!isCaught())
-				m_reward += -1;
-				else //pacman ran into the ghost
-				m_reward += -50;
-		}
-		else //pacman ran into the wall
-			m_reward += -10;
-		break;
-	case 2:
-		if(maze[pacman.x + 1][pacman.y].isFreeCell)
-		{
-			pacman.x++;
-			if(!isCaught())
-				m_reward += -1;
-				else //pacman ran into the ghost
-				m_reward += -50;
-		}
-		else //pacman ran into the wall
-			m_reward += -10;
-		break;
-	case 3:
-		if(maze[pacman.x][pacman.y-1].isFreeCell)
-		{
-			pacman.y--;
-			if(!isCaught())
-				m_reward += -1;
-				else //pacman ran into the ghost
-				m_reward += -50;
-		}
-		else //pacman ran into the wall
-			m_reward += -10;
-	}
+	m_reward = 60;
+	int pac_x_shift = (2 - action) * ((2 - action) % 2);
+	int pac_y_shift = (action - 1) * ((action - 1) % 2);
+	assert(action == 0 ? pac_x_shift == 0 : true);
+	assert(pac_x_shift == 0 || pac_x_shift == -1 || pac_x_shift == 1);
+	assert(pac_y_shift == 0 || pac_y_shift == -1 || pac_y_shift == 1);
+	assert(pac_x_shift == 0 ? pac_y_shift != 0 : pac_y_shift == 0);
 
+	//power pill effect fades when counter reaches 0
+	if (power_pill_counter-- > 1)
+		pacman.state = 0;
+
+	if(maze[pacman.x - pac_x_shift][pacman.y - pac_y_shift].isFreeCell)
+	{
+		pacman.x = pacman.x - pac_x_shift;
+		pacman.y = pacman.y - pac_y_shift;
+		assert(maze[pacman.x][pacman.y].isFreeCell);
+		if (!isCaught())
+		{
+			if (maze[pacman.x][pacman.y].contents == 1) //pacman moved to a cell with food
+			{
+				maze[pacman.x][pacman.y].contents = 0;
+				m_reward += 10;
+			}
+			else if (maze[pacman.x][pacman.y].contents == 2) //POWER PILL!!!
+			{
+				pacman.state = 1;
+				power_pill_counter = power_pill_time;
+			} 
+			else //empty cell
+				m_reward += -1;
+		}
+		else //pacman ran into the ghost
+		{
+			m_reward += -50;
+			finished = true;
+			m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+			return;
+		}
+	}
+	else //pacman ran into the wall
+		m_reward += -10;
+		
 	for(int i=0; i<4; i++)
 	{
 		if(ghost[i].state)
 		{
-			if(manhattan_dist(i) < 5)
+			if(manhattan_dist(ghost[i], pacman) < 5)
 			{
-				return;
-				//TODO: implement manMove(i) in environment.hpp
+				manMove(i);
 			}
 			else
-				return;	//TODO: random move
+			{
+				int movableCells[4][2];
+				int count = 0;
+				for (int j = 3; j >= 0; j--) //check each direction for empty cell
+				{
+					int xshift = (2 - j) * ((2 - j) % 2);
+					assert(j == 0 ? xshift == 0 : true);
+					assert(xshift == 0 || xshift == -1 || xshift == 1);
+					int yshift = ((j - 1) % 2) * (j - 1);
+					assert(yshift == 0 || yshift == -1 || yshift == 1);
+					assert(xshift == 0 ? yshift != 0 : yshift == 0);
+					if (maze[ghost[i].x - xshift][ghost[i].y - yshift].isFreeCell)
+					{
+						//check for collitions with other ghosts
+						for (int k = 0; k < 4; k++)
+						{
+							if (ghost[k].x != (ghost[i].x - xshift) && ghost[k].y != (ghost[i].y - yshift) && ghost[k].state)
+							{
+								movableCells[count][0] = ghost[i].x - xshift;
+								movableCells[count++][1] = ghost[i].y - yshift;
+							}
+						}
+					}
+				}
+				int move = (int)(rand01() * count);
+				ghost[i].x = movableCells[move][0];
+				ghost[i].y = movableCells[move][1];
+			}
+			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
+			for (int i_1 = 0; i_1 < 4; i++)
+			{
+				assert((ghost[i_1].x != pacman.x) || (ghost[i_1].y != pacman.y));
+				for (int i_2 = 0; i_2 < 4; i_2++)
+				{
+					assert((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y));
+				}
+			}
+		}
+		else
+		{
+			eatenGhostMove(i);
 		}
 	}
-}
+	if (isCaught())
+	{
+		m_reward += -50;
+		finished = true;
+	}
 
+	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+
+	//check if all food is eaten
+	for (int x = 0; x < 21; x++)
+		for (int y = 0; y < 19; y++)
+			if (maze[x][y].contents == 1)
+				return;
+	
+	//agent wins
+	finished = true;
+	m_reward += 100;
+}
+	
 bool Pacman::isFinished(void) const
 {
-	return false;
+	return finished;
+}
+
+void Pacman::envReset(void)
+{
+	//encoding the structure of the maze
+	bool maze1[21][19] = {
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0},
+			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
+			{0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0},
+			{1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1},
+			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
+			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
+			{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0},
+			{0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0},
+			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
+			{0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0},
+			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+	};
+	for (int i = 0; i < 21; i++)
+		for (int j = 0; j < 19; j++)
+			maze[i][j].isFreeCell = maze1[i][j];
+	std::bitset<4> per;
+	for(int i=1;i<20; i++)
+		for(int j=1; j<18; j++)
+		{
+			if(maze[i][j].isFreeCell)
+			{
+				!maze[i-1][j].isFreeCell ? per.set(3,1) : per.set(3,0);
+				!maze[i][j+1].isFreeCell ? per.set(2,1) : per.set(2,0);
+				!maze[i+1][j].isFreeCell ? per.set(1,1) : per.set(1,0);
+				!maze[i][j-1].isFreeCell ? per.set(0,1) : per.set(0,0);
+				maze[i][j].wall = per.to_ulong() & INT_MAX;
+				if(rand01() < 0.5)
+					maze[i][j].contents = 1;
+				else
+					maze[i][j].contents = 0;
+		}
+			else
+				maze[i][j].wall = 15;
+	}
+	maze[9][0].wall = 10;
+	maze[9][18].wall = 10;
+	if (rand01() < 0.5)
+		maze[9][0].contents = 1;
+	else
+		maze[9][0].contents = 0;
+	if (rand01() < 0.5)
+			maze[9][18].contents = 1;
+	else
+			maze[9][18].contents = 0;
+
+	maze[1][3].contents = 2;
+	maze[17][3].contents = 2;
+
+	maze[1][15].contents = 2;
+	maze[17][15].contents = 2;
+
+	//initialising the ghosts
+	for (int i = 0; i < 4; i++)
+	{
+		ghost[i].x = 8 + (int)(i / 2);
+		ghost[i].y = 9 + (int)(i % 2);
+		ghost[i].state = 1;
+	}
+	//initialising pacman
+	pacman.x = 13;
+	pacman.y = 9;
+	pacman.state = 0;
+	maze[13][9].contents = 0;
+
+	finished = false;
+
+	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+	m_reward = 60;
 }
