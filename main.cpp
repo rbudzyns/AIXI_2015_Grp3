@@ -269,7 +269,7 @@ int main(int argc, char *argv[]) {
 		ai.searchTreeReset();
 		//ai.contextTree()->debugTree();
 	}
-
+	std::cout << "Done!" << std::endl;
 	aixi::log.close();
 	compactLog.close();
 
