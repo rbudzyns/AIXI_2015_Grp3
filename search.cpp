@@ -190,12 +190,18 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	} else {
 		percept_t* percept = agent.genPerceptAndUpdate();
 		obsrew_t o_r = std::make_pair(percept[0], percept[1]);
+        bool found = m_children.count(o_r);
 
-		bool found = m_children.count(o_r);
-		if (!found) {
-			DecisionNode* decision_node = new DecisionNode(o_r);
-			addChild(decision_node);
-		}
+        if (!found) {
+        	DecisionNode* decision_node = new DecisionNode(o_r);
+        	found = addChild(decision_node);
+        	// if we have breached MaxBranchFactor, uniformly choose an existing child DecisionNode
+        	if (!found) {
+        		auto random_it = std::next(std::begin(m_children), randRange(0,m_children.size()));
+        		o_r = random_it->first;
+        	}
+        }
+
 		reward = percept[1] + m_children[o_r]->sample(agent, dfr + 1);
 		delete percept;
 	}
