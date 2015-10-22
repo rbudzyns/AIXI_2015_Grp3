@@ -38,6 +38,7 @@ DecisionNode::~DecisionNode() {
 			i++) {
 		delete i->second;
 	}
+	m_children.clear();
 }
 
 // print method for debugging purposes
@@ -62,6 +63,18 @@ bool DecisionNode::addChild(ChanceNode* child) {
 	m_children.insert(p);
 
 	return true;
+}
+
+ChanceNode * DecisionNode::getChild(action_t action) {
+	return m_children.count(action) ? m_children[action] : 0;
+}
+
+int DecisionNode::getDecisionNodeInfo(void) {
+	int n_nodes = 0;
+	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+		n_nodes += (it->second)->getChanceNodeInfo() + 1;
+	}
+	return n_nodes;
 }
 
 // perform a sample run through this node and it's children,
@@ -133,8 +146,22 @@ action_t DecisionNode::selectAction(Agent &agent) {
 	}
 }
 
+// prune all child chance nodes except the given action
+void DecisionNode::pruneAllBut(action_t action) {
+	auto it = m_children.begin();
+
+	while (it != m_children.end()) {
+		if ((it->second)->action() != action) {
+			delete it->second;
+			it = m_children.erase(it);
+		} else {
+			it++;
+		}
+	}
+}
+
 // return the best action for a decision node
-action_t DecisionNode::bestAction(Agent &agent) const {
+action_t DecisionNode::bestAction(Agent & agent) const {
 	if (m_children.size() > 0) {
 		reward_t max_val = 0;
 		action_t a = 1;
@@ -163,6 +190,7 @@ ChanceNode::~ChanceNode() {
 			i++) {
 		delete i->second;
 	}
+	m_children.clear();
 }
 
 action_t ChanceNode::action(void) const {
@@ -181,6 +209,31 @@ bool ChanceNode::addChild(DecisionNode* child) {
 	return true;
 }
 
+// prune all child decision nodes except the given observation/reward
+void ChanceNode::pruneAllBut(obsrew_t obsrew) {
+	auto it = m_children.begin();
+	while (it != m_children.end()) {
+		if ((it->second)->obsRew() != obsrew) {
+			delete it->second;
+			it = m_children.erase(it);
+		} else {
+			it++;
+		}
+	}
+}
+
+int ChanceNode::getChanceNodeInfo(void) {
+	int n_nodes = 0;
+	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
+		n_nodes += (it->second)->getDecisionNodeInfo() + 1;
+	}
+	return n_nodes;
+}
+
+DecisionNode * ChanceNode::getChild(obsrew_t o_r) {
+	return m_children.count(o_r) ? m_children[o_r] : 0;
+}
+
 // perform a sample run through this node and it's children,
 // returning the accumulated reward from this sample run
 reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
@@ -190,12 +243,19 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 	} else {
 		percept_t* percept = agent.genPerceptAndUpdate();
 		obsrew_t o_r = std::make_pair(percept[0], percept[1]);
-
 		bool found = m_children.count(o_r);
+
 		if (!found) {
 			DecisionNode* decision_node = new DecisionNode(o_r);
-			addChild(decision_node);
+			found = addChild(decision_node);
+			// if we have breached MaxBranchFactor, uniformly choose an existing child DecisionNode
+			if (!found) {
+				auto random_it = std::next(std::begin(m_children),
+						randRange(0, m_children.size()));
+				o_r = random_it->first;
+			}
 		}
+
 		reward = percept[1] + m_children[o_r]->sample(agent, dfr + 1);
 		delete percept;
 	}
@@ -239,7 +299,7 @@ extern action_t search(Agent &agent) {
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < agent.timeout());
 
 	action_t action = (agent.searchTree())->bestAction(agent);
-	//action_t action = root.bestAction(agent);
+//action_t action = root.bestAction(agent);
 
 	return action;
 }

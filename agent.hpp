@@ -96,6 +96,8 @@ public:
 
 	void searchTreeReset();
 
+	void searchTreePrune(action_t action, obsrew_t obsrew);
+
 private:
 	// action sanity check
 	bool isActionOk(action_t action) const;
