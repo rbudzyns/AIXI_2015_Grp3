@@ -66,7 +66,7 @@ bool DecisionNode::addChild(ChanceNode* child) {
 }
 
 ChanceNode * DecisionNode::getChild(action_t action) {
-	return m_children[action];
+	return m_children.count(action) ? m_children[action] : 0;
 }
 
 // perform a sample run through this node and it's children,
@@ -210,7 +210,7 @@ void ChanceNode::pruneAllBut(obsrew_t obsrew) {
 }
 
 DecisionNode * ChanceNode::getChild(obsrew_t o_r) {
-	return m_children[o_r];
+	return m_children.count(o_r) ? m_children[o_r] : 0;
 }
 
 // perform a sample run through this node and it's children,

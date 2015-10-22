@@ -59,6 +59,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
+		obsrew_t o_r = std::make_pair(observation, reward);
+		ai.searchTreePrune(action, o_r);
+
 		// Update agent's environment model with the new percept
 
 		ai.modelUpdate(observation, reward);
@@ -67,8 +70,11 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			aixi::log << "cycle: " << global_cycles_g << std::endl;
 			aixi::log << "observation: " << observation << std::endl;
 			aixi::log << "reward: " << reward << std::endl;
-			compactLog << global_cycles_g << ", " << cycle << ", " << observation << ", " << reward << ", " << explore_g << ", "
-							<< "endgame" << ", " << "endgame" << ", " << "endgame" << ", " << ai.reward() << ", " << ai.averageReward() << std::endl;
+			compactLog << global_cycles_g << ", " << cycle << ", "
+					<< observation << ", " << reward << ", " << explore_g
+					<< ", " << "endgame" << ", " << "endgame" << ", "
+					<< "endgame" << ", " << ai.reward() << ", "
+					<< ai.averageReward() << std::endl;
 			global_cycles_g++;
 			break;
 		}
@@ -121,9 +127,10 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		aixi::log << "average reward: " << ai.averageReward() << std::endl;
 
 		// Log the data in a more compact form
-		compactLog  << global_cycles_g << ", " << cycle << ", " << observation << ", " << reward << ", "
-				<< action << ", " << explore_g << ", " << explored << ", " << explore_rate_g << ", "
-				<< ai.reward() << ", " << ai.averageReward() << std::endl;
+		compactLog << global_cycles_g << ", " << cycle << ", " << observation
+				<< ", " << reward << ", " << action << ", " << explore_g << ", "
+				<< explored << ", " << explore_rate_g << ", " << ai.reward()
+				<< ", " << ai.averageReward() << std::endl;
 
 		// Update exploration rate
 		if (explore_g)
@@ -235,7 +242,7 @@ int main(int argc, char *argv[]) {
 	next_explore_switch_g = global_cycles_g
 			+ (def_total_cycles_g * total_cycles_mult_g / 5);
 
-	// Determine exploration options
+// Determine exploration options
 	explore_g = options.count("exploration") > 0;
 	if (explore_g) {
 		strExtract(options["exploration"], explore_rate_g);
@@ -244,7 +251,7 @@ int main(int argc, char *argv[]) {
 		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
 	}
 
-	while (global_cycles_g < 2*def_total_cycles_g * total_cycles_mult_g) {
+	while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
