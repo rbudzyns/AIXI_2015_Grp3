@@ -42,7 +42,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	action_t action = 0;
 	int cycle = 1;
-
+	bool dobreak = false;
 	//double total_head_prob = 0.0;
 
 	while (true) {
@@ -56,27 +56,20 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		}
 
 		// Get a percept from the environment
+
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
 		obsrew_t o_r = std::make_pair(observation, reward);
-		ai.searchTreePrune(action, o_r);
+		ai.searchTreeReset();
+		//ai.searchTreePrune(action, o_r);
 
 		// Update agent's environment model with the new percept
 
 		ai.modelUpdate(observation, reward);
 
 		if (env.isFinished()) {
-			aixi::log << "cycle: " << global_cycles_g << std::endl;
-			aixi::log << "observation: " << observation << std::endl;
-			aixi::log << "reward: " << reward << std::endl;
-			compactLog << global_cycles_g << ", " << cycle << ", "
-					<< observation << ", " << reward << ", " << explore_g
-					<< ", " << "endgame" << ", " << "endgame" << ", "
-					<< "endgame" << ", " << ai.reward() << ", "
-					<< ai.averageReward() << std::endl;
-			global_cycles_g++;
-			break;
+			dobreak = true;
 		}
 
 		// Determine best exploitive action, or explore_g
@@ -86,7 +79,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 						<< std::endl;
 				explore_g = false;
 				next_explore_switch_g += def_total_cycles_g
-						* total_cycles_mult_g * 2 / 5;
+						* total_cycles_mult_g / 10;
 			} else {
 				std::cout << "Starting training phase: " << global_cycles_g
 						<< std::endl;
@@ -109,10 +102,15 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				//		<< std::endl;
 			}
 		}
-		env.performAction(action);
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action);
+
+		if (dobreak) {
+			break;
+		}
+
+		env.performAction(action);
 
 		// Log this turn
 
@@ -132,7 +130,8 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		compactLog << global_cycles_g << ", " << cycle << ", " << observation
 				<< ", " << reward << ", " << action << ", " << explore_g << ", "
 				<< explored << ", " << explore_rate_g << ", " << ai.reward()
-				<< ", " << ai.averageReward() << std::endl;
+				<< ", " << ai.averageReward() << ", " << env.isFinished()
+				<< std::endl;
 
 		// Update exploration rate
 		if (explore_g)
@@ -179,7 +178,7 @@ int main(int argc, char *argv[]) {
 // Print header to compactLog
 
 	compactLog
-			<< "global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward"
+			<< "global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward, end of game"
 			<< std::endl;
 
 	options_t options;
@@ -189,7 +188,7 @@ int main(int argc, char *argv[]) {
 	options["ct-depth"] = "3";				// max context tree depth
 	options["agent-horizon"] = "16";		// agent max search horizon
 	options["exploration"] = "0";			// do not explore_g
-	options["explore_g-decay"] = "1.0";		// exploration rate does not decay
+	options["explore-decay"] = "1.0";		// exploration rate does not decay
 	options["timeout"] = "0.5"; 			// timeout
 	options["UCB-weight"] = "1.41"; 		// UCB weight
 	options["def-total-cycles"] = "1000"; // total number of cycles for 1 experiment
@@ -249,7 +248,7 @@ int main(int argc, char *argv[]) {
 	explore_g = options.count("exploration") > 0;
 	if (explore_g) {
 		strExtract(options["exploration"], explore_rate_g);
-		strExtract(options["explore_g-decay"], explore_decay_g);
+		strExtract(options["explore-decay"], explore_decay_g);
 		assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
 		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
 	}
@@ -258,11 +257,11 @@ int main(int argc, char *argv[]) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
-		ai.newEpisode();
+		//ai.newEpisode();
 		ai.searchTreeReset();
 		//ai.contextTree()->debugTree();
 	}
-
+	std::cout << "Done!" << std::endl;
 	aixi::log.close();
 	compactLog.close();
 

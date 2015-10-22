@@ -283,6 +283,10 @@ private:
 
 	bool pacmanPowered;
 
+	int ghost_follow_time;
+
+	int ghost_timer[4];
+
 	pos ghost[4];
 	pos pacman;
 	bool finished;
@@ -409,11 +413,14 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y) //ghost is active and pacman does not have power pill
+			if((pacman.x == ghost[i].x) && (pacman.y == ghost[i].y))
+			{
+				//ghost is active and pacman does not have power pill
 				if(ghost[i].state && !pacman.state)
 					return 1;
 				else if(pacman.state) //pacman under effect of power pill
 					ghost[i].state = 0;
+			}
 		}
 		return 0;
 	}
@@ -439,11 +446,11 @@ private:
 			goal.x = 8 + (int)(ghostNo / 2);
 			goal.y = 9 + (int)(ghostNo % 2);
 		}
+		open_list[0] = new node;
 		open_list[0]->cell = ghost[ghostNo];
 		open_list[0]->parent = NULL;
 		open_list[0]->g_value = 0;
-		open_list[0]->h_value = manhattan_dist(ghost[ghostNo], goal);
-		open_list_size++;
+		open_list[open_list_size++]->h_value = manhattan_dist(ghost[ghostNo], goal);
 		while (true)
 		{
 			min_node = open_list[0];
@@ -451,7 +458,7 @@ private:
 			//find node with best f_value
 			for (int i = 1; i < open_list_size; i++)
 			{
-				if ((open_list[i]->h_value + open_list[0]->g_value) < (min_node->h_value + min_node->g_value))
+				if ((open_list[i]->h_value + open_list[i]->g_value) < (min_node->h_value + min_node->g_value))
 				{
 					min_node = open_list[i];
 					min_node_index = i;
@@ -471,46 +478,53 @@ private:
 			}
 
 			//adding node to closed list
-			closed_list[closed_list_size] = min_node;
+			closed_list[closed_list_size++] = min_node;
 
 			for (int j = 3; j >= 0; j--) //iterate through all possible neighbours
 			{
-				int xshift = (2 - j) * ((2 - j) % 2);
+				int xshift = (2 - j) % 2;
 				assert(j == 0 ? xshift == 0 : true);
 				assert(xshift == 0 || xshift == -1 || xshift == 1);
-				int yshift = ((j - 1) % 2) * (j - 1);
+				int yshift = (j - 1) % 2;
 				assert(yshift == 0 || yshift == -1 || yshift == 1);
 				assert(xshift == 0 ? yshift != 0 : yshift == 0);
-				if (maze[min_node->cell.x - xshift][min_node->cell.y - yshift].isFreeCell)
+				if (maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
 				{
+					bool conflict = false;
 					//check if this position is occupied by another ghost
 					for (int i = 0; i < 4; i++)
 					{
-						if ((ghost[i].x == min_node->cell.x - xshift) && (ghost[i].y == min_node->cell.y - yshift) && (ghost[i].state || ghost[ghostNo].state))
+						if ((ghost[i].x == min_node->cell.x + xshift) && (ghost[i].y == min_node->cell.y + yshift) && (!ghost[i].state || !ghost[ghostNo].state))
 						{
-							pos possible_node;
-							possible_node.x = min_node->cell.x - xshift;
-							possible_node.y = min_node->cell.y - yshift;
-							//check if node is already in open list
-							for (int k = 0; k < open_list_size; k++)
+							conflict = true;
+						}
+					}
+					if(!conflict)
+					{
+						pos possible_node;
+						possible_node.x = min_node->cell.x + xshift;
+						possible_node.y = min_node->cell.y + yshift;
+						//check if node is already in open list
+						bool check = true;
+						for (int k = 0; k < open_list_size; k++)
+						{
+							if (open_list[k]->cell.x == possible_node.x  && open_list[k]->cell.y == possible_node.y)
 							{
-								if (open_list[k]->cell.x == possible_node.x  && open_list[k]->cell.y == possible_node.y)
+								check = false;
+								if (open_list[k]->g_value < (min_node->g_value + 1))
 								{
-									if (open_list[k]->g_value < (min_node->g_value + 1))
-									{
-										open_list[k]->g_value = min_node->g_value + 1;
-										open_list[k]->parent = min_node;
-									}
-								}
-								//add the node to the open list
-								else
-								{
-									open_list[open_list_size]->cell = possible_node;
-									open_list[open_list_size]->g_value = min_node->g_value + 1;
-									open_list[open_list_size]->h_value = manhattan_dist(possible_node, goal);
-									open_list[open_list_size++]->parent = min_node;
+									open_list[k]->g_value = min_node->g_value + 1;
+									open_list[k]->parent = min_node;
 								}
 							}
+						}
+						if(check)
+						{
+							open_list[open_list_size] = new node;
+							open_list[open_list_size]->cell = possible_node;
+							open_list[open_list_size]->g_value = min_node->g_value + 1;
+							open_list[open_list_size]->h_value = manhattan_dist(possible_node, goal);
+							open_list[open_list_size++]->parent = min_node;
 						}
 					}
 				}
@@ -522,20 +536,19 @@ private:
 			move = min_node->cell;
 			min_node = min_node->parent;
 		}
-		for (int i = 0; i < 400; i++)
+		for (int i = 0; i < open_list_size; i++)
 		{
-			delete open_list[i]->parent;
 			delete open_list[i];
-			delete closed_list[i]->parent;
+		}
+		for(int i =0; i<closed_list_size; i++)
+		{
 			delete closed_list[i];
 		}
-		delete min_node->parent;
-		delete min_node;
 
 		assert(maze[move.x][move.y].isFreeCell);
 
 		ghost[ghostNo].x = move.x;
-		ghost[ghostNo].x = move.y;
+		ghost[ghostNo].y = move.y;
 	}
 
 	//this method return the path for a ghost in powerless state
@@ -549,7 +562,7 @@ private:
 
 	int manhattan_dist(pos start, pos goal)
 	{
-		return (abs(start.x -goal.x) - abs(start.y - goal.y));
+		return (abs(start.x -goal.x) + abs(start.y - goal.y));
 	}
 };
 

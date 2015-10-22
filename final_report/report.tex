@@ -177,6 +177,11 @@ used to generate each child.
 
 \subsubsection{Efficiency/performance}
 
+Between calls to ${\tt search}$, we retain much of the search tree,
+pruning those nodes that are now inaccessible from the realised $(a,o,r)$
+tuple that happened during the cycle. This allows us to avoid re-generating
+similar search trees from similar positions. 
+
 
 \subsection{Context Tree Weighting (CTW)}
 
