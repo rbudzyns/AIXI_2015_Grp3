@@ -55,11 +55,14 @@ public:
 	// get (observation,reward) label
 	obsrew_t obsRew(void) const;
 
+	void pruneAllBut(action_t action);
+
+	int getDecisionNodeInfo(void);
+
 	// add a new child chance node
 	bool addChild(ChanceNode* child);
 
-	// get the child for the given action
-	ChanceNode * getChild(action_t action);
+	ChanceNode* getChild(action_t a);
 
 	// perform a sample run through this node and its children,
 	// returning the accumulated reward from this sample run
@@ -70,9 +73,6 @@ public:
 
 	// return the best action for a decision node
 	action_t bestAction(Agent &agent) const;
-
-	// prune all child chance nodes except the given action
-	void pruneAllBut(action_t action);
 
 private:
 
@@ -92,8 +92,11 @@ public:
 	// add a new child decision node
 	bool addChild(DecisionNode* child);
 
-	// get the child for the given observation/reward
-	DecisionNode * getChild(obsrew_t obsrew);
+	void pruneAllBut(obsrew_t obsrew);
+
+	DecisionNode* getChild(obsrew_t o_r);
+
+	int getChanceNodeInfo(void);
 
 	// get action label
 	action_t action(void) const;
@@ -101,9 +104,6 @@ public:
 	// perform a sample run through this node and it's children,
 	// returning the accumulated reward from this sample run
 	reward_t sample(Agent &agent, unsigned int dfr);
-
-	// prune all child decision nodes except the given observation/reward
-	void pruneAllBut(obsrew_t obsrew);
 
 private:
 

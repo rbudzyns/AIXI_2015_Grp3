@@ -301,7 +301,7 @@ void Agent::searchTreeReset() {
 // prune the tree to the subtree of the root corresponding to
 // the given action
 void Agent::searchTreePrune(action_t action, obsrew_t obsrew) {
-	ChanceNode * chance_node = searchTree()->getChild(action);
+	ChanceNode * chance_node = m_st->getChild(action);
 	if (chance_node != 0) {
 		searchTree()->pruneAllBut(action);
 		DecisionNode * new_root = chance_node->getChild(obsrew);
