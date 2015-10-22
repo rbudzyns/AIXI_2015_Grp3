@@ -307,6 +307,16 @@ TicTacToe::TicTacToe(options_t &options)
 
 void TicTacToe::performAction(action_t action)
 {
+	/*
+	for(int x = 0; x<3; x++)
+	{
+		for(int y=0; y<3; y++)
+		{
+			std::cout << board[x*y] << " ";
+		}
+		std::cout << std::endl;
+	}
+	*/
 	if (board[action] != 0 && freeCells != 0) //illegal move
 	{
 		m_reward = 0;
@@ -426,6 +436,10 @@ Pacman::Pacman(options_t &options)
 		strExtract(options["power-pill-time"], power_pill_time);
 	}
 
+	if(options.count("ghost-follow-time")>0) {
+		strExtract(options["ghost-follow-time"], ghost_follow_time);
+	}
+
 	//encoding the structure of the maze
 	bool maze1[21][19] = {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -495,6 +509,8 @@ Pacman::Pacman(options_t &options)
 		ghost[i].x = 8 + (int)(i / 2);
 		ghost[i].y = 9 + (int)(i % 2);
 		ghost[i].state = 1;
+		ghost_timer[i] = 0;
+		assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 	}
 	//initialising pacman
 	pacman.x = 13;
@@ -513,8 +529,8 @@ Pacman::Pacman(options_t &options)
 void Pacman::performAction(action_t action)
 {
 	m_reward = 60;
-	int pac_x_shift = (2 - action) * ((2 - action) % 2);
-	int pac_y_shift = (action - 1) * ((action - 1) % 2);
+	int pac_x_shift = (2 - (int)action) % 2;
+	int pac_y_shift = ((int)action - 1) % 2;
 	assert(action == 0 ? pac_x_shift == 0 : true);
 	assert(pac_x_shift == 0 || pac_x_shift == -1 || pac_x_shift == 1);
 	assert(pac_y_shift == 0 || pac_y_shift == -1 || pac_y_shift == 1);
@@ -524,10 +540,10 @@ void Pacman::performAction(action_t action)
 	if (power_pill_counter-- > 1)
 		pacman.state = 0;
 
-	if(maze[pacman.x - pac_x_shift][pacman.y - pac_y_shift].isFreeCell)
+	if(maze[pacman.x + pac_x_shift][pacman.y + pac_y_shift].isFreeCell)
 	{
-		pacman.x = pacman.x - pac_x_shift;
-		pacman.y = pacman.y - pac_y_shift;
+		pacman.x = pacman.x + pac_x_shift;
+		pacman.y = pacman.y + pac_y_shift;
 		assert(maze[pacman.x][pacman.y].isFreeCell);
 		if (!isCaught())
 		{
@@ -559,8 +575,12 @@ void Pacman::performAction(action_t action)
 	{
 		if(ghost[i].state)
 		{
-			if(manhattan_dist(ghost[i], pacman) < 5)
+			if(manhattan_dist(ghost[i], pacman) < 5 && ghost_timer[i]-- !=1)
 			{
+				if(ghost_timer[i] < 0)
+				{
+					ghost_timer[i] = ghost_follow_time;
+				}
 				manMove(i);
 			}
 			else
@@ -569,22 +589,27 @@ void Pacman::performAction(action_t action)
 				int count = 0;
 				for (int j = 3; j >= 0; j--) //check each direction for empty cell
 				{
-					int xshift = (2 - j) * ((2 - j) % 2);
+					int xshift = (2 - j) % 2;
 					assert(j == 0 ? xshift == 0 : true);
 					assert(xshift == 0 || xshift == -1 || xshift == 1);
-					int yshift = ((j - 1) % 2) * (j - 1);
+					int yshift = (j - 1) % 2;
 					assert(yshift == 0 || yshift == -1 || yshift == 1);
 					assert(xshift == 0 ? yshift != 0 : yshift == 0);
-					if (maze[ghost[i].x - xshift][ghost[i].y - yshift].isFreeCell)
+					if (maze[ghost[i].x + xshift][ghost[i].y + yshift].isFreeCell)
 					{
-						//check for collitions with other ghosts
+						//check for collisions with other ghosts
+						bool ghost_collision = false;
 						for (int k = 0; k < 4; k++)
 						{
-							if (ghost[k].x != (ghost[i].x - xshift) && ghost[k].y != (ghost[i].y - yshift) && ghost[k].state)
+							if ((ghost[k].x == (ghost[i].x + xshift) && ghost[k].y == (ghost[i].y + yshift)) || !ghost[k].state)
 							{
-								movableCells[count][0] = ghost[i].x - xshift;
-								movableCells[count++][1] = ghost[i].y - yshift;
+								ghost_collision = true;
 							}
+						}
+						if(!ghost_collision)
+						{
+							movableCells[count][0] = ghost[i].x + xshift;
+							movableCells[count++][1] = ghost[i].y + yshift;
 						}
 					}
 				}
@@ -593,20 +618,26 @@ void Pacman::performAction(action_t action)
 				ghost[i].y = movableCells[move][1];
 			}
 			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
-			for (int i_1 = 0; i_1 < 4; i++)
+			/*
+			for (int i_1 = 0; i_1 < 4; i_1++)
 			{
 				assert((ghost[i_1].x != pacman.x) || (ghost[i_1].y != pacman.y));
 				for (int i_2 = 0; i_2 < 4; i_2++)
 				{
-					assert((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y));
+					if(!((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y) || (i_1 == i_2)))
+					{
+						std::cout <<i_1<<i_2<<std::endl;
+					}
 				}
 			}
+			*/
 		}
 		else
 		{
 			eatenGhostMove(i);
 		}
 	}
+
 	if (isCaught())
 	{
 		m_reward += -50;
@@ -633,62 +664,17 @@ bool Pacman::isFinished(void) const
 
 void Pacman::envReset(void)
 {
-	//encoding the structure of the maze
-	bool maze1[21][19] = {
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0},
-			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
-			{0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0},
-			{1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1},
-			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
-			{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0},
-			{0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0},
-			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
-			{0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-	};
-	for (int i = 0; i < 21; i++)
-		for (int j = 0; j < 19; j++)
-			maze[i][j].isFreeCell = maze1[i][j];
-	std::bitset<4> per;
-	for(int i=1;i<20; i++)
-		for(int j=1; j<18; j++)
+	for(int i=0;i<21; i++)
+		for(int j=0; j<19; j++)
 		{
 			if(maze[i][j].isFreeCell)
 			{
-				!maze[i-1][j].isFreeCell ? per.set(3,1) : per.set(3,0);
-				!maze[i][j+1].isFreeCell ? per.set(2,1) : per.set(2,0);
-				!maze[i+1][j].isFreeCell ? per.set(1,1) : per.set(1,0);
-				!maze[i][j-1].isFreeCell ? per.set(0,1) : per.set(0,0);
-				maze[i][j].wall = per.to_ulong() & INT_MAX;
 				if(rand01() < 0.5)
 					maze[i][j].contents = 1;
 				else
 					maze[i][j].contents = 0;
+			}
 		}
-			else
-				maze[i][j].wall = 15;
-	}
-	maze[9][0].wall = 10;
-	maze[9][18].wall = 10;
-	if (rand01() < 0.5)
-		maze[9][0].contents = 1;
-	else
-		maze[9][0].contents = 0;
-	if (rand01() < 0.5)
-			maze[9][18].contents = 1;
-	else
-			maze[9][18].contents = 0;
 
 	maze[1][3].contents = 2;
 	maze[17][3].contents = 2;
@@ -702,6 +688,7 @@ void Pacman::envReset(void)
 		ghost[i].x = 8 + (int)(i / 2);
 		ghost[i].y = 9 + (int)(i % 2);
 		ghost[i].state = 1;
+		ghost_timer[i] = 0;
 	}
 	//initialising pacman
 	pacman.x = 13;

@@ -552,6 +552,22 @@ Code snippets
 Efficiency/performance
 \end_layout
 
+\begin_layout Standard
+Between calls to 
+\begin_inset Formula ${\tt search}$
+\end_inset
+
+, we retain much of the search tree, pruning those nodes that are now inaccessib
+le from the realised 
+\begin_inset Formula $(a,o,r)$
+\end_inset
+
+ tuple that happened during the cycle.
+ This allows us to avoid re-generating similar search trees from similar
+ positions.
+ 
+\end_layout
+
 \begin_layout Subsection
 Context Tree Weighting (CTW)
 \end_layout
@@ -847,146 +863,118 @@ The report archive should contain the following:
 \end_layout
 
 \begin_layout Verbatim
-
 MC-AIXI-CTW-Grp3.zip
 \end_layout
 
 \begin_layout Verbatim
-
     
 \backslash
 report
 \end_layout
 
 \begin_layout Verbatim
-
         report.pdf // this report
 \end_layout
 
 \begin_layout Verbatim
-
         report.tex
 \end_layout
 
 \begin_layout Verbatim
-
         cheesemaze_01.png // results plots
 \end_layout
 
 \begin_layout Verbatim
-
         extended_tiger_01.png
 \end_layout
 
 \begin_layout Verbatim
-
         biased_rock_paper_scissor_01.png
 \end_layout
 
 \begin_layout Verbatim
-
         tic_tac_toe_01.png
 \end_layout
 
 \begin_layout Verbatim
-
         pacman_01.png
 \end_layout
 
 \begin_layout Verbatim
-
     
 \backslash
 src
 \end_layout
 
 \begin_layout Verbatim
-
         main.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         main.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         environment.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         environment.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         agent.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         agent.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         search.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         search.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         predict.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         predict.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         util.hpp
 \end_layout
 
 \begin_layout Verbatim
-
         util.cpp
 \end_layout
 
 \begin_layout Verbatim
-
         README.md
 \end_layout
 
 \begin_layout Verbatim
-
         cheesemaze.conf // environment configuration files
 \end_layout
 
 \begin_layout Verbatim
-
         rockpaper.conf
 \end_layout
 
 \begin_layout Verbatim
-
         tictactoe.conf
 \end_layout
 
 \begin_layout Verbatim
-
         coinflip.conf
 \end_layout
 
 \begin_layout Verbatim
-
         tiger.conf
 \end_layout
 
