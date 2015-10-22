@@ -42,7 +42,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
 	action_t action = 0;
 	int cycle = 1;
-
+	bool dobreak = false;
 	//double total_head_prob = 0.0;
 
 	while (true) {
@@ -56,6 +56,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		}
 
 		// Get a percept from the environment
+
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
@@ -70,12 +71,13 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			aixi::log << "cycle: " << global_cycles_g << std::endl;
 			aixi::log << "observation: " << observation << std::endl;
 			aixi::log << "reward: " << reward << std::endl;
-			compactLog << global_cycles_g << ", " << cycle << ", " << observation
-                                << ", " << reward << ", " << action << ", " << explore_g << ", "
-                                << explored << ", " << explore_rate_g << ", " << ai.reward()
-                                << ", " << ai.averageReward() << ", " << env.isFinished() << std::endl;
+			compactLog << global_cycles_g << ", " << cycle << ", "
+					<< observation << ", " << reward << ", " << action << ", "
+					<< explore_g << ", " << explored << ", " << explore_rate_g
+					<< ", " << ai.reward() << ", " << ai.averageReward() << ", "
+					<< env.isFinished() << std::endl;
 			global_cycles_g++;
-			break;
+			dobreak = true;
 		}
 
 		// Determine best exploitive action, or explore_g
@@ -108,10 +110,15 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				//		<< std::endl;
 			}
 		}
-		env.performAction(action);
 
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action);
+
+		if (dobreak) {
+			break;
+		}
+
+		env.performAction(action);
 
 		// Log this turn
 
@@ -129,9 +136,10 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		aixi::log << "Global cycle number: " << global_cycles_g << std::endl;
 		// Log the data in a more compact form
 		compactLog << global_cycles_g << ", " << cycle << ", " << observation
-                                << ", " << reward << ", " << action << ", " << explore_g << ", "
-                                << explored << ", " << explore_rate_g << ", " << ai.reward()
-                                << ", " << ai.averageReward() << ", " << env.isFinished() << std::endl;
+				<< ", " << reward << ", " << action << ", " << explore_g << ", "
+				<< explored << ", " << explore_rate_g << ", " << ai.reward()
+				<< ", " << ai.averageReward() << ", " << env.isFinished()
+				<< std::endl;
 
 		// Update exploration rate
 		if (explore_g)
