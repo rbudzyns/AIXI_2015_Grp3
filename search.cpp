@@ -222,22 +222,24 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 
 // determine the best action by searching ahead using MCTS
 extern action_t search(Agent &agent) {
-	obsrew_t o_r = std::make_pair(NULL, NULL);
-	DecisionNode root = DecisionNode(o_r);
+//	obsrew_t o_r = std::make_pair(NULL, NULL);
+//	DecisionNode root = DecisionNode(o_r);
 	clock_t startTime = clock();
 	clock_t endTime = clock();
 	int iter = 0;
 	do {
 		ModelUndo mu = ModelUndo(agent);
 
-		root.sample(agent, 0u);
+		(agent.searchTree())->sample(agent, 0u);
+		//root.sample(agent, 0u);
 		agent.modelRevert(mu);
 
 		endTime = clock();
 		iter++;
 	} while ((endTime - startTime) / (double) CLOCKS_PER_SEC < agent.timeout());
 
-	action_t action = root.bestAction(agent);
+	action_t action = (agent.searchTree())->bestAction(agent);
+	//action_t action = root.bestAction(agent);
 
 	return action;
 }

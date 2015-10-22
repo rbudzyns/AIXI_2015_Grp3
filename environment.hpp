@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cassert>
+#include <queue>
 #include "util.hpp"
 
 class Environment {
@@ -72,7 +73,7 @@ public:
 	
 	//Check with the environment if the agent has reached the goal;
 	virtual bool isFinished(void) const;
-
+	
 	//reset the environment
 	virtual void envReset(void);
 	
@@ -93,6 +94,16 @@ private:
 //If tiger is true then tiger is behind left door and false if tiger is behind right door.
 //The gold pot is obviously behind the other door.
 //Agent state is mapped using boolean variable sitting. 1 for standing, 0 for sitting.
+
+/*actions: 			0 = stand
+ * 					1 = listen
+ * 					2 = open left door
+ * 					3 = open right door
+ *
+ * observations:	0 = nothing known
+ * 					1 = tiger behind right door
+ * 					2 = tiger behind left door
+ */
 class ExtTiger : public Environment{
 public:
 	//setup initial environment for Cheese maze and sets up the inital percept for the agent.
@@ -107,8 +118,6 @@ public:
 	//reset the environment
 	virtual void envReset(void);
 
-	//shift the percepts
-	percept_t getReward(void) const;
 
 private:
 	double p; //probability of listening correctly
@@ -168,8 +177,8 @@ private:
 		for (int i = 0; i < 9; i++)
 		{
 			if (board[i] == 0)
-				if (count++ == move)
-				{
+				if (count++ == move) {
+					board[i] = 1;
 					freeCells--;
 					return;
 				}
@@ -178,8 +187,6 @@ private:
 
 	int check_winner()
 	{
-		if (freeCells <= 4)
-		{
 			if (board[0] != 0)
 			{
 				if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
@@ -206,11 +213,16 @@ private:
 				if (board[6] == board[7] && board[7] == board[8])
 					return board[6];
 			}
-		}
 		return 0;
 	}
 };
 
+/*
+Action
+		0 : rock
+		1 : paper
+		2 : scissors
+*/
 class BRockPaperScissors : public Environment
 {
 public:
@@ -227,7 +239,7 @@ private:
 /*Pacman environment
  *	0 : Wall
  *	1 : Empty Cell
- *	2 : Food Pelet
+ *	2 : Food Pellet
  *	3 : Power Pill
  */
 class Pacman : public Environment
@@ -241,6 +253,9 @@ public:
 
 	//check if the game is finished
 	virtual bool isFinished() const;
+
+	//reset the environment
+	virtual void envReset(void);
 
 private:
 	struct cell
@@ -258,10 +273,22 @@ private:
 		bool state;
 	};
 
+	struct node
+	{
+		pos cell;
+		int h_value;
+		int g_value;
+		node* parent;
+	};
+
 	bool pacmanPowered;
 
 	pos ghost[4];
 	pos pacman;
+	bool finished;
+
+	int power_pill_counter;
+	int power_pill_time;
 
 
 	//returns the bits for direction of ghost which are in line of sight
@@ -382,7 +409,7 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y); //ghost is active and pacman does not have power pill
+			if(pacman.x == ghost[i].x && pacman.y == ghost[i].y) //ghost is active and pacman does not have power pill
 				if(ghost[i].state && !pacman.state)
 					return 1;
 				else if(pacman.state) //pacman under effect of power pill
@@ -391,25 +418,138 @@ private:
 		return 0;
 	}
 
+
+	//this method moves ghost when it is at a manhattan distance of less than 5 from the agent.
 	void manMove(int ghostNo)
 	{
-		for(int i=3; i>=0; i--) //iterate through all possible neighbours
+		pos goal;
+		pos move;
+		node* min_node;
+		node* open_list[400];
+		node* closed_list[400];
+		int open_list_size = 0;
+		int closed_list_size = 0;
+		if (ghost[ghostNo].state)
 		{
-			/* maze[][].wall is encoded so that if the bit is zero then that particular cell is free
-			 * since the encoding is dependent on the initial data, any errors in the initialisation will
-			 * cause inconsistency problems. We have not a of as of now checked for such problems in the
-			 * constructor.
-			 */
-			if((maze[ghost[ghostNo].x][ghost[ghostNo].y].wall & (1 << i)) == 0)
+			goal.x = pacman.x;
+			goal.y = pacman.y;
+		}
+		else
+		{
+			goal.x = 8 + (int)(ghostNo / 2);
+			goal.y = 9 + (int)(ghostNo % 2);
+		}
+		open_list[0]->cell = ghost[ghostNo];
+		open_list[0]->parent = NULL;
+		open_list[0]->g_value = 0;
+		open_list[0]->h_value = manhattan_dist(ghost[ghostNo], goal);
+		open_list_size++;
+		while (true)
+		{
+			min_node = open_list[0];
+			int min_node_index = 0;
+			//find node with best f_value
+			for (int i = 1; i < open_list_size; i++)
 			{
-				return; //TODO: need to add code for shortest path move
+				if ((open_list[i]->h_value + open_list[0]->g_value) < (min_node->h_value + min_node->g_value))
+				{
+					min_node = open_list[i];
+					min_node_index = i;
+				}
+			}
+			//removing min_node from the open list
+			for (int i = min_node_index; i < open_list_size - 1; i++)
+			{
+				open_list[i] = open_list[i + 1];
+			}
+			open_list_size--;
+
+			//check if the node is the goal
+			if (min_node->cell.x == goal.x && min_node->cell.y == goal.y)
+			{
+				break;
+			}
+
+			//adding node to closed list
+			closed_list[closed_list_size] = min_node;
+
+			for (int j = 3; j >= 0; j--) //iterate through all possible neighbours
+			{
+				int xshift = (2 - j) * ((2 - j) % 2);
+				assert(j == 0 ? xshift == 0 : true);
+				assert(xshift == 0 || xshift == -1 || xshift == 1);
+				int yshift = ((j - 1) % 2) * (j - 1);
+				assert(yshift == 0 || yshift == -1 || yshift == 1);
+				assert(xshift == 0 ? yshift != 0 : yshift == 0);
+				if (maze[min_node->cell.x - xshift][min_node->cell.y - yshift].isFreeCell)
+				{
+					//check if this position is occupied by another ghost
+					for (int i = 0; i < 4; i++)
+					{
+						if ((ghost[i].x == min_node->cell.x - xshift) && (ghost[i].y == min_node->cell.y - yshift) && (ghost[i].state || ghost[ghostNo].state))
+						{
+							pos possible_node;
+							possible_node.x = min_node->cell.x - xshift;
+							possible_node.y = min_node->cell.y - yshift;
+							//check if node is already in open list
+							for (int k = 0; k < open_list_size; k++)
+							{
+								if (open_list[k]->cell.x == possible_node.x  && open_list[k]->cell.y == possible_node.y)
+								{
+									if (open_list[k]->g_value < (min_node->g_value + 1))
+									{
+										open_list[k]->g_value = min_node->g_value + 1;
+										open_list[k]->parent = min_node;
+									}
+								}
+								//add the node to the open list
+								else
+								{
+									open_list[open_list_size]->cell = possible_node;
+									open_list[open_list_size]->g_value = min_node->g_value + 1;
+									open_list[open_list_size]->h_value = manhattan_dist(possible_node, goal);
+									open_list[open_list_size++]->parent = min_node;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
+		//find the move in the path
+		while (min_node->parent != NULL)
+		{
+			move = min_node->cell;
+			min_node = min_node->parent;
+		}
+		for (int i = 0; i < 400; i++)
+		{
+			delete open_list[i]->parent;
+			delete open_list[i];
+			delete closed_list[i]->parent;
+			delete closed_list[i];
+		}
+		delete min_node->parent;
+		delete min_node;
+
+		assert(maze[move.x][move.y].isFreeCell);
+
+		ghost[ghostNo].x = move.x;
+		ghost[ghostNo].x = move.y;
 	}
 
-	int manhattan_dist(int ghostNo)
+	//this method return the path for a ghost in powerless state
+	void eatenGhostMove(int ghostNo)
 	{
-		return (abs(ghost[ghostNo].x -pacman.x) - abs(ghost[ghostNo].y - pacman.y));
+		manMove(ghostNo);
+		if ((ghost[ghostNo].x == 8 + (int)(ghostNo / 2)) && (ghost[ghostNo].y == 9 + (int)(ghostNo % 2)))
+			ghost[ghostNo].state = 1;
+		return;
+	}
+
+	int manhattan_dist(pos start, pos goal)
+	{
+		return (abs(start.x -goal.x) - abs(start.y - goal.y));
 	}
 };
 

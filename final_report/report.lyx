@@ -9,6 +9,7 @@
 \renewcommand{\labelitemi}{$\diamond$}
 \newcommand{\T}{\rule{0pt}{2.6ex}}       % Top strut
 \newcommand{\B}{\rule[-1.2ex]{0pt}{0pt}} % Bottom strut
+\usepackage{algorithm,algpseudocode}
 \end_preamble
 \use_default_options false
 \maintain_unincluded_children false
@@ -209,6 +210,7 @@ To run, invoke
 \end_inset
 
 .
+ 
 \end_layout
 
 \begin_layout Section
@@ -216,28 +218,337 @@ MC-AIXI-CTW Implementation
 \end_layout
 
 \begin_layout Subsection
+Main loop
+\end_layout
+
+\begin_layout Standard
+For each agent-environment interaction cycle, we run the following for each
+ experiment:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+algorithmicrequire}{
+\backslash
+textbf{Inputs:}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+algorithmicensure}{
+\backslash
+textbf{Outputs:}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While{$cycle < max
+\backslash
+_cycles$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While{environment is not finished}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{generate $(o,r)$ from environment}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{update agent model with $(o,r)$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If{explore}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{$a 
+\backslash
+leftarrow randomAction()$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Else
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{$a 
+\backslash
+leftarrow MCTS()$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Comment{Monte Carlo Tree Search}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{perform action $a$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{update agent history with $a$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{$cycle++$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{reset environment}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Main loop.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $MCTS$
+\end_inset
+
+ algorithm follows as in Algorithms 1-4 in Veness et al., and is found in
+ 
+\begin_inset Formula ${\tt search.cpp}$
+\end_inset
+
+.
+ Model updates are handled in methods in 
+\begin_inset Formula ${\tt agent.cpp}$
+\end_inset
+
+, which interfaces with the context tree defined in 
+\begin_inset Formula ${\tt predict.cpp}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 Monte Carlo Tree Search (MCTS) Algorithm
 \end_layout
 
-\begin_layout Enumerate
-High level description of algorithm
+\begin_layout Subsubsection
+High level description
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Standard
+Since the environment is only partially observable, we have no explicit
+ notion of state; instead, we only have a history of actions and percepts
+ 
+\begin_inset Formula $h=\left(a_{1}o_{1}r_{1}\dots a_{n}o_{n}r_{n}\right)$
+\end_inset
+
+.
+ For the purposes of choosing the optimal action, we treat each possible
+ (hypothetical) history as a node in the search tree, with the root being
+ the tip of the current (realised) history.
+ Each node is labelled by its history.
+ The expected value of each node in the search tree is equal to the expected
+ total (non-discounted) reward that would be accumulated from that node,
+ where the expectation is under the agent's current policy and the agent's
+ current model for the behavior of the environment.
+ 
+\end_layout
+
+\begin_layout Standard
+Thus, for each node we keep a value estimate 
+\begin_inset Formula $\hat{V}$
+\end_inset
+
+, and a count of the number of times 
+\begin_inset Formula $T$
+\end_inset
+
+ that node has been visited in search.
+ This is used to determine how we explore the search space using the UCB
+ algorithm, which, for each decision node picks (assuming 
+\begin_inset Formula $T\left(ha\right)>0$
+\end_inset
+
+ for all actions)
+\begin_inset Formula 
+\[
+a_{\text{UCB}}=\arg\max_{a\in\mathcal{A}}\left\{ \frac{1}{m\left(\beta-\alpha\right)}\hat{V}\left(ha\right)+C\sqrt{\frac{\log T\left(h\right)}{T\left(ha\right)}}\right\} ,
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ is the set of all permissible actions, 
+\begin_inset Formula $m$
+\end_inset
+
+ is the search horizon, 
+\begin_inset Formula $\beta-\alpha$
+\end_inset
+
+ is the difference between the minimal and maximal instantaneous reward,
+ and 
+\begin_inset Formula $C$
+\end_inset
+
+ is a parameter controlling the propensity of the agent to explore less
+ frequently-seen histories.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that the expectimax is a stochastic, partially observable game between
+ the agent and its environment.
+ In the following, call nodes corresponding to agent moves `decision nodes',
+ and nodes corresponding to Nature's moves `chance nodes'.
+\end_layout
+
+\begin_layout Subsubsection
 Class structure
 \end_layout
 
-\begin_deeper
 \begin_layout Standard
-SearchNode, DecisionNode, ChanceNode.
+To represent our search nodes, we define a base 
+\begin_inset Formula ${\tt SearchNode}$
+\end_inset
+
+ class, from which ChanceNode and DecisionNode inherit.
+ ChanceNode and DecisionNode each have a 
+\begin_inset Formula ${\tt sample}$
+\end_inset
+
+ method defined on them; each of these methods is mutually recursive.
+ For a given node 
+\begin_inset Formula $n$
+\end_inset
+
+, we keep its children in a dictionary keyed on the action or (observation,rewar
+d) used to generate each child.
 \end_layout
 
-\end_deeper
-\begin_layout Enumerate
+\begin_layout Subsubsection
 Code snippets
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 Efficiency/performance
 \end_layout
 
@@ -245,19 +556,19 @@ Efficiency/performance
 Context Tree Weighting (CTW)
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 High level description of algorithm
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 Class structure
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 Code snippets
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 Efficiency/performance
 \end_layout
 
@@ -512,6 +823,10 @@ Cross domain simulation on more difficult environments...
 
 \begin_layout Itemize
 Separate CTW for Obs and Rews...
+\end_layout
+
+\begin_layout Section
+Discussion and Conclusions
 \end_layout
 
 \begin_layout Section*

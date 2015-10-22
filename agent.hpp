@@ -5,10 +5,14 @@
 
 #include "main.hpp"
 #include "predict.hpp"
+#include "search.hpp"
+#include "util.hpp"
 
 class ContextTree;
 
 class ModelUndo;
+
+class DecisionNode;
 
 class Agent {
 
@@ -87,6 +91,11 @@ public:
 	double perceptProbability(percept_t observation, percept_t reward) const;
 
 	ContextTree * contextTree();
+
+	DecisionNode * searchTree();
+
+	void searchTreeReset();
+
 private:
 	// action sanity check
 	bool isActionOk(action_t action) const;
@@ -108,6 +117,7 @@ private:
 	unsigned int m_rew_bits;     // number of bits to represent a reward
 	size_t m_horizon;            // length of the search horizon
 	double m_timeout;			 // timeout value for MC search
+	DecisionNode *m_st;          // head node of the search tree
 
 	// the max CTW tree depth
 	size_t m_max_tree_depth;

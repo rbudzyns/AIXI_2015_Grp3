@@ -95,6 +95,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
+				// action = search(ai, uct);
 				action = search(ai);
 			} else {
 				action = ai.genRandomAction();
@@ -243,11 +244,12 @@ int main(int argc, char *argv[]) {
 		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
 	}
 
-	for (int i = 0; i < 2*def_total_cycles_g * total_cycles_mult_g ; i++) {
+	while (global_cycles_g < 2*def_total_cycles_g * total_cycles_mult_g) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		//ai.contextTree()->debugTree();
 		ai.newEpisode();
+		ai.searchTreeReset();
 		//ai.contextTree()->debugTree();
 	}
 
