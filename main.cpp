@@ -106,12 +106,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		// Update agent's environment model with the chosen action
 		ai.modelUpdate(action);
 
-		if (dobreak) {
-			break;
-		}
-
-		env.performAction(action);
-
 		// Log this turn
 
 		aixi::log << "action: " << action << std::endl;
@@ -137,6 +131,21 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		if (explore_g)
 			explore_rate_g *= explore_decay_g;
 
+		cycle++;
+		global_cycles_g++;
+
+		
+
+		if (dobreak) {
+			break;
+		}
+
+		env.performAction(action);
+
+		
+	}
+	
+
 //		std::cout << "agent lifetime: " << ai.lifetime() + 1 << std::endl;
 //		std::cout << "average reward: " << ai.averageReward() << std::endl;
 //		int cyclebits = 16;
@@ -146,9 +155,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 //			std::cout<< total_head_prob/(cycle-buffer)<<std::endl;
 //		}
 
-		cycle++;
-		global_cycles_g++;
-	}
 
 // Print summary to standard output
 
