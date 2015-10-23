@@ -380,7 +380,7 @@ private:
 			{
 				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
 				{
-					assert(0 < j && j < 19);
+					assert(0 <= j && j <= 19);
 					if (!maze[pacman.x][j].isFreeCell)
 						break;
 					else if (maze[pacman.x][j].contents == 1)
@@ -394,7 +394,7 @@ private:
 			{
 				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
 				{
-					assert(0 < j && j < 21);
+					assert(0 <= j && j <= 21);
 					if (!maze[j][pacman.y].isFreeCell)
 						break;
 					else if (maze[j][pacman.y].contents == 1)
@@ -488,6 +488,15 @@ private:
 				int yshift = (j - 1) % 2;
 				assert(yshift == 0 || yshift == -1 || yshift == 1);
 				assert(xshift == 0 ? yshift != 0 : yshift == 0);
+				//adding condition for loop back in row 9
+				if(min_node->cell.y == 9 && min_node->cell.x == 0 && xshift == -1)
+				{
+					xshift = 20;
+				}
+				else if(min_node->cell.y == 9 && min_node->cell.x == 20 && xshift == 1)
+				{
+					xshift = -20;
+				}
 				if (maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
 				{
 					bool conflict = false;
