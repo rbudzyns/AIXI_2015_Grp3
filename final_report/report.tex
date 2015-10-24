@@ -258,6 +258,9 @@ Extended Tiger & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $
                & $25$ & $256$ & $20$ & $8$ & $9$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
                & $25$ & $512$ & $25$ & $3$ & $9$ & $0.9999$ & $0.9999079028$ & $1.4$ \tabularnewline
                & $25$ & $512$ & $30$ & $2$ & $9$ & $0.9999$ & $0.9999232518$ & $1.4$ \tabularnewline
+\hline
+Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tabularnewline
+               & $26$ & $512$ & $20$ & $2$ & $4$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
 \hline 
 \hline
 \end{tabular}
@@ -265,26 +268,29 @@ Extended Tiger & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $
 \end{table}
 
 \subsection{Cheesemaze}
-\begin{itemize}
-\item Experimental setup ... \\
- Any simulation provided should include detailed description of experimental
-setup; selected parameters of algorithms and examples; and concise
-interpretations of obtained simulation results. \\
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Cheesemaze environment. \\
 
-\begin{tabular}{|l|l|l|}
+Interpreting the results, we conclude that ... \\
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline 
-Environment  & MCTS  & CTW \tabularnewline
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-1  & $m=100$  & $\text{ct-depth}=96$ \tabularnewline
-\hline 
- & $C=\sqrt{2}$  & \tabularnewline
-\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
 \end{tabular}
+\caption{Environment Setup}
+\end{table}
 
-\item Plots ... \\
- \includegraphics[scale=0.4]{cheesemaze_best} 
-\item Interpretation of Results 
-\end{itemize}
+\begin{figure}[h!]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{cheesemaze_best} 
+\end{figure}
+
 
 \subsection{Extended Tiger}
 
