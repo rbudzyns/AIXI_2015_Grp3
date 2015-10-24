@@ -28,6 +28,7 @@ std::ofstream compactLog; // A compact comma-separated value log
 
 void processOptions(std::ifstream &in, options_t &options);
 Environment * getEnvFromOptions(options_t options);
+void setGlobalOptions(options_t options);
 
 // The main agent/environment interaction loop
 void mainLoop(Agent &ai, Environment &env, options_t &options) {
@@ -42,11 +43,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	}
 
 	// Agent/environment interaction loop
-
 	action_t action = 0;
 	int cycle = 1;
 	bool dobreak = false;
-	//double total_head_prob = 0.0;
 
 	while (true) {
 		// check for agent termination
@@ -56,16 +55,16 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		}
 
 		// Get a percept from the environment
-
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
+		// Reset the UCT
 		ai.searchTreeReset();
 
 		// Update agent's environment model with the new percept
-
 		ai.modelUpdate(observation, reward);
 
+		// If the episode is finished, still do a modelUpdate with action
 		if (env.isFinished()) {
 			dobreak = true;
 		}
@@ -86,11 +85,14 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 						* total_cycles_mult_g / 5;
 			}
 		}
+
 		explored = false;
+		// Either explore or search
 		if (explore_g && rand01() < explore_rate_g) {
 			explored = true;
 			action = ai.genRandomAction();
 		} else {
+			// We need to accumulate some history before calling search
 			if (ai.historySize() >= ai.maxTreeDepth()) {
 				action = search(ai);
 			} else {
@@ -102,7 +104,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		ai.modelUpdate(action);
 
 		// Log this turn
-
 		aixi::log << "action: " << action << std::endl;
 		aixi::log << "explored: " << (explored ? "yes" : "no") << std::endl;
 		aixi::log << "explore_rate_g: " << explore_rate_g << std::endl;
@@ -115,6 +116,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		aixi::log << "Search tree size: "
 				<< ai.searchTree()->getDecisionNodeInfo() << std::endl;
 		aixi::log << "Global cycle number: " << global_cycles_g << std::endl;
+
 		// Log the data in a more compact form
 		compactLog << global_cycles_g << ", " << cycle << ", " << observation
 				<< ", " << reward << ", " << action << ", " << explore_g << ", "
@@ -122,19 +124,19 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 				<< ", " << ai.averageReward() << ", " << env.isFinished()
 				<< std::endl;
 
-		// Update exploration rate
+		// Break out before performing another action, since the environment is finished.
+		if (dobreak) {
+			break;
+		}
+
+		// Do the action!
+		env.performAction(action);
+
 		if (explore_g)
 			explore_rate_g *= explore_decay_g;
 
 		cycle++;
 		global_cycles_g++;
-
-		if (dobreak) {
-			break;
-		}
-
-		env.performAction(action);
-
 	}
 }
 
@@ -148,12 +150,12 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-// Set up logging
+	// Set up logging
 	std::string log_file = "log";
 	aixi::log.open((log_file + ".log").c_str());
 	compactLog.open((log_file + ".csv").c_str());
 
-// Print header to compactLog
+	// Print header to compactLog
 
 	compactLog
 			<< "global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward, end of game"
@@ -161,7 +163,7 @@ int main(int argc, char *argv[]) {
 
 	options_t options;
 
-// Default configuration values
+	// Default configuration values
 
 	options["ct-depth"] = "3";				// max context tree depth
 	options["agent-horizon"] = "16";		// agent max search horizon
@@ -171,7 +173,7 @@ int main(int argc, char *argv[]) {
 	options["UCB-weight"] = "1.41"; 		// UCB weight
 	options["def-total-cycles"] = "1000"; // total number of cycles for 1 experiment
 
-// Read configuration options
+	// Read configuration options
 
 	std::ifstream conf(argv[1]);
 	if (!conf.is_open()) {
@@ -181,6 +183,8 @@ int main(int argc, char *argv[]) {
 	}
 	processOptions(conf, options);
 	conf.close();
+
+	// Read the optional second config
 	options_t options1;
 	if (argc == 3) {
 		std::ifstream conf1(argv[2]);
@@ -193,53 +197,29 @@ int main(int argc, char *argv[]) {
 		conf1.close();
 	}
 
-// Set up the environment
+	// Set up the environment
 	Environment *env;
 	env = getEnvFromOptions(options);
 
-// Set up the agent
+	// Set up the agent
 	Agent ai(options);
 
-// Run the main agent/environment interaction loop
-	strExtract(options["total-cycles-mult"], total_cycles_mult_g);
-	strExtract(options["def-total-cycles"], def_total_cycles_g);
-	next_explore_switch_g = global_cycles_g
-			+ (def_total_cycles_g * total_cycles_mult_g / 5);
+	setGlobalOptions(options);
 
-// Determine exploration options
-	explore_g = options.count("exploration") > 0;
-	if (explore_g) {
-		strExtract(options["exploration"], explore_rate_g);
-		strExtract(options["explore-decay"], explore_decay_g);
-		assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
-		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
-	}
-
+	// Run the main agent/environment interaction loop
 	while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
 		mainLoop(ai, *env, options);
 		env->envReset();
 		ai.searchTreeReset();
 	}
 	if (argc == 3) {
-		std::cout << "Done with game 1" << std::endl;
+		std::cout << "Finished game 1, starting game 2" << std::endl;
 		aixi::log << "-----------------" << std::endl;
 		compactLog << "-----------------" << std::endl;
 
 		global_cycles_g = 0;
 		ai.setOptions(options1);
-		strExtract(options1["total-cycles-mult"], total_cycles_mult_g);
-		strExtract(options1["def-total-cycles"], def_total_cycles_g);
-		next_explore_switch_g = global_cycles_g
-				+ (def_total_cycles_g * total_cycles_mult_g / 5);
-
-		// Determine exploration options
-		explore_g = options1.count("exploration") > 0;
-		if (explore_g) {
-			strExtract(options1["exploration"], explore_rate_g);
-			strExtract(options1["explore-decay"], explore_decay_g);
-			assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
-			assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
-		}
+		setGlobalOptions(options1);
 
 		env = getEnvFromOptions(options1);
 
@@ -252,23 +232,11 @@ int main(int argc, char *argv[]) {
 		global_cycles_g = 0;
 		ai.setOptions(options);
 
-		std::cout << "Done with game 2" << std::endl;
+		std::cout << "Finished game 2, returning to game 1" << std::endl;
 		aixi::log << "-----------------" << std::endl;
 		compactLog << "-----------------" << std::endl;
 
-		strExtract(options["total-cycles-mult"], total_cycles_mult_g);
-		strExtract(options["def-total-cycles"], def_total_cycles_g);
-		next_explore_switch_g = global_cycles_g
-				+ (def_total_cycles_g * total_cycles_mult_g / 5);
-
-		// Determine exploration options
-		explore_g = options.count("exploration") > 0;
-		if (explore_g) {
-			strExtract(options["exploration"], explore_rate_g);
-			strExtract(options["explore-decay"], explore_decay_g);
-			assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
-			assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
-		}
+		setGlobalOptions(options);
 
 		env = getEnvFromOptions(options);
 
@@ -351,3 +319,20 @@ Environment * getEnvFromOptions(options_t options) {
 	}
 }
 
+// Helper function to extract global experiment variables from options
+void setGlobalOptions(options_t options) {
+	// Determine experiment length options
+	strExtract(options["total-cycles-mult"], total_cycles_mult_g);
+	strExtract(options["def-total-cycles"], def_total_cycles_g);
+	next_explore_switch_g = global_cycles_g
+			+ (def_total_cycles_g * total_cycles_mult_g / 5);
+
+	// Determine exploration options
+	explore_g = options.count("exploration") > 0;
+	if (explore_g) {
+		strExtract(options["exploration"], explore_rate_g);
+		strExtract(options["explore-decay"], explore_decay_g);
+		assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
+		assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
+	}
+}
