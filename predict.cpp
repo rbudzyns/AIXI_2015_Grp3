@@ -3,9 +3,7 @@
 
 #include <cassert>
 #include <cmath>
-#include <sys/ioctl.h>
 #include <stdio.h>
-#include <unistd.h>
 
 CTNode::CTNode(void) :
 		m_log_prob_est(0.0), m_log_prob_weighted(0.0) {
@@ -410,7 +408,7 @@ void ContextTree::printTree1(std::vector<CTNode*> node_list, int cur_depth,
 	}
 	i = 0;
 	int n_pad = 80 / (n_cur_level + 1);
-	char pad[n_pad + 1];
+	char pad[80 + 1];
 
 	while (i < n_pad - 1) {
 		pad[i] = 0x20;
