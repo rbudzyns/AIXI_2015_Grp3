@@ -12,6 +12,7 @@
 #include "util.hpp"
 #include "predict.hpp"
 
+// Globals for controlling experiments
 static int total_cycles_mult_g;
 static int def_total_cycles_g;
 static int global_cycles_g = 0;
@@ -26,6 +27,8 @@ std::ofstream log;        // A verbose human-readable log
 std::ofstream compactLog; // A compact comma-separated value log
 
 void processOptions(std::ifstream &in, options_t &options);
+Environment * getEnvFromOptions(options_t options);
+
 // The main agent/environment interaction loop
 void mainLoop(Agent &ai, Environment &env, options_t &options) {
 
@@ -46,9 +49,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 	//double total_head_prob = 0.0;
 
 	while (true) {
-		//std::cout << "GlobalCycles: " << global_cycles << std::endl;
-		//std::cout << "HistSize: " << ai.historySize() << " MaxTreeDepth: " << ai.maxTreeDepth() << std::endl;
-
 		// check for agent termination
 		if (terminate_check && ai.lifetime() > terminate_lifetime) {
 			aixi::log << "info: terminating lifetime" << std::endl;
@@ -60,9 +60,7 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		percept_t observation = env.getObservation();
 		percept_t reward = env.getReward();
 
-		obsrew_t o_r = std::make_pair(observation, reward);
 		ai.searchTreeReset();
-		//ai.searchTreePrune(action, o_r);
 
 		// Update agent's environment model with the new percept
 
@@ -94,12 +92,9 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 			action = ai.genRandomAction();
 		} else {
 			if (ai.historySize() >= ai.maxTreeDepth()) {
-				// action = search(ai, uct);
 				action = search(ai);
 			} else {
 				action = ai.genRandomAction();
-				// std::cout << "Generating random action: " << action
-				//		<< std::endl;
 			}
 		}
 
@@ -141,23 +136,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		env.performAction(action);
 
 	}
-
-//		std::cout << "agent lifetime: " << ai.lifetime() + 1 << std::endl;
-//		std::cout << "average reward: " << ai.averageReward() << std::endl;
-//		int cyclebits = 16;
-//		int buffer = 300*cyclebits;
-//		if(cycle > buffer) {
-//			total_head_prob += ai.getProbNextSymbol();
-//			std::cout<< total_head_prob/(cycle-buffer)<<std::endl;
-//		}
-
-// Print summary to standard output
-
-//	std::cout << std::endl << std::endl << "Episode finished. Summary:"
-//			<< std::endl;
-//	std::cout << "agent lifetime: " << ai.lifetime() + 1 << std::endl;
-//	std::cout << "average reward: " << ai.averageReward() << std::endl;
-
 }
 
 int main(int argc, char *argv[]) {
@@ -165,7 +143,7 @@ int main(int argc, char *argv[]) {
 	if (argc < 2 || argc > 3) {
 		std::cerr << "ERROR: Incorrect number of arguments" << std::endl;
 		std::cerr
-				<< "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the file to log to."
+				<< "The first argument should indicate the location of the configuration file and the second (optional) argument should indicate the location of the configuration file of the second game to run."
 				<< std::endl;
 		return -1;
 	}
@@ -217,36 +195,10 @@ int main(int argc, char *argv[]) {
 
 // Set up the environment
 	Environment *env;
-
-// option. For any environment you do not implement you may delete the
-// corresponding if statement.
-// NOTE: you may modify the options map in order to set quantities such as
-// the reward-bits for each particular environment. See the coin-flip
-// experiment for an example.
-
-	std::string environment_name = options["environment"];
-	if (environment_name == "coin-flip") {
-		env = new CoinFlip(options);
-	} else if (environment_name == "cheese-maze") {
-		env = new CheeseMaze(options);
-	} else if (environment_name == "extended-tiger") {
-		env = new ExtTiger(options);
-	} else if (environment_name == "tictactoe") {
-		env = new TicTacToe(options);
-	} else if (environment_name == "biased-rock-paper-scissor") {
-		env = new BRockPaperScissors(options);
-	} else if (environment_name == "pacman") {
-		env = new Pacman(options);
-	} else {
-		std::cerr << "ERROR: unknown environment '" << environment_name << "'"
-				<< std::endl;
-		return -1;
-	}
+	env = getEnvFromOptions(options);
 
 // Set up the agent
 	Agent ai(options);
-
-//	mainLoop(ai, *env, options);
 
 // Run the main agent/environment interaction loop
 	strExtract(options["total-cycles-mult"], total_cycles_mult_g);
@@ -266,10 +218,7 @@ int main(int argc, char *argv[]) {
 	while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
 		mainLoop(ai, *env, options);
 		env->envReset();
-		//ai.contextTree()->debugTree();
-		//ai.newEpisode();
 		ai.searchTreeReset();
-		//ai.contextTree()->debugTree();
 	}
 	if (argc == 3) {
 		std::cout << "Done with game 1" << std::endl;
@@ -280,14 +229,24 @@ int main(int argc, char *argv[]) {
 		ai.setOptions(options1);
 		strExtract(options1["total-cycles-mult"], total_cycles_mult_g);
 		strExtract(options1["def-total-cycles"], def_total_cycles_g);
+		next_explore_switch_g = global_cycles_g
+				+ (def_total_cycles_g * total_cycles_mult_g / 5);
+
+		// Determine exploration options
+		explore_g = options1.count("exploration") > 0;
+		if (explore_g) {
+			strExtract(options1["exploration"], explore_rate_g);
+			strExtract(options1["explore-decay"], explore_decay_g);
+			assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
+			assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
+		}
+
+		env = getEnvFromOptions(options1);
 
 		while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
 			mainLoop(ai, *env, options1);
 			env->envReset();
-			//ai.contextTree()->debugTree();
-			//ai.newEpisode();
 			ai.searchTreeReset();
-			//ai.contextTree()->debugTree();
 		}
 
 		global_cycles_g = 0;
@@ -299,14 +258,24 @@ int main(int argc, char *argv[]) {
 
 		strExtract(options["total-cycles-mult"], total_cycles_mult_g);
 		strExtract(options["def-total-cycles"], def_total_cycles_g);
+		next_explore_switch_g = global_cycles_g
+				+ (def_total_cycles_g * total_cycles_mult_g / 5);
+
+		// Determine exploration options
+		explore_g = options.count("exploration") > 0;
+		if (explore_g) {
+			strExtract(options["exploration"], explore_rate_g);
+			strExtract(options["explore-decay"], explore_decay_g);
+			assert(0.0 <= explore_rate_g && explore_rate_g <= 1.0);
+			assert(0.0 <= explore_decay_g && explore_decay_g <= 1.0);
+		}
+
+		env = getEnvFromOptions(options);
 
 		while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
 			mainLoop(ai, *env, options);
 			env->envReset();
-			//ai.contextTree()->debugTree();
-			//ai.newEpisode();
 			ai.searchTreeReset();
-			//ai.contextTree()->debugTree();
 		}
 	}
 
@@ -357,6 +326,28 @@ void processOptions(std::ifstream &in, options_t &options) {
 			std::cout << "OPTION: '" << key << "' = '" << value << "'"
 					<< std::endl;
 		}
-
 	}
 }
+
+// Construct the environmnet required by the options
+Environment * getEnvFromOptions(options_t options) {
+	std::string environment_name = options["environment"];
+	if (environment_name == "coin-flip") {
+		return new CoinFlip(options);
+	} else if (environment_name == "cheese-maze") {
+		return new CheeseMaze(options);
+	} else if (environment_name == "extended-tiger") {
+		return new ExtTiger(options);
+	} else if (environment_name == "tictactoe") {
+		return new TicTacToe(options);
+	} else if (environment_name == "biased-rock-paper-scissor") {
+		return new BRockPaperScissors(options);
+	} else if (environment_name == "pacman") {
+		return new Pacman(options);
+	} else {
+		std::cerr << "ERROR: unknown environment '" << environment_name << "'"
+				<< std::endl;
+		return NULL;
+	}
+}
+
