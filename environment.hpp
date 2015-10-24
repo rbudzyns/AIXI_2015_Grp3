@@ -325,7 +325,7 @@ private:
 				{
 					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
 					{
-						assert(0 < j && j < 19);
+						assert(0 < j && j <= 19);
 						if(!maze[pacman.x][j].isFreeCell)
 							break;
 						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)

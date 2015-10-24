@@ -653,6 +653,11 @@ void Pacman::performAction(action_t action)
 				ghost[i].x = curr_ghost.x;
 				ghost[i].y = curr_ghost.y;
 			}
+			if (!maze[ghost[i].x][ghost[i].y].isFreeCell)
+			{
+				ghost[i].x = curr_ghost.x;
+				ghost[i].y = curr_ghost.y;
+			}
 			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 			/*
 			for (int i_1 = 0; i_1 < 4; i_1++)
