@@ -468,8 +468,8 @@ Pacman::Pacman(options_t &options)
 		for (int j = 0; j < 19; j++)
 			maze[i][j].isFreeCell = maze1[i][j];
 	std::bitset<4> per;
-	for(int i=1;i<20; i++)
-		for(int j=1; j<18; j++)
+	for(int i=0;i<21; i++)
+		for(int j=0; j<19; j++)
 		{
 			if(maze[i][j].isFreeCell)
 			{
@@ -484,7 +484,10 @@ Pacman::Pacman(options_t &options)
 					maze[i][j].contents = 0;
 		}
 			else
+			{
 				maze[i][j].wall = 15;
+				maze[i][j].contents = -1;
+			}
 	}
 	maze[9][0].wall = 10;
 	maze[9][18].wall = 10;
@@ -536,6 +539,16 @@ void Pacman::performAction(action_t action)
 	assert(pac_y_shift == 0 || pac_y_shift == -1 || pac_y_shift == 1);
 	assert(pac_x_shift == 0 ? pac_y_shift != 0 : pac_y_shift == 0);
 
+	//adding condition for loop back in row 9
+	if(pacman.y == 9 && pacman.x == 0 && pac_x_shift == -1)
+	{
+		pac_x_shift = 20;
+	}
+	else if(pacman.y == 9 && pacman.x == 20 && pac_x_shift == 1)
+	{
+		pac_x_shift = -20;
+	}
+
 	//power pill effect fades when counter reaches 0
 	if (power_pill_counter-- > 1)
 		pacman.state = 0;
@@ -573,6 +586,7 @@ void Pacman::performAction(action_t action)
 		
 	for(int i=0; i<4; i++)
 	{
+		pos curr_ghost = ghost[i];
 		if(ghost[i].state)
 		{
 			if(manhattan_dist(ghost[i], pacman) < 5 && ghost_timer[i]-- !=1)
@@ -595,6 +609,17 @@ void Pacman::performAction(action_t action)
 					int yshift = (j - 1) % 2;
 					assert(yshift == 0 || yshift == -1 || yshift == 1);
 					assert(xshift == 0 ? yshift != 0 : yshift == 0);
+
+					//adding condition for loop back in row 9
+					if(ghost[i].y == 9 && ghost[i].x == 0 && xshift == -1)
+					{
+						xshift = 20;
+					}
+					else if(ghost[i].y == 9 && ghost[i].x == 20 && xshift == 1)
+					{
+						xshift = -20;
+					}
+
 					if (maze[ghost[i].x + xshift][ghost[i].y + yshift].isFreeCell)
 					{
 						//check for collisions with other ghosts
@@ -616,6 +641,24 @@ void Pacman::performAction(action_t action)
 				int move = (int)(rand01() * count);
 				ghost[i].x = movableCells[move][0];
 				ghost[i].y = movableCells[move][1];
+			}
+			//in case of an error in movement revert actions
+			if(ghost[i].x < 0 || ghost[i].x >= 21)
+			{
+				ghost[i].x = curr_ghost.x;
+				ghost[i].x = curr_ghost.y;
+			}
+			if (ghost[i].y < 0 || ghost[i].y >= 19)
+			{
+				ghost[i].x = curr_ghost.x;
+				ghost[i].y = curr_ghost.y;
+			}
+			if(!maze[ghost[i].x][ghost[i].y].isFreeCell)
+			{
+				std::cout << "ghost original position" << curr_ghost.x << ", " << curr_ghost.y << std::endl;
+				std::cout << "new ghost position" << ghost[i].x << ", " << ghost[i].y << std::endl;
+				ghost[i].x = curr_ghost.x;
+				ghost[i].y = curr_ghost.y;
 			}
 			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 			/*

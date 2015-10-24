@@ -134,17 +134,13 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 		cycle++;
 		global_cycles_g++;
 
-		
-
 		if (dobreak) {
 			break;
 		}
 
 		env.performAction(action);
 
-		
 	}
-	
 
 //		std::cout << "agent lifetime: " << ai.lifetime() + 1 << std::endl;
 //		std::cout << "average reward: " << ai.averageReward() << std::endl;
@@ -154,7 +150,6 @@ void mainLoop(Agent &ai, Environment &env, options_t &options) {
 //			total_head_prob += ai.getProbNextSymbol();
 //			std::cout<< total_head_prob/(cycle-buffer)<<std::endl;
 //		}
-
 
 // Print summary to standard output
 
@@ -176,8 +171,7 @@ int main(int argc, char *argv[]) {
 	}
 
 // Set up logging
-
-	std::string log_file = argc < 3 ? "log" : argv[2];
+	std::string log_file = "log";
 	aixi::log.open((log_file + ".log").c_str());
 	compactLog.open((log_file + ".csv").c_str());
 
@@ -209,6 +203,17 @@ int main(int argc, char *argv[]) {
 	}
 	processOptions(conf, options);
 	conf.close();
+	options_t options1;
+	if (argc == 3) {
+		std::ifstream conf1(argv[2]);
+		if (!conf.is_open()) {
+			std::cerr << "ERROR: Could not open file '" << argv[1]
+					<< "' now exiting" << std::endl;
+			return -1;
+		}
+		processOptions(conf1, options1);
+		conf1.close();
+	}
 
 // Set up the environment
 	Environment *env;
@@ -244,7 +249,6 @@ int main(int argc, char *argv[]) {
 //	mainLoop(ai, *env, options);
 
 // Run the main agent/environment interaction loop
-	int n_episodes = 10000;
 	strExtract(options["total-cycles-mult"], total_cycles_mult_g);
 	strExtract(options["def-total-cycles"], def_total_cycles_g);
 	next_explore_switch_g = global_cycles_g
@@ -267,6 +271,45 @@ int main(int argc, char *argv[]) {
 		ai.searchTreeReset();
 		//ai.contextTree()->debugTree();
 	}
+	if (argc == 3) {
+		std::cout << "Done with game 1" << std::endl;
+		aixi::log << "-----------------" << std::endl;
+		compactLog << "-----------------" << std::endl;
+
+		global_cycles_g = 0;
+		ai.setOptions(options1);
+		strExtract(options1["total-cycles-mult"], total_cycles_mult_g);
+		strExtract(options1["def-total-cycles"], def_total_cycles_g);
+
+		while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
+			mainLoop(ai, *env, options1);
+			env->envReset();
+			//ai.contextTree()->debugTree();
+			//ai.newEpisode();
+			ai.searchTreeReset();
+			//ai.contextTree()->debugTree();
+		}
+
+		global_cycles_g = 0;
+		ai.setOptions(options);
+
+		std::cout << "Done with game 2" << std::endl;
+		aixi::log << "-----------------" << std::endl;
+		compactLog << "-----------------" << std::endl;
+
+		strExtract(options["total-cycles-mult"], total_cycles_mult_g);
+		strExtract(options["def-total-cycles"], def_total_cycles_g);
+
+		while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
+			mainLoop(ai, *env, options);
+			env->envReset();
+			//ai.contextTree()->debugTree();
+			//ai.newEpisode();
+			ai.searchTreeReset();
+			//ai.contextTree()->debugTree();
+		}
+	}
+
 	std::cout << "Done!" << std::endl;
 	aixi::log.close();
 	compactLog.close();
