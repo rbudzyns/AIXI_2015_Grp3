@@ -516,8 +516,8 @@ Pacman::Pacman(options_t &options)
 		assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 	}
 	//initialising pacman
-	pacman.x = 13;
-	pacman.y = 9;
+	pacman.x = 9;
+	pacman.y = 0;
 	pacman.state = 0;
 	maze[13][9].contents = 0;
 
@@ -540,13 +540,13 @@ void Pacman::performAction(action_t action)
 	assert(pac_x_shift == 0 ? pac_y_shift != 0 : pac_y_shift == 0);
 
 	//adding condition for loop back in row 9
-	if(pacman.y == 9 && pacman.x == 0 && pac_x_shift == -1)
+	if(pacman.x == 9 && pacman.y == 0 && pac_y_shift == -1)
 	{
-		pac_x_shift = 20;
+		pac_y_shift = 18;
 	}
-	else if(pacman.y == 9 && pacman.x == 20 && pac_x_shift == 1)
+	else if(pacman.x == 9 && pacman.y == 18 && pac_y_shift == 1)
 	{
-		pac_x_shift = -20;
+		pac_y_shift = -18;
 	}
 
 	//power pill effect fades when counter reaches 0
@@ -615,13 +615,13 @@ void Pacman::performAction(action_t action)
 					assert(xshift == 0 ? yshift != 0 : yshift == 0);
 
 					//adding condition for loop back in row 9
-					if(ghost[i].y == 9 && ghost[i].x == 0 && xshift == -1)
+					if(ghost[i].x == 9 && ghost[i].y == 0 && yshift == -1)
 					{
-						xshift = 20;
+						yshift = 18;
 					}
-					else if(ghost[i].y == 9 && ghost[i].x == 20 && xshift == 1)
+					else if(ghost[i].x == 9 && ghost[i].y == 18 && yshift == 1)
 					{
-						xshift = -20;
+						yshift = -18;
 					}
 
 					if (maze[ghost[i].x + xshift][ghost[i].y + yshift].isFreeCell)
@@ -642,9 +642,12 @@ void Pacman::performAction(action_t action)
 						}
 					}
 				}
-				int move = (int)(rand01() * count);
-				ghost[i].x = movableCells[move][0];
-				ghost[i].y = movableCells[move][1];
+				if (count != 0)
+				{
+					int move = (int)(rand01() * count);
+					ghost[i].x = movableCells[move][0];
+					ghost[i].y = movableCells[move][1];
+				}
 			}
 			//in case of an error in movement revert actions
 			if(ghost[i].x < 0 || ghost[i].x >= 21)

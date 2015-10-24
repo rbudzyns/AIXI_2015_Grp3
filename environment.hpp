@@ -308,7 +308,7 @@ private:
 				{
 					for(int j = pacman.x; i==0?j>0:j<21; i==0?j--:j++)
 					{
-						assert(0 < j && j <= 21);
+						assert(0 < j && j < 21);
 						if(!maze[j][pacman.y].isFreeCell)
 							break;
 						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
@@ -325,7 +325,7 @@ private:
 				{
 					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
 					{
-						assert(0 < j && j < 19);
+						assert(0 <= j && j < 19);
 						if(!maze[pacman.x][j].isFreeCell)
 							break;
 						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
@@ -503,13 +503,13 @@ private:
 				assert(yshift == 0 || yshift == -1 || yshift == 1);
 				assert(xshift == 0 ? yshift != 0 : yshift == 0);
 				//adding condition for loop back in row 9
-				if(min_node->cell.y == 9 && min_node->cell.x == 0 && xshift == -1)
+				if(min_node->cell.x == 9 && min_node->cell.y == 0 && yshift == -1)
 				{
-					xshift = 20;
+					yshift = 18;
 				}
-				else if(min_node->cell.y == 9 && min_node->cell.x == 20 && xshift == 1)
+				else if(min_node->cell.x == 9 && min_node->cell.y == 18 && yshift == 1)
 				{
-					xshift = -20;
+					yshift = -18;
 				}
 				if (maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
 				{
