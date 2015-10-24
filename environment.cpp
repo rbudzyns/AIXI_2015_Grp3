@@ -630,7 +630,7 @@ void Pacman::performAction(action_t action)
 						bool ghost_collision = false;
 						for (int k = 0; k < 4; k++)
 						{
-							if ((ghost[k].x == (ghost[i].x + xshift) && ghost[k].y == (ghost[i].y + yshift)) || !ghost[k].state)
+							if (ghost[k].x == (ghost[i].x + xshift) && ghost[k].y == (ghost[i].y + yshift))
 							{
 								ghost_collision = true;
 							}

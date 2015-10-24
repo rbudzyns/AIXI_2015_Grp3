@@ -442,10 +442,11 @@ private:
 	void manMove(int ghostNo)
 	{
 		pos goal;
-		pos move;
+		pos move= ghost[ghostNo];
 		node* min_node;
 		node* open_list[400];
 		node* closed_list[400];
+		bool path_found = false;
 		int open_list_size = 0;
 		int closed_list_size = 0;
 		if (ghost[ghostNo].state)
@@ -463,7 +464,7 @@ private:
 		open_list[0]->parent = NULL;
 		open_list[0]->g_value = 0;
 		open_list[open_list_size++]->h_value = manhattan_dist(ghost[ghostNo], goal);
-		while (true)
+		while (open_list_size > 0)
 		{
 			min_node = open_list[0];
 			int min_node_index = 0;
@@ -486,6 +487,7 @@ private:
 			//check if the node is the goal
 			if (min_node->cell.x == goal.x && min_node->cell.y == goal.y)
 			{
+				path_found = true;
 				break;
 			}
 
@@ -539,6 +541,13 @@ private:
 								}
 							}
 						}
+						for (int k = 0; k < closed_list_size; k++)
+						{
+							if (closed_list[k]->cell.x == possible_node.x && closed_list[k]->cell.y == possible_node.y)
+							{
+								check = false;
+							}
+						}
 						if(check)
 						{
 							open_list[open_list_size] = new node;
@@ -552,7 +561,7 @@ private:
 			}
 		}
 		//find the move in the path
-		while (min_node->parent != NULL)
+		while (min_node->parent != NULL && path_found)
 		{
 			move = min_node->cell;
 			min_node = min_node->parent;
