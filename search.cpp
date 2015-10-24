@@ -257,7 +257,7 @@ reward_t ChanceNode::sample(Agent &agent, unsigned int dfr) {
 		}
 
 		reward = percept[1] + m_children[o_r]->sample(agent, dfr + 1);
-		delete percept;
+		delete[] percept;
 	}
 	m_mean = (1.0 / (m_visits + 1)) * (reward + m_visits * m_mean);
 	m_visits++;
@@ -274,7 +274,7 @@ reward_t playout(Agent &agent, unsigned int playout_len) {
 		agent.modelUpdate(a);
 		percept_t* percept = agent.genPerceptAndUpdate();
 		reward += percept[1];
-		delete percept;
+		delete[] percept;
 	}
 
 	return reward;
