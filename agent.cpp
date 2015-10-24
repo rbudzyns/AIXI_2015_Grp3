@@ -7,6 +7,27 @@
 #include "util.hpp"
 
 // construct a learning agent from the command line arguments
+
+void Agent::setOptions(options_t & options) {
+	std::string s;
+
+	strExtract(options["agent-actions"], m_actions);
+	strExtract(options["agent-horizon"], m_horizon);
+	strExtract(options["observation-bits"], m_obs_bits);
+	strExtract(options["ct-depth"], m_max_tree_depth);
+	strExtract<unsigned int>(options["reward-bits"], m_rew_bits);
+	strExtract(options["timeout"], m_timeout);
+	strExtract(options["UCB-weight"], m_UCBWeight);
+
+	for (unsigned int i = 1, c = 1; i < m_actions; i *= 2, c++) {
+		m_actions_bits = c;
+	}
+	m_time_cycle = 0;
+	m_total_reward = 0.0;
+	obsrew_t o_r = std::make_pair(NULL, NULL);
+	m_st = new DecisionNode(o_r);
+}
+
 Agent::Agent(options_t & options) {
 	std::string s;
 
