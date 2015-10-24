@@ -156,7 +156,6 @@ int main(int argc, char *argv[]) {
 	compactLog.open((log_file + ".csv").c_str());
 
 	// Print header to compactLog
-
 	compactLog
 			<< "global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward, end of game"
 			<< std::endl;
@@ -164,7 +163,6 @@ int main(int argc, char *argv[]) {
 	options_t options;
 
 	// Default configuration values
-
 	options["ct-depth"] = "3";				// max context tree depth
 	options["agent-horizon"] = "16";		// agent max search horizon
 	options["exploration"] = "0";			// do not explore_g
@@ -174,7 +172,6 @@ int main(int argc, char *argv[]) {
 	options["def-total-cycles"] = "1000"; // total number of cycles for 1 experiment
 
 	// Read configuration options
-
 	std::ifstream conf(argv[1]);
 	if (!conf.is_open()) {
 		std::cerr << "ERROR: Could not open file '" << argv[1]
@@ -184,7 +181,7 @@ int main(int argc, char *argv[]) {
 	processOptions(conf, options);
 	conf.close();
 
-	// Read the optional second config
+	// Read the optional second config, if required
 	options_t options1;
 	if (argc == 3) {
 		std::ifstream conf1(argv[2]);
@@ -198,12 +195,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Set up the environment
-	Environment *env;
-	env = getEnvFromOptions(options);
+	Environment * env = getEnvFromOptions(options);
 
 	// Set up the agent
 	Agent ai(options);
 
+	// Set the global experiment options
 	setGlobalOptions(options);
 
 	// Run the main agent/environment interaction loop
@@ -212,6 +209,7 @@ int main(int argc, char *argv[]) {
 		env->envReset();
 		ai.searchTreeReset();
 	}
+	// Run on game 2, then again on game 1.
 	if (argc == 3) {
 		std::cout << "Finished game 1, starting game 2" << std::endl;
 		aixi::log << "-----------------" << std::endl;
@@ -237,7 +235,6 @@ int main(int argc, char *argv[]) {
 		compactLog << "-----------------" << std::endl;
 
 		setGlobalOptions(options);
-
 		env = getEnvFromOptions(options);
 
 		while (global_cycles_g < 2 * def_total_cycles_g * total_cycles_mult_g) {
