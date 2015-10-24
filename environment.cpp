@@ -586,6 +586,7 @@ void Pacman::performAction(action_t action)
 		
 	for(int i=0; i<4; i++)
 	{
+		pos curr_ghost = ghost[i];
 		if(ghost[i].state)
 		{
 			if(manhattan_dist(ghost[i], pacman) < 5 && ghost_timer[i]-- !=1)
@@ -640,6 +641,17 @@ void Pacman::performAction(action_t action)
 				int move = (int)(rand01() * count);
 				ghost[i].x = movableCells[move][0];
 				ghost[i].y = movableCells[move][1];
+			}
+			//in case of an error in movement revert actions
+			if(ghost[i].x < 0 || ghost[i].x >= 21)
+			{
+				ghost[i].x = curr_ghost.x;
+				ghost[i].x = curr_ghost.y;
+			}
+			if (ghost[i].y < 0 || ghost[i].y >= 19)
+			{
+				ghost[i].x = curr_ghost.x;
+				ghost[i].y = curr_ghost.y;
 			}
 			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 			/*
