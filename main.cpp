@@ -206,8 +206,8 @@ int main(int argc, char *argv[]) {
 	options_t options1;
 	if (argc == 3) {
 		std::ifstream conf1(argv[2]);
-		if (!conf.is_open()) {
-			std::cerr << "ERROR: Could not open file '" << argv[1]
+		if (!conf1.is_open()) {
+			std::cerr << "ERROR: Could not open file '" << argv[2]
 					<< "' now exiting" << std::endl;
 			return -1;
 		}
