@@ -380,7 +380,13 @@ private:
 			{
 				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
 				{
-					assert(0 <= j && j <= 19);
+					if (0 > j || j >= 19)
+					{
+						std::cout << "Error in seeFood()" << std::endl;
+						std::cout << "direction: " << i << " j = " << j << std::endl;
+						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+						break;
+					}
 					if (!maze[pacman.x][j].isFreeCell)
 						break;
 					else if (maze[pacman.x][j].contents == 1)
@@ -394,7 +400,13 @@ private:
 			{
 				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
 				{
-					assert(0 <= j && j <= 21);
+					if (0 > j || j >= 21)
+					{
+						std::cout << "Error in seeFood()" << std::endl;
+						std::cout << "direction: " << i << " j = " << j << std::endl;
+						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+						break;
+					}
 					if (!maze[j][pacman.y].isFreeCell)
 						break;
 					else if (maze[j][pacman.y].contents == 1)
@@ -503,7 +515,7 @@ private:
 					//check if this position is occupied by another ghost
 					for (int i = 0; i < 4; i++)
 					{
-						if ((ghost[i].x == min_node->cell.x + xshift) && (ghost[i].y == min_node->cell.y + yshift) && (!ghost[i].state || !ghost[ghostNo].state))
+						if ((ghost[i].x == min_node->cell.x + xshift) && (ghost[i].y == min_node->cell.y + yshift) /*&& (!ghost[i].state || !ghost[ghostNo].state)*/)
 						{
 							conflict = true;
 						}

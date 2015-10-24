@@ -512,7 +512,7 @@ Pacman::Pacman(options_t &options)
 		ghost[i].x = 8 + (int)(i / 2);
 		ghost[i].y = 9 + (int)(i % 2);
 		ghost[i].state = 1;
-		ghost_timer[i] = 0;
+		ghost_timer[i] = -1 * ghost_follow_time;
 		assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
 	}
 	//initialising pacman
@@ -589,13 +589,17 @@ void Pacman::performAction(action_t action)
 		pos curr_ghost = ghost[i];
 		if(ghost[i].state)
 		{
-			if(manhattan_dist(ghost[i], pacman) < 5 && ghost_timer[i]-- !=1)
+			if(manhattan_dist(ghost[i], pacman) < 5 )
 			{
-				if(ghost_timer[i] < 0)
+				if(ghost_timer[i]-- > 0 || ghost_timer[i] <= -1 * ghost_follow_time) 
+				//ghost follows the pacman for the follow time set in the configuration file and then takes random moves for the same time
 				{
-					ghost_timer[i] = ghost_follow_time;
+					if (ghost_timer[i] < 0)
+					{
+						ghost_timer[i] = ghost_follow_time;
+					}
+					manMove(i);
 				}
-				manMove(i);
 			}
 			else
 			{
@@ -661,19 +665,23 @@ void Pacman::performAction(action_t action)
 				ghost[i].y = curr_ghost.y;
 			}
 			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
-			/*
+			
 			for (int i_1 = 0; i_1 < 4; i_1++)
 			{
-				assert((ghost[i_1].x != pacman.x) || (ghost[i_1].y != pacman.y));
+				//assert((ghost[i_1].x != pacman.x) || (ghost[i_1].y != pacman.y));
 				for (int i_2 = 0; i_2 < 4; i_2++)
 				{
 					if(!((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y) || (i_1 == i_2)))
 					{
+						std::cout << "ghost collision" << std::endl;
 						std::cout <<i_1<<i_2<<std::endl;
+						std::cout << "ghost 1 = " << ghost[i_1].x << ghost[i_1].y << std::endl;
+						std::cout << "ghost 1 original = " << curr_ghost.x << curr_ghost.y << std::endl;
+						std::cout << "ghost 2 = " << ghost[i_2].x << ghost[i_2].y << std::endl;
 					}
 				}
 			}
-			*/
+			
 		}
 		else
 		{
