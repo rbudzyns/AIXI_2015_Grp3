@@ -8,7 +8,6 @@
 
 #include "util.hpp"
 
-
 class next;
 class next;
 CoinFlip::CoinFlip(options_t &options) {
@@ -48,7 +47,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 	int cheese_pos=1;
 	//setup the environment according to the config file
 	if (options.count("maze-structure") > 0){
-		strExtract(options["maze-structure"], maze_conf);
+		strExtract(options["maze-structure"], m_maze_conf);
 	}
 	
 	if (options.count("mouse-pos") > 0){
@@ -65,7 +64,7 @@ CheeseMaze::CheeseMaze(options_t &options)
 	char num[3];
 	int j=0;
 	unsigned int per;
-	node *curr_node;
+	node_t *curr_node;
 	//stack of pointers of a pointer to a node. 
 	/*Basic depth first search algorithm involves pushing into a stack the 
 	 * neighbouring nodes. Since we do not know the graph beforehand, 
@@ -73,19 +72,19 @@ CheeseMaze::CheeseMaze(options_t &options)
 	 * to have values assigned, which we can find out based on the value of
 	 * percept.
 	*/
-	std::stack <node*> nodes;
+	std::stack <node_t*> nodes;
 	do
 	{		
-		if(maze_conf[i] == ',' || maze_conf[i] == '\0')
+		if(m_maze_conf[i] == ',' || m_maze_conf[i] == '\0')
 		{
 			num[j] = '\0';
 			std::istringstream(num)>>per;
-			node *new_node = new node;
+			node_t *new_node = new node_t;
 			new_node->percept = per;
 			if(count == mouse_pos)
-				mouse_start = new_node;
+				m_mouse_start = new_node;
 			if(count == cheese_pos)
-				cheese_node = new_node;
+				m_cheese_node = new_node;
 			for(int k=0;k<4;k++)
 				new_node->next[k] = NULL;
 			//if stack is empty, meaning all edges will have to be connected
@@ -143,14 +142,14 @@ CheeseMaze::CheeseMaze(options_t &options)
 		}
 		else
 		{
-			num[j]=maze_conf[i];
+			num[j]=m_maze_conf[i];
 			j++;
 		}
-	}while(maze_conf[i++] != '\0');
+	}while(m_maze_conf[i++] != '\0');
 	
-	current_node = mouse_start;
+	m_current_node = m_mouse_start;
 	//setting initial observation
-	m_observation = current_node->percept;
+	m_observation = m_current_node->percept;
 	m_reward = 10;
 }
 
@@ -158,45 +157,45 @@ CheeseMaze::CheeseMaze(options_t &options)
 void CheeseMaze::performAction(action_t action)
 {
 	//action takes agent into wall
-	if(current_node->next[action] == NULL)
+	if(m_current_node->next[action] == NULL)
 	{
 		m_reward = 0;
 		return;
 	}
 	//action takes agent into free cell
 	else
-		current_node = current_node->next[action];
+		m_current_node = m_current_node->next[action];
 	//set percept for agent
-	m_observation = current_node->percept;
-	m_reward = current_node == cheese_node ? 20 : 9;
+	m_observation = m_current_node->percept;
+	m_reward = m_current_node == m_cheese_node ? 20 : 9;
 }
 
 void CheeseMaze::envReset()
 {
-	current_node = mouse_start;
+	m_current_node = m_mouse_start;
 	m_reward = 10;
-	m_observation = current_node->percept;
+	m_observation = m_current_node->percept;
 }
 
 bool CheeseMaze::isFinished() const
 {
-	return current_node == cheese_node ? 1 : 0;
+	return m_current_node == m_cheese_node ? 1 : 0;
 }
 
 
 //Creating the environment
 ExtTiger::ExtTiger(options_t &options)
 {
-	p=1.0;
+	m_p=1.0;
 	//determine the probability of listening correctly
 	if(options.count("listen-p")>0){
-		strExtract(options["listen-p"],p);
+		strExtract(options["listen-p"],m_p);
 	}
-	assert(0.0<=p);
-	assert(p<=1.0);
+	assert(0.0<=m_p);
+	assert(m_p<=1.0);
 	
-	standing = 0; //player is sitting
-	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
+	m_standing = 0; //player is sitting
+	m_tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
 	//initial observation
 	m_observation = 0;
 	m_reward = 100;
@@ -215,8 +214,8 @@ void ExtTiger::performAction(action_t action)
 		 * standing	-10
 		 */
 		case 0:
-		m_reward = standing ? -10 : -1;
-		standing = 1;
+		m_reward = m_standing ? -10 : -1;
+		m_standing = 1;
 		break;
 		
 		/*
@@ -227,8 +226,8 @@ void ExtTiger::performAction(action_t action)
 		 * standing(tiger behind right door)	 30
 		 */
 		case 2:
-		if(standing){
-			m_reward = tiger ? -100 : 30;
+		if(m_standing){
+			m_reward = m_tiger ? -100 : 30;
 		}
 		else{
 			m_reward = -10;
@@ -243,8 +242,8 @@ void ExtTiger::performAction(action_t action)
 		 * Standing(tiger behind right door)	-100
 		 */
 		case 3:
-		if(standing){
-			m_reward = tiger ? 30 : -100;
+		if(m_standing){
+			m_reward = m_tiger ? 30 : -100;
 		}
 		else{
 			m_reward = -10;
@@ -258,11 +257,11 @@ void ExtTiger::performAction(action_t action)
 		 * standing									-10
 		 */
 		case 1:
-		if(!standing){
-			if(tiger == 1)
-				m_observation = rand01() < p ? 1 : 2;
+		if(!m_standing){
+			if(m_tiger == 1)
+				m_observation = rand01() < m_p ? 1 : 2;
 			else
-				m_observation = rand01() < p ? 2 : 1;
+				m_observation = rand01() < m_p ? 2 : 1;
 			
 			m_reward = -1;
 		}
@@ -283,8 +282,8 @@ bool ExtTiger::isFinished() const{
 
 //reset the enviroment
 void ExtTiger::envReset(){
-	standing = 0; //player is sitting
-	tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
+	m_standing = 0; //player is sitting
+	m_tiger = rand01() < 0.5 ? 0 : 1; //tiger behind left door with 0.5 probability.
 	//initial observation
 	m_observation = 0;
 	m_reward = 100;
@@ -295,10 +294,10 @@ void ExtTiger::envReset(){
 TicTacToe::TicTacToe(options_t &options)
 {
 	for (int i = 0; i < 9; i++)
-		board[i] = 0;
+		m_board[i] = 0;
 
-	freeCells = 9;
-	finished = 0;
+	m_freeCells = 9;
+	m_finished = 0;
 
 	//return the initial percept,
 	m_observation = calBoardVal();
@@ -307,37 +306,27 @@ TicTacToe::TicTacToe(options_t &options)
 
 void TicTacToe::performAction(action_t action)
 {
-	/*
-	for(int x = 0; x<3; x++)
-	{
-		for(int y=0; y<3; y++)
-		{
-			std::cout << board[x*y] << " ";
-		}
-		std::cout << std::endl;
-	}
-	*/
-	if (board[action] != 0 && freeCells != 0) //illegal move
+	if (m_board[action] != 0 && m_freeCells != 0) //illegal move
 	{
 		m_reward = 0;
 		return; //Obverstaion will not change so there is no need to re-calculate
 	}
 	else
 	{
-		board[action] = 2;
-		freeCells--;
+		m_board[action] = 2;
+		m_freeCells--;
 		if (check_winner() == 2) //agent won the game
 		{
 			m_reward = 5;
 			m_observation = calBoardVal();
-			finished = 1;
+			m_finished = 1;
 			return;
 		}
-		else if (freeCells == 0) //game is a draw
+		else if (m_freeCells == 0) //game is a draw
 		{
 			m_reward = 4;
 			m_observation = calBoardVal();
-			finished = 1;
+			m_finished = 1;
 			return;
 		}
 		else
@@ -347,10 +336,10 @@ void TicTacToe::performAction(action_t action)
 			{
 				m_reward = 1;
 				m_observation = calBoardVal();
-				finished = 1;
+				m_finished = 1;
 				return;
 			}
-			else if (freeCells != 0) //game has not yet ended
+			else if (m_freeCells != 0) //game has not yet ended
 			{
 				m_reward = 3;
 				m_observation = calBoardVal();
@@ -360,7 +349,7 @@ void TicTacToe::performAction(action_t action)
 			{
 				m_reward = 4;
 				m_observation = calBoardVal();
-				finished = 1;
+				m_finished = 1;
 				return;
 			}
 		}
@@ -371,10 +360,10 @@ void TicTacToe::performAction(action_t action)
 void TicTacToe::envReset()
 {
 	for (int i = 0; i < 9; i++)
-		board[i] = 0;
+		m_board[i] = 0;
 
-	freeCells = 9;
-	finished = 0;
+	m_freeCells = 9;
+	m_finished = 0;
 
 	//return the initial percept,
 	m_observation = calBoardVal();
@@ -383,7 +372,7 @@ void TicTacToe::envReset()
 
 bool TicTacToe::isFinished() const
 {
-	return finished;
+	return m_finished;
 }
 
 
@@ -396,18 +385,18 @@ bool TicTacToe::isFinished() const
 */
 BRockPaperScissors::BRockPaperScissors(options_t &options)
 {
-	move = (int)(rand01() * 3);
+	m_move = (int)(rand01() * 3);
 	//return the initial precept
-	m_observation = move;
+	m_observation = m_move;
 	m_reward = 1;
 }
 
 void BRockPaperScissors::performAction(action_t action)
 {
-	move = m_reward == 0 ? move : (int)(rand01() * 3);
-	if (action != move)
+	m_move = m_reward == 0 ? m_move : (int)(rand01() * 3);
+	if (action != m_move)
 	{
-		switch (move)
+		switch (m_move)
 		{
 		case 0:
 			m_reward = action == 1 ? 2 : 0;
@@ -424,7 +413,7 @@ void BRockPaperScissors::performAction(action_t action)
 		m_reward = 1;
 	}
 
-	m_observation = move;
+	m_observation = m_move;
 }
 
 
@@ -433,78 +422,55 @@ void BRockPaperScissors::performAction(action_t action)
 Pacman::Pacman(options_t &options)
 {
 	if (options.count("power-pill-time")>0) {
-		strExtract(options["power-pill-time"], power_pill_time);
+		strExtract(options["power-pill-time"], m_power_pill_time);
 	}
 
 	if(options.count("ghost-follow-time")>0) {
-		strExtract(options["ghost-follow-time"], ghost_follow_time);
+		strExtract(options["ghost-follow-time"], m_ghost_follow_time);
 	}
 
 	//encoding the structure of the maze
-	bool maze1[21][19] = {
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0},
-			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
-			{0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0},
-			{1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1},
-			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0},
-			{0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0},
-			{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0},
-			{0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0},
-			{0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0},
-			{0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0},
-			{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-	};
 	for (int i = 0; i < 21; i++)
 		for (int j = 0; j < 19; j++)
-			maze[i][j].isFreeCell = maze1[i][j];
+			m_maze[i][j].isFreeCell = maze1[i][j];
 	std::bitset<4> per;
 	for(int i=0;i<21; i++)
 		for(int j=0; j<19; j++)
 		{
-			if(maze[i][j].isFreeCell)
+			if(m_maze[i][j].isFreeCell)
 			{
-				!maze[i-1][j].isFreeCell ? per.set(3,1) : per.set(3,0);
-				!maze[i][j+1].isFreeCell ? per.set(2,1) : per.set(2,0);
-				!maze[i+1][j].isFreeCell ? per.set(1,1) : per.set(1,0);
-				!maze[i][j-1].isFreeCell ? per.set(0,1) : per.set(0,0);
-				maze[i][j].wall = per.to_ulong() & INT_MAX;
+				!m_maze[i-1][j].isFreeCell ? per.set(3,1) : per.set(3,0);
+				!m_maze[i][j+1].isFreeCell ? per.set(2,1) : per.set(2,0);
+				!m_maze[i+1][j].isFreeCell ? per.set(1,1) : per.set(1,0);
+				!m_maze[i][j-1].isFreeCell ? per.set(0,1) : per.set(0,0);
+				m_maze[i][j].wall = per.to_ulong() & INT_MAX;
 				if(rand01() < 0.5)
-					maze[i][j].contents = 1;
+					m_maze[i][j].contents = 1;
 				else
-					maze[i][j].contents = 0;
+					m_maze[i][j].contents = 0;
 		}
 			else
 			{
-				maze[i][j].wall = 15;
-				maze[i][j].contents = -1;
+				m_maze[i][j].wall = 15;
+				m_maze[i][j].contents = -1;
 			}
 	}
-	maze[9][0].wall = 10;
-	maze[9][18].wall = 10;
+	m_maze[9][0].wall = 10;
+	m_maze[9][18].wall = 10;
 	if (rand01() < 0.5)
-		maze[9][0].contents = 1;
+		m_maze[9][0].contents = 1;
 	else
-		maze[9][0].contents = 0;
+		m_maze[9][0].contents = 0;
 	if (rand01() < 0.5)
-			maze[9][18].contents = 1;
+			m_maze[9][18].contents = 1;
 	else
-			maze[9][18].contents = 0;
+			m_maze[9][18].contents = 0;
 
-	maze[1][3].contents = 2;
-	maze[17][3].contents = 2;
+	m_maze[1][3].contents = 2;
+	m_maze[17][3].contents = 2;
 
-	maze[1][15].contents = 2;
-	maze[17][15].contents = 2;
+	m_maze[1][15].contents = 2;
+	m_maze[17][15].contents = 2;
 
 	//initialising the ghosts
 	for (int i = 0; i < 4; i++)
@@ -512,20 +478,20 @@ Pacman::Pacman(options_t &options)
 		ghost[i].x = 8 + (int)(i / 2);
 		ghost[i].y = 9 + (int)(i % 2);
 		ghost[i].state = 1;
-		ghost_timer[i] = -1 * ghost_follow_time;
-		assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
+		m_ghost_timer[i] = -1 * m_ghost_follow_time;
+		assert(m_maze[ghost[i].x][ghost[i].y].isFreeCell);
 	}
 	//initialising pacman
-	pacman.x = 9;
-	pacman.y = 0;
-	pacman.state = 0;
-	maze[13][9].contents = 0;
+	m_pacman.x = 9;
+	m_pacman.y = 0;
+	m_pacman.state = 0;
+	m_maze[13][9].contents = 0;
 
-	power_pill_counter = 0;
+	m_power_pill_counter = 0;
 
-	finished = false;
+	m_finished = false;
 
-	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+	m_observation = ((m_maze[m_pacman.x][m_pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | m_pacman.state;
 	m_reward = 60;
 }
 
@@ -540,35 +506,35 @@ void Pacman::performAction(action_t action)
 	assert(pac_x_shift == 0 ? pac_y_shift != 0 : pac_y_shift == 0);
 
 	//adding condition for loop back in row 9
-	if(pacman.x == 9 && pacman.y == 0 && pac_y_shift == -1)
+	if(m_pacman.x == 9 && m_pacman.y == 0 && pac_y_shift == -1)
 	{
 		pac_y_shift = 18;
 	}
-	else if(pacman.x == 9 && pacman.y == 18 && pac_y_shift == 1)
+	else if(m_pacman.x == 9 && m_pacman.y == 18 && pac_y_shift == 1)
 	{
 		pac_y_shift = -18;
 	}
 
 	//power pill effect fades when counter reaches 0
-	if (power_pill_counter-- > 1)
-		pacman.state = 0;
+	if (m_power_pill_counter-- > 1)
+		m_pacman.state = 0;
 
-	if(maze[pacman.x + pac_x_shift][pacman.y + pac_y_shift].isFreeCell)
+	if(m_maze[m_pacman.x + pac_x_shift][m_pacman.y + pac_y_shift].isFreeCell)
 	{
-		pacman.x = pacman.x + pac_x_shift;
-		pacman.y = pacman.y + pac_y_shift;
-		assert(maze[pacman.x][pacman.y].isFreeCell);
+		m_pacman.x = m_pacman.x + pac_x_shift;
+		m_pacman.y = m_pacman.y + pac_y_shift;
+		assert(m_maze[m_pacman.x][m_pacman.y].isFreeCell);
 		if (!isCaught())
 		{
-			if (maze[pacman.x][pacman.y].contents == 1) //pacman moved to a cell with food
+			if (m_maze[m_pacman.x][m_pacman.y].contents == 1) //pacman moved to a cell with food
 			{
-				maze[pacman.x][pacman.y].contents = 0;
+				m_maze[m_pacman.x][m_pacman.y].contents = 0;
 				m_reward += 10;
 			}
-			else if (maze[pacman.x][pacman.y].contents == 2) //POWER PILL!!!
+			else if (m_maze[m_pacman.x][m_pacman.y].contents == 2) //POWER PILL!!!
 			{
-				pacman.state = 1;
-				power_pill_counter = power_pill_time;
+				m_pacman.state = 1;
+				m_power_pill_counter = m_power_pill_time;
 			} 
 			else //empty cell
 				m_reward += -1;
@@ -576,8 +542,8 @@ void Pacman::performAction(action_t action)
 		else //pacman ran into the ghost
 		{
 			m_reward += -50;
-			finished = true;
-			m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+			m_finished = true;
+			m_observation = ((m_maze[m_pacman.x][m_pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | m_pacman.state;
 			return;
 		}
 	}
@@ -589,14 +555,14 @@ void Pacman::performAction(action_t action)
 		pos curr_ghost = ghost[i];
 		if(ghost[i].state)
 		{
-			if(manhattan_dist(ghost[i], pacman) < 5 )
+			if(manhattan_dist(ghost[i], m_pacman) < 5 )
 			{
-				if(ghost_timer[i]-- > 0 || ghost_timer[i] <= -1 * ghost_follow_time) 
+				if(m_ghost_timer[i]-- > 0 || m_ghost_timer[i] <= -1 * m_ghost_follow_time) 
 				//ghost follows the pacman for the follow time set in the configuration file and then takes random moves for the same time
 				{
-					if (ghost_timer[i] < 0)
+					if (m_ghost_timer[i] < 0)
 					{
-						ghost_timer[i] = ghost_follow_time;
+						m_ghost_timer[i] = m_ghost_follow_time;
 					}
 					manMove(i);
 				}
@@ -615,16 +581,16 @@ void Pacman::performAction(action_t action)
 					assert(xshift == 0 ? yshift != 0 : yshift == 0);
 
 					//adding condition for loop back in row 9
-					if(ghost[i].x == 9 && ghost[i].y == 0 && yshift == -1)
+					if (ghost[i].x == 9 && ghost[i].y == 0 && yshift == -1)
 					{
 						yshift = 18;
 					}
-					else if(ghost[i].x == 9 && ghost[i].y == 18 && yshift == 1)
+					else if (ghost[i].x == 9 && ghost[i].y == 18 && yshift == 1)
 					{
 						yshift = -18;
 					}
 
-					if (maze[ghost[i].x + xshift][ghost[i].y + yshift].isFreeCell)
+					if (m_maze[ghost[i].x + xshift][ghost[i].y + yshift].isFreeCell)
 					{
 						//check for collisions with other ghosts
 						bool ghost_collision = false;
@@ -635,7 +601,7 @@ void Pacman::performAction(action_t action)
 								ghost_collision = true;
 							}
 						}
-						if(!ghost_collision)
+						if (!ghost_collision)
 						{
 							movableCells[count][0] = ghost[i].x + xshift;
 							movableCells[count++][1] = ghost[i].y + yshift;
@@ -649,39 +615,18 @@ void Pacman::performAction(action_t action)
 					ghost[i].y = movableCells[move][1];
 				}
 			}
-			//in case of an error in movement revert actions
-			if(ghost[i].x < 0 || ghost[i].x >= 21)
-			{
-				ghost[i].x = curr_ghost.x;
-				ghost[i].x = curr_ghost.y;
-			}
-			if (ghost[i].y < 0 || ghost[i].y >= 19)
-			{
-				ghost[i].x = curr_ghost.x;
-				ghost[i].y = curr_ghost.y;
-			}
-			if(!maze[ghost[i].x][ghost[i].y].isFreeCell)
-			{
-				std::cout << "ghost original position" << curr_ghost.x << ", " << curr_ghost.y << std::endl;
-				std::cout << "new ghost position" << ghost[i].x << ", " << ghost[i].y << std::endl;
-				ghost[i].x = curr_ghost.x;
-				ghost[i].y = curr_ghost.y;
-			}
-			assert(maze[ghost[i].x][ghost[i].y].isFreeCell);
+			assert(ghost[i].x >= 0 && ghost[i].x < 21);
+			assert(ghost[i].y >= 0 && ghost[i].y < 19);
+
+			//Confirm ghost is moving into a free cell
+			assert(m_maze[ghost[i].x][ghost[i].y].isFreeCell);
 			
+			//confirm ghost is not moving into the same cell as another ghost or the pacman.
 			for (int i_1 = 0; i_1 < 4; i_1++)
 			{
-				//assert((ghost[i_1].x != pacman.x) || (ghost[i_1].y != pacman.y));
 				for (int i_2 = 0; i_2 < 4; i_2++)
 				{
-					if(!((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y) || (i_1 == i_2)))
-					{
-						std::cout << "ghost collision" << std::endl;
-						std::cout <<i_1<<i_2<<std::endl;
-						std::cout << "ghost 1 = " << ghost[i_1].x << ghost[i_1].y << std::endl;
-						std::cout << "ghost 1 original = " << curr_ghost.x << curr_ghost.y << std::endl;
-						std::cout << "ghost 2 = " << ghost[i_2].x << ghost[i_2].y << std::endl;
-					}
+					assert((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y) || (i_1 == i_2));
 				}
 			}
 			
@@ -695,25 +640,25 @@ void Pacman::performAction(action_t action)
 	if (isCaught())
 	{
 		m_reward += -50;
-		finished = true;
+		m_finished = true;
 	}
 
-	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+	m_observation = ((m_maze[m_pacman.x][m_pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | m_pacman.state;
 
 	//check if all food is eaten
 	for (int x = 0; x < 21; x++)
 		for (int y = 0; y < 19; y++)
-			if (maze[x][y].contents == 1)
+			if (m_maze[x][y].contents == 1)
 				return;
 	
 	//agent wins
-	finished = true;
+	m_finished = true;
 	m_reward += 100;
 }
 	
 bool Pacman::isFinished(void) const
 {
-	return finished;
+	return m_finished;
 }
 
 void Pacman::envReset(void)
@@ -721,20 +666,20 @@ void Pacman::envReset(void)
 	for(int i=0;i<21; i++)
 		for(int j=0; j<19; j++)
 		{
-			if(maze[i][j].isFreeCell)
+			if(m_maze[i][j].isFreeCell)
 			{
 				if(rand01() < 0.5)
-					maze[i][j].contents = 1;
+					m_maze[i][j].contents = 1;
 				else
-					maze[i][j].contents = 0;
+					m_maze[i][j].contents = 0;
 			}
 		}
 
-	maze[1][3].contents = 2;
-	maze[17][3].contents = 2;
+	m_maze[1][3].contents = 2;
+	m_maze[17][3].contents = 2;
 
-	maze[1][15].contents = 2;
-	maze[17][15].contents = 2;
+	m_maze[1][15].contents = 2;
+	m_maze[17][15].contents = 2;
 
 	//initialising the ghosts
 	for (int i = 0; i < 4; i++)
@@ -742,16 +687,16 @@ void Pacman::envReset(void)
 		ghost[i].x = 8 + (int)(i / 2);
 		ghost[i].y = 9 + (int)(i % 2);
 		ghost[i].state = 1;
-		ghost_timer[i] = 0;
+		m_ghost_timer[i] = 0;
 	}
 	//initialising pacman
-	pacman.x = 13;
-	pacman.y = 9;
-	pacman.state = 0;
-	maze[13][9].contents = 0;
+	m_pacman.x = 13;
+	m_pacman.y = 9;
+	m_pacman.state = 0;
+	m_maze[13][9].contents = 0;
 
-	finished = false;
+	m_finished = false;
 
-	m_observation = ((maze[pacman.x][pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | pacman.state;
+	m_observation = ((m_maze[m_pacman.x][m_pacman.y].wall & 15) << 12) | ((seeGhost() & 15) << 8) | ((smellFood() & 7) << 5) | ((seeFood() & 15) << 1) | m_pacman.state;
 	m_reward = 60;
 }
