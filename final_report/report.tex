@@ -382,6 +382,13 @@ Having implemented the MC-AIXI-CTW agent and five game environments, we proceed 
 
 For each experiment, the agent's actions are controlled according to a training-evaluation schedule. During the training phase, the agent chooses a random action with probability $\epsilon$, and performs the normal Monte Carlo expectimax search otherwise. Over the course of the experiment, the exploration rate decays exponentially as $\epsilon_t = \epsilon_0 \gamma^t$. During evaluation cycles, the agent plans using the Monte Carlo tree search, and does no explicit exploration. We evaluate the agent's performance by plotting its average reward per cycle against \textit{evaluation} cycles. Typically, we alternate between $1000$ cycles of training, followed by $200$ cycles of evaluation, and repeat until the total allocated number of cycles is exhausted. 
 
+In all of the following plots, we report the \textit{running} average reward per cycle, and the \textit{rolling} average reward per cycle, which are defined as 
+
+\begin{align*}
+\bar{R}^\text{running}_t = \frac{1}{t}\sum_{i=1}^{t}{R_i} 
+
+\end{align*}
+
 \subsection{Experiment Summary}
 Here we summarise the parameters used in our experiments.\\
 
