@@ -49,10 +49,13 @@ Group 3}
 \date{October 2015}
 
 \maketitle
+\begin{abstract}
 We outline an implementation of Veness et al.'s Monte Carlo AIXI approximation\cite{veness-11}
 (MC-AIXI-CTW), and report our simulation results on a number of toy
 domains.
+\end{abstract}
 
+\tableofcontents{}
 
 \section{Introduction}
 
@@ -80,21 +83,21 @@ and $\textsc{Cheesemaze}$.
 
 \section{User Manual}
 
-To build from source, run ${\tt g++\ *.cpp\ *.hpp\ -o\ aixi}$ \textbf{TODO
+To build from source on linux, run ${\tt g++\ -std=c++0x *.cpp\ -o\ aixi}$ \textbf{TODO
 check}
 
-To run, invoke ${\tt ./aixi\ envname}$. 
+To run, invoke ${\tt ./aixi\ \$ENVNAME.conf}$. 
 
 
 \section{MC-AIXI-CTW Implementation}
 
 
-\subsection{Main loop}
+\subsection{Agent-environment interaction loop}
 
 For each agent-environment interaction cycle, we run the following
-for each experiment:
+for each experiment (see Algorithm \ref{mainlopp}):
 
-\begin{algorithm}
+\begin{algorithm}[h]
 \begin{algorithmic}[1]
 \renewcommand{\algorithmicrequire}{\textbf{Inputs:}}
 \renewcommand{\algorithmicensure}{\textbf{Outputs:}}
@@ -117,7 +120,7 @@ for each experiment:
 \end{algorithmic}
 
 \caption{Main loop.}
-
+\label{mainloop}
 
 \end{algorithm}
 
@@ -370,8 +373,10 @@ To calculate the actual reward, the rewards from the above table are added to 60
 
 In terms of an optimal agent strategy, an upper bound on reward per cycle for Pacman is unknown.
 
-\section{Simulation Results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Experiments}
 
+\subsection{Experimental Setup}
 \subsection{Experiment Summary}
 Following is a complete summary of all experiments conducted \\
 

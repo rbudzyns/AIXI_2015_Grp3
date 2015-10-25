@@ -44,6 +44,7 @@ aixi
 /final_report/report.synctex.gz
 /final_report/#report.lyx#
 /final_report/*.eps
+/final_report/*.toc
 
 # cheese-rock-cheese
 /final_report/tmp*
