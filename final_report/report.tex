@@ -556,7 +556,9 @@ Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tab
 \end{table}
 
 \subsection{Cheesemaze}
-In this cheesemaze run, we chose a very short timeout (0.5 seconds)
+In this cheesemaze run, we chose a very short search timeout of 0.5 seconds, and a moderately long horizon (8). We tried longer timeouts, but this did not improve convergence rates. Using a smaller search horizon of 4 yielded low performance; this is probably due to the fact that in certain maze positions, the cheese was beyond the search horizon of the agent. \\
+
+Within 6000 training cycles, the agent's average reward per cycle is approaching the optimal, and by $10000$ cycles, is exceeding $1.5$. Though cheese maze is the least challenging of our environments, our agent's strong performance and fast convergence suggests that our implementation is correct and reasonably efficient. 
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -576,11 +578,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \end{figure}
 
 \subsection{Extended Tiger}
-Here we present the environmental setup and learning rate of our best results
-training AIXI on the Extended Tiger environment. \\
-
-Interpreting the results, we conclude that ... \\
-
+Extended Tiger is a more difficult game to learn than Cheese Maze, since the configuration of the trap/goal changes from game to game, and the reliability of some of the observations is stochastic.  Collecting good results in Extended Tiger is difficult, given that the ideal time for search per cycle is 12 seconds (according to Veness), making good results time consuming to obtain. The game is also very unforgiving, with a very large penalty for opening the tiger door. Considering how bad the penalties are, our agent is reasonably close to optimal, given that extremely negative rewards skew the running average.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -600,11 +598,7 @@ $13$ & $52$ & $5$ & $8$ & $4$ & $0.999$ & $0.99954$ & $1.4$ \tabularnewline
 \end{figure}
 
 \subsection{Tic\-Tac\-Toe}
-Here we present the environmental setup and learning rate of our best results
-training AIXI on the Tic-Tac-Toe environment. \\
-
-Interpreting the results, we conclude that ... \\
-
+Tic-Tac-Toe is a difficult game, because the percept space is very large, and towards the end of each episode, the probability of naively performing an illegal action is very high. For these reasons, it takes a long time to learn how to play Tic-Tac-Toe (Veness's agent took 3 weeks of training to achieve optimality). Given more time, we should expect to see better results on Tic-Tac-Toe, knowing that we have a rising trend and decreasing variance in our average reward per cycle.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -624,11 +618,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \end{figure}
 
 \subsection{Biased Rock-Paper-Scissors}
-Here we present the environmental setup and learning rate of our best results
-training AIXI on the Biased Rock-Paper-Scissors environment. \\
-
-Interpreting the results, we conclude that ... \\
-
+In biased rock-paper-scissors, we achieve optimal performance after the first $1000$ training cycles. This is unsurprising, given that the agent's optimal strategy is not that far from random, and the agent merely has to learn a simple correlation in its opponent's actions (after all, it is just learning a 1st order Markov process). Both the percept space and action space are small, which means that a context tree of modest depth can model many cycles. Monte Carlo tree search also benefits from this small branching factor, allowing the agent to plan ahead more effectively. Experiments with larger tree depths and longer timeouts did not converge faster as a result; the parameters that we chose were sufficient to be optimal very quickly.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -649,10 +639,7 @@ $25$ & $512$ & $30$ & $2$ & $9$ & $0.9999$ & $0.99992$ & $1.4$ \tabularnewline
 
 
 \subsection{Pacman}
-Here we present the environmental setup and learning rate of our best results
-training AIXI on the Pacman environment. \\
-
-Interpreting the results, we conclude that ... \\
+Pacman is clearly a very difficult game. Even if the true environment were known, planning would still be a huge problem as there are $10^60$ unique underlying states. Veness et al. trained for $250,000$ cycles, which is clearly not feasible in our circumstances. Despite these shortcomings, our agent's performance steadily improves, demonstrating that the agent learns to not run into walls and ghosts. 
 
 \begin{table}[H]
 \centering
@@ -673,10 +660,10 @@ $26$ & $256$ & $10$ & $2$ & $8$ & $0.9999$ & $0.99977$ & $1.4$ \tabularnewline
 \end{figure}
 
 \subsection{Cross Domain Simulation Results}
-\begin{itemize}
-\item Cheesemaze and Biased Rock-Paper-Scissors
-\item Cross domain simulation on more difficult environments... 
-\end{itemize}
+
+We ran our cross-domain simulations on Cheesemaze and Biased Rock-Paper-Scissors, since these are simple environments on which we have already achieved optimal or close-to-optimal performance. Moving to RPS, the agent performed extremely well, achieving optimality within the first training phase. This is impressive, given that the domains are quite different; the percept space in RPS is quite smaller, meaning that the patterns learned by the context tree will be quite different. The robustness of our convergence in RPS is perhaps a testament to the ease of the game. However, once we return to the Cheese Maze domain, learning seemed to be hampered, and convergence to optimality was slower than it would otherwise have been. This is perhaps due to the fact that, having collected many statistics in the simple RPS domain has skewed the Cheese Maze agent towards simpler models that don't appropriately represent the maze domain. From our experiment, it is not clear whether models learnt in one domain were beneficial when transferred to other domains.
+
+
 \begin{figure}[H]
 \centering
 \caption{Learning Rate}
@@ -694,10 +681,6 @@ $26$ & $256$ & $10$ & $2$ & $8$ & $0.9999$ & $0.99977$ & $1.4$ \tabularnewline
 \caption{Learning Rate}
 \includegraphics[scale=0.4]{cheeserock_3} 
 \end{figure}
-
-\section{Conclusion}
-
-
 
 \section*{Appendix}
 
@@ -775,8 +758,6 @@ MC-AIXI-CTW-Grp3.zip
         tiger.conf
 \end{verbatim}
 
-
-\section{Plots}
 
 \begin{thebibliography}{widest entry}
 \bibitem[V+ 11]{veness-11} J. Veness, K. S. Ng, M. Hutter, W. Uther, D. Silver, A Monte-Carlo AIXI Approximation,Journal of Artificial Intelligence Research 40 (2011), pp. 95-142.
