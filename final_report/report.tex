@@ -114,17 +114,18 @@ for each experiment (see Algorithm \ref{mainlopp}):
 
 \end{algorithm}
 
+Essentially, the agent plays a turn-based game with its environment. The input tape of the agent is the output tape of the environment, and visa versa. Each cycle then adds an $(\text{observation},\text{reward},\text{action})$ triplet to the agent's history. The agent chooses actions according to its policy, and updates its internal model with observations from the environment. The agent's behavior is broken into three main modules: $\tt{search.cpp}$, $\tt{agent.cpp}$, and $\tt{predict.cpp}$.
 
-The $MCTS$ algorithm follows as in Algorithms 1-4 in Veness et al.,
-and is found in ${\tt search.cpp}$. Model updates are handled in
-methods in ${\tt agent.cpp}$, which interfaces with the context tree
-defined in ${\tt predict.cpp}$.
-
+The $MCTS$ algorithm can be found in its entirety in ${\tt search.cpp}$. Model updates and queries are handled by public methods in ${\tt agent.cpp}$, which interfaces with the (private) context tree
+defined in ${\tt predict.cpp}$. Below, we detail the design and implementation of each of these modules.
 
 \subsection{Monte Carlo Tree Search (MCTS) Algorithm}
 
+The MCTS module comprises the planning part of the agent; it makes up the `sequential decision theory' section of the AIXI model. At each agent-environment interaction cycle, we wish to choose the action which maximises our total expected future reward, under the current policy and our best model of the environment. MCTS is a standard algorithm for collecting statistics and estimating the value $\hat{V}$ of each history. The MC-UTS (upper confidence bound tree search) algorithm is an adaptation of MCTS which adapts the UCB algorithm from bandit to manage exploration of the search space.
 
 \subsubsection{High level description}
+
+Note that pseudocode for the MC-UTS algorithm is presented in Veness et al., in Algorithms 1-4, so  we won't repeat their exposition here. Instead, we will outline the algorithm conceptually, and address some of the concerns in its implementation.
 
 Since the environment is only partially observable, we have no explicit
 notion of state; instead, we only have a history of actions and percepts
@@ -133,12 +134,12 @@ of choosing the optimal action, we treat each possible (hypothetical)
 history as a node in the search tree, with the root being the tip
 of the current (realised) history. \\
 
-The search tree is comprised of alternate layers of decision nodes and
-chance nodes with the root being a decision node. The maximum branching
+The search tree is comprised of alternating layers of decision nodes and
+chance nodes with the root being a decision node. Decision nodes correspond to the agent's turn, and chance nodes correspond to the environmnet's turn. The maximum branching
 possible from decision nodes is the number of available actions in the given
 environment while the maximum branching possible from chance nodes is equal
 to the number of possible observations times the number of possible rewards.
-We do however restrict branching in general to $100$ to avoid memory issues.
+We do however restrict branching in general to $100$ to avoid memory issues. If we have a branching factor exceeding this, we sample uniformly from the $100$ existing nodes.
 This number is configurable in ${\tt search.cpp}$. \\
 
 Each node is implicitly labelled by its history as chance nodes record the
@@ -164,10 +165,7 @@ minimal and maximal instantaneous reward, and $C$ is a parameter
 controlling the propensity of the agent to explore less frequently-seen
 histories. \\
 
-Note that the expectimax is a stochastic, partially observable game
-between the agent and its environment. In the following, call nodes
-corresponding to agent moves `decision nodes', and nodes corresponding
-to Nature's moves `chance nodes'. \\
+Note that the expectimax search generalises all environments, be they stochastic or even adversarial, since the actions of an opponent can be modelled as a distribution conditioned on the history of the game. In this sense, everything is modelled as a stochastic, partially observable game between the agent and its environment. In the following, search nodes corresponding to agent moves `decision nodes', and nodes corresponding to Nature's moves `chance nodes'. \\
 
 \subsubsection{Class structure}
 
@@ -383,8 +381,10 @@ In all of the following plots, we report the \textit{running} average reward per
 
 \begin{align*}
 \bar{R}_t = \frac{1}{t}\sum_{i=1}^{t}{R_i}\\ 
-\bar{R}^w_t = \frac{1}{w}\sum_{i=t-w}^{t}{R_i}.
+\bar{R}^w_t = \frac{1}{w}\sum_{i=t-w}^{t}{R_i},
 \end{align*}
+
+for some sliding window $w>0$. For the last section of our experiments, we train MC-AIXI-CTW on Cheese Maze (CM), then train it on Rock-Paper-Scissor (RPS), before interfacing it again with Cheese Maze. The goal here is to see whether knowledge in CM is useful in RPS, and whether the agent retains any of its CM knowledge after a series of episodes training in RPS.
 
 \subsection{Experiment Summary}
 Here we summarise the parameters used in our experiments.\\
@@ -392,7 +392,7 @@ Here we summarise the parameters used in our experiments.\\
 \begin{table}[H]
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline 
- & Bits\tablefootnote{total bit length of an $\tt{ora}$ cycle} & CT-depth & Cycles & Timeout\tablefootnote{timeout value for each select action} & Horizon & Exp. Rate & Exp.-Decay & UCB-weight\tablefootnote{UCB exploration bias parameter} \tabularnewline
+ & $b$& $D$ & $n_\text{cycles}$& $t_\text{max}$ & $m$ & $\epsilon_0$  & $\gamma$ & $w_\text{UCB}$  \tabularnewline
 \hline 
 Cheesemaze & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
            & $11$ & $96$ & $10$ & $1.6$ & $6$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
@@ -423,7 +423,7 @@ Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tab
 \hline 
 \hline
 \end{tabular}
-\caption{MC-AIXI-CTW Experiments}
+\caption{MC-AIXI-CTW Experiments. Here, $b$ is the total bit length of an $(o,r,a)$ tuple, $D$ is the depth of the context tree, $n_\text{cycles}$ is the maximum number of global cycles allowed in the experiment, $t_\text{max}$ is the search time allowed per cycle, $m$ is the search horizon, $\epsilon_0$ is the initial exploration rate, $\gamma$ is the exploration decay rate, and $w_\text{UCB}$ is the UCB exploration bias parameter.}
 \end{table}
 
 \subsection{Cheesemaze}
@@ -438,7 +438,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -446,7 +446,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \begin{figure}[h!]
 \centering
-\caption{Learning Rate}
+\caption{Agent performance: Cheese Maze}
 \includegraphics[scale=0.4]{cheesemaze_best} 
 \end{figure}
 
@@ -462,7 +462,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -470,7 +470,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \begin{figure}[H]
 \centering
-\caption{Learning Rate}
+\caption{Agent performance: Extended Tiger}
 \includegraphics[scale=0.4]{tiger_best} 
 \end{figure}
 
@@ -486,7 +486,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -494,7 +494,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \begin{figure}[H]
 \centering
-\caption{Learning Rate}
+\caption{Agent performance: Tic-Tac-Toe}
 \includegraphics[scale=0.4]{tictactoe_best} 
 \end{figure}
 
@@ -510,7 +510,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -518,7 +518,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \begin{figure}[H]
 \centering
-\caption{Learning Rate}
+\caption{Agent performance: Biased Rock-Paper-Scissors}
 \includegraphics[scale=0.4]{rockpaper_best} 
 \end{figure}
 
@@ -534,7 +534,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -542,7 +542,7 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \begin{figure}[H]
 \centering
-\caption{Learning Rate}
+\caption{Agent performance: PacMan}
 \includegraphics[scale=0.4]{pacman_best} 
 \end{figure}
 
@@ -570,6 +570,8 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 \end{figure}
 
 \section{Conclusion}
+
+
 
 \section*{Appendix}
 
