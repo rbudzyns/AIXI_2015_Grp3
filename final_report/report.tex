@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{tablefootnote}
+\usepackage{float}
 
 \makeatletter
 
@@ -28,6 +29,8 @@
 \renewcommand{\labelitemi}{$\diamond$}
 \newcommand{\T}{\rule{0pt}{2.6ex}}       % Top strut
 \newcommand{\B}{\rule[-1.2ex]{0pt}{0pt}} % Bottom strut
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}} % Vectors
+\newcommand{\mat}[1]{\boldsymbol{\mathbf{#1}}} % Matrices
 \usepackage{algorithm,algpseudocode}
 
 \makeatother
@@ -182,8 +185,23 @@ each of these methods is mutually recursive. For a given node $n$,
 we keep its children in a dictionary keyed on the action or (observation,reward)
 used to generate each child.
 
-\subsubsection{Code snippets}
+\subsubsection{Other Considerations}
 
+In addition to the psuedocode presented in Veness et al., we implemented a solution
+to allow us to decide on a per cycle basis whether or not to build a search tree from
+scratch. In addition, we constructed routines which given an action taken by the
+agent and an observation/reward received from the environment, would prune the search
+tree accordingly. \\
+
+The pruning of the search tree removes all subtrees begining with the chance nodes
+directly below the root which correspond to the actions not taken by the agent and
+as such are impossible future paths. Additionally, all subtrees begining with descision
+nodes below the chance node (corresponding to the action taken) that do not match the
+observation/reward received from the environment are pruned. As cycles progress
+throughout an experiment, this represents a significant reduction in memory consumption. \\
+
+Our final solution however did not implement pruning as our experimental results showed
+unusual behaviour whereby the agent would appear to get stuck in certain game states.
 
 \subsubsection{Efficiency/performance}
 
@@ -235,9 +253,12 @@ The rewards have been adjusted as
 
 \par
 The details of the maze and the starting positions of the agent and the cheese are read from the configuration file. The maze is represented as the list of nodes as they would be visited by the depth first search algorithm. Mouse position and cheese position are simply the order of the node.\\
-Each node of the maze is a structure which stores the percept of that node and an array of pointers which point to its neighbours. In case there is a wall on a particular side of the node then that pointer will be NULL.
+Each node of the maze is a structure which stores the percept of that node and an array of pointers which point to its neighbours. In case there is a wall on a particular side of the node then that pointer will be NULL. \\
+
+In terms of an optimal agent strategy, an upper bound on reward per cycle for Cheesemaze is $2$ given that the best possible reward for an episode is $8$ and there are a minimum of $4$ moves (including the start) to reach the goal state.
+
 \subsection{Extended Tiger}
-This environment simulates two doors. At the start of each game the tiger will placed behind one of the doors with probability of 0.5 and behind the other there is a pot of gold. The agent begins sitting down and it can perform the following actions:
+This environment simulates two doors. At the start of each game the tiger is behind one of the doors with probability of 0.5 and behind the other door, there is a pot of gold. The agent begins sitting down and it can perform the following actions:
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action} & \textbf{Code} \\ \hline
@@ -270,8 +291,12 @@ The rewards the agent receives in this environment are as follows
 \end{tabular}
 \end{center}
 
-\subsection{TicTacToe}
-In this the agent plays games of TicTacToe against an opponent who makes random moves. The agent moves are coded as 0-8 referring to the different positions of the board.
+In terms of an optimal agent strategy, an upper bound on reward per cycle for Extended Tiger is derived as follows. Firstly note that an optimal strategy will be to $\tt{start}$, $\tt{listen}$ $n$ times, $\tt{stand}$, $\tt{open}$. Letting a false observation probability be $q$, we wish to maximise the following w.r.t. $n$
+$$\mathbb{E}[r_{\text{avg}}] = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3}$$
+where the denominator is equal to the number of actions taken. For example, with $q=0.15$, the optimal $n$ is $2$.
+
+\subsection{Tic-Tac-Toe}
+In this game, the agent plays games of TicTacToe against an opponent who makes random moves. The agent moves are coded as 0-8 referring to the different positions of the board.
 \begin{center}
 	\begin{tabular}{c | c | c}
 	0 & 1 & 2 \\ \hline
@@ -298,6 +323,8 @@ The agent rewards are as follows:
 	\end{tabular}
 \end{center}
 
+In terms of an optimal agent strategy, an upper bound on reward per cycle is $0.5$ given that the minimu number of cycles required for the agent to win the game is $4$.
+
 \subsection{Biased Rock-Paper-Scissors}
 The agent will play games of Rock-Paper-Scissors against an opponent who plays the same action every time it wins the game, and otherwise plays a random move. For this agent we encoded the actions of the agent and the environment as
 \begin{center}
@@ -307,10 +334,28 @@ The agent will play games of Rock-Paper-Scissors against an opponent who plays t
 	Scissors & 2 \\
 	\end{tabular}
 \end{center}
-The agent receives a reward of 1 for a win, 0 for a draw and -1 for a loss.
+The agent receives a reward of 1 for a win, 0 for a draw and -1 for a loss. \\
+
+In terms of an optimal agent strategy, an upper bound on reward per cycle for Biased Rock-Paper-Scissors is derived as follows.
+
+Let $X_t$ be a R.V. representing the outcome of cycle $t$. Under an optimal strategy, the agent will win after the environment won in cycle $t-1$ as the environments action in cycle $t$ is predictable. Otherwise, the agent plays randomly. As such we have
+$$P(X_t = \text{win}) = \sum_{X_{t-1}} P(X_t = \text{win}, X_{t-1}) = \sum_{X_{t-1}} P(X_t = \text{win}|X_{t-1})P(X_{t-1})$$
+which is a 1\textsuperscript{st} order Markov chain with the following right stochastic transition matrix
+
+\begin{align}
+\mat{P} = 
+\begin{bmatrix}
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+1 & 0 & 0 \\
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3}
+\end{bmatrix}
+\end{align}
+
+Therefore, we want a steady state distribution for $\mat{P}$, i.e. a solution to $\vec{\pi} = \mat{P}\vec{\pi}$, which is an eigenvector $\vec{\pi^{*}}$. The average reward at time $t$ is then
+$$\mathbb{E}[r_{\text{avg}_t}] = 1 \cdot P(X_t = \text{win}) + 0 \cdot P(X_t =\text{draw}) - 1 \cdot P(X_t = \text{lose}) = \vec{\pi^{*}_0} - \vec{\pi^{*}_2} = 0.25$$
 
 \subsection{PacMan}
-This is game of PacMan in which the agent can only partially observer the environment unlike the classic game in which the entire game state is known to the player at any given time. The agent does not know the structure of the maze but only receives a 4 bit wall configuration of the node it is currently in. The agent also receives a 4 bit observation of the presence of any ghosts in its direct line of sight. The location of food pellets can change every episode as very free cell has a 50\% chance of having food in it. The agent receives 3 bit observation indicating the presence of food within a Manhattan distance of 2, 3 or 4. It also receives a 4 bit string indicating food in its line of sight similar to the ghosts. The agent also knows when it is under the effect of the power pill.\\
+This is game of PacMan in which the agent can only partially observe the environment unlike the classic game in which the entire game state is known to the player at any given time. The agent does not know the structure of the maze but only receives a 4 bit wall configuration of the node it is currently in. The agent also receives a 4 bit observation of the presence of any ghosts in its direct line of sight. The location of food pellets can change every episode as every free cell has a 50\% chance of having food in it. The agent receives a 3 bit observation indicating the presence of food within a Manhattan distance of 2, 3 or 4. It also receives a 4 bit string indicating food in its line of sight similar to the ghosts. The agent also knows when it is under the effect of the power pill.\\
 \begin{center}
 	\begin{tabular}{c | c}
 	\textbf{Action} & \textbf{Reward} \\ \hline
@@ -321,17 +366,19 @@ This is game of PacMan in which the agent can only partially observer the enviro
 	Agent collects all the food & 100 \\
 	\end{tabular}
 \end{center}
-To calculate the actual reward the rewards from the above table are added to 60. This is because the agent can potentially be affected by multiple rewards e.g. it can run into a wall and get caught by a ghost in the same turn.
+To calculate the actual reward, the rewards from the above table are added to 60. This is because the agent can potentially be affected by multiple rewards e.g. it can run into a wall and get caught by a ghost in the same turn.
+
+In terms of an optimal agent strategy, an upper bound on reward per cycle for Pacman is unknown.
 
 \section{Simulation Results}
 
 \subsection{Experiment Summary}
 Following is a complete summary of all experiments conducted \\
 
-\begin{table}[h]
+\begin{table}[H]
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline 
- & Bits\tablefootnote{total bit length of an \tt{ora} cycle} & CT-depth & Cycles & Timeout\tablefootnote{timeout value for each select action} & Horizon & Exp. Rate & Exp.-Decay & UCB-weight\tablefootnote{the $C$ parameter from Veness et. al.} \tabularnewline
+ & Bits\tablefootnote{total bit length of an $\tt{ora}$ cycle} & CT-depth & Cycles & Timeout\tablefootnote{timeout value for each select action} & Horizon & Exp. Rate & Exp.-Decay & UCB-weight\tablefootnote{UCB exploration bias parameter} \tabularnewline
 \hline 
 Cheesemaze & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
            & $11$ & $96$ & $10$ & $1.6$ & $6$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
@@ -349,7 +396,7 @@ Extended Tiger & $13$ & $96$ & $16$ & $2.5$ & $6$ & $0.999$ & $0.99985613$ & $1.
                & $13$ & $96$ & $25$ & $0.8$ & $4$ & $0.999$ & $0.9999079208$ & $1.4$ \tabularnewline
                & $13$ & $52$ & $5$ & $8$ & $4$ & $0.999$ & $0.999539689$ & $1.4$ \tabularnewline
 \hline
-Extended Tiger & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $1.4$ \tabularnewline
+Tic-Tac-Toe    & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $1.4$ \tabularnewline
                & $25$ & $192$ & $5$ & $8$ & $9$ & $0.9999$ & $0.999539599$ & $1.4$ \tabularnewline
                & $25$ & $256$ & $20$ & $8$ & $9$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
                & $25$ & $512$ & $25$ & $3$ & $9$ & $0.9999$ & $0.9999079028$ & $1.4$ \tabularnewline
@@ -371,7 +418,7 @@ training AIXI on the Cheesemaze environment. \\
 
 Interpreting the results, we conclude that ... \\
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline 
@@ -389,30 +436,101 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 \includegraphics[scale=0.4]{cheesemaze_best} 
 \end{figure}
 
-
 \subsection{Extended Tiger}
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Extended Tiger environment. \\
 
-Experimental setup ... \\
- Plots ... 
+Interpreting the results, we conclude that ... \\
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline 
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
+\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
+\end{tabular}
+\caption{Environment Setup}
+\end{table}
 
-\subsection{Biased Rock-Paper-Scissor}
+\begin{figure}[H]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{tiger_best} 
+\end{figure}
 
-Experimental setup ... \\
- Plots ... 
+\subsection{Tic\-Tac\-Toe}
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Tic-Tac-Toe environment. \\
 
+Interpreting the results, we conclude that ... \\
 
-\subsection{Tic-Tac-Toe}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline 
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
+\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
+\end{tabular}
+\caption{Environment Setup}
+\end{table}
 
-Experimental setup ... \\
- Plots ... 
+\begin{figure}[H]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{tictactoe_best} 
+\end{figure}
 
+\subsection{Biased Rock-Paper-Scissors}
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Biased Rock-Paper-Scissors environment. \\
+
+Interpreting the results, we conclude that ... \\
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline 
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
+\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
+\end{tabular}
+\caption{Environment Setup}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{rockpaper_best} 
+\end{figure}
 
 \subsection{Pacman}
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Pacman environment. \\
 
-Experimental setup ... \\
- Plots ... 
+Interpreting the results, we conclude that ... \\
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline 
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
+\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
+\end{tabular}
+\caption{Environment Setup}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{pacman_best} 
+\end{figure}
 
 \section{Cross Domain Simulation Results}
 \begin{itemize}
@@ -437,11 +555,11 @@ MC-AIXI-CTW-Grp3.zip
     \report
         report.pdf // this report
         report.tex
-        cheesemaze_01.png // results plots
-        extended_tiger_01.png
-        biased_rock_paper_scissor_01.png
-        tic_tac_toe_01.png
-        pacman_01.png
+        cheesemaze_best.png // results plots
+        tiger_best.png
+        rockpaper_best.png
+        tictactoe_best.png
+        pacman_best.png
     \src
         main.hpp
         main.cpp
