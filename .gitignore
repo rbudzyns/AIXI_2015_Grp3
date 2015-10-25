@@ -35,6 +35,8 @@
 /Docs/
 log.*
 
+aixi
+
 # Report
 /final_report/.ipynb_checkpoints/
 /final_report/report.log
@@ -42,3 +44,7 @@ log.*
 /final_report/report.synctex.gz
 /final_report/#report.lyx#
 /final_report/*.eps
+/final_report/*.toc
+
+# cheese-rock-cheese
+/final_report/tmp*

@@ -9,9 +9,9 @@
 // Observation/Reward pair hashing function for storage in unordered_map
 class or_hasher {
 public:
-	size_t operator()(const obsrew_t & p) const {
-		return p.first * 100 + p.second * 10000;
-	}
+    size_t operator()(const obsrew_t & p) const {
+        return p.first * 100 + p.second * 10000;
+    }
 };
 class ChanceNode;
 class DecisionNode;
@@ -26,89 +26,89 @@ class SearchNode {
 
 public:
 
-	SearchNode(void);
+    SearchNode(void);
 
-	// determine the expected reward from this node
-	reward_t expectation(void) const;
+    // determine the expected reward from this node
+    reward_t expectation(void) const;
 
-	// number of times the search node has been visited
-	visits_t visits(void) const;
+    // number of times the search node has been visited
+    visits_t visits(void) const;
 
 protected:
 
-	double m_mean;      // the expected reward of this node
-	visits_t m_visits;  // number of times the search node has been visited
+    double m_mean;      // the expected reward of this node
+    visits_t m_visits;  // number of times the search node has been visited
 };
 
 class DecisionNode: SearchNode {
 
 public:
 
-	// constructor
-	DecisionNode(obsrew_t obsrew);
+    // constructor
+    DecisionNode(obsrew_t obsrew);
 
-	~DecisionNode();
+    ~DecisionNode();
 
-	// print node data for debugging purposes
-	void print() const;
+    // print node data for debugging purposes
+    void print() const;
 
-	// get (observation,reward) label
-	obsrew_t obsRew(void) const;
+    // get (observation,reward) label
+    obsrew_t obsRew(void) const;
 
-	void pruneAllBut(action_t action);
+    void pruneAllBut(action_t action);
 
-	int getDecisionNodeInfo(void);
+    int getDecisionNodeInfo(void);
 
-	// add a new child chance node
-	bool addChild(ChanceNode* child);
+    // add a new child chance node
+    bool addChild(ChanceNode* child);
 
-	ChanceNode* getChild(action_t a);
+    ChanceNode* getChild(action_t a);
 
-	// perform a sample run through this node and its children,
-	// returning the accumulated reward from this sample run
-	reward_t sample(Agent &agent, unsigned int dfr);
+    // perform a sample run through this node and its children,
+    // returning the accumulated reward from this sample run
+    reward_t sample(Agent &agent, unsigned int dfr);
 
-	// determine the next action to play
-	action_t selectAction(Agent &agent);
+    // determine the next action to play
+    action_t selectAction(Agent &agent);
 
-	// return the best action for a decision node
-	action_t bestAction(Agent &agent) const;
+    // return the best action for a decision node
+    action_t bestAction(Agent &agent) const;
 
 private:
 
-	obsrew_t m_obsrew; // observation/reward pair
-	chance_map_t m_children; // list of child chance nodes
+    obsrew_t m_obsrew; // observation/reward pair
+    chance_map_t m_children; // list of child chance nodes
 };
 
 class ChanceNode: public SearchNode {
 
 public:
 
-	// constructor
-	ChanceNode(action_t action);
+    // constructor
+    ChanceNode(action_t action);
 
-	~ChanceNode();
+    ~ChanceNode();
 
-	// add a new child decision node
-	bool addChild(DecisionNode* child);
+    // add a new child decision node
+    bool addChild(DecisionNode* child);
 
-	void pruneAllBut(obsrew_t obsrew);
+    void pruneAllBut(obsrew_t obsrew);
 
-	DecisionNode* getChild(obsrew_t o_r);
+    DecisionNode* getChild(obsrew_t o_r);
 
-	int getChanceNodeInfo(void);
+    int getChanceNodeInfo(void);
 
-	// get action label
-	action_t action(void) const;
+    // get action label
+    action_t action(void) const;
 
-	// perform a sample run through this node and it's children,
-	// returning the accumulated reward from this sample run
-	reward_t sample(Agent &agent, unsigned int dfr);
+    // perform a sample run through this node and it's children,
+    // returning the accumulated reward from this sample run
+    reward_t sample(Agent &agent, unsigned int dfr);
 
 private:
 
-	action_t m_action;
-	decision_map_t m_children; // list of child decision nodes
+    action_t m_action;
+    decision_map_t m_children; // list of child decision nodes
 };
 
 // determine the best action by searching ahead
