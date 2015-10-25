@@ -576,13 +576,42 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 
 \appendix
 
-\section*{User Manual}
+\section{User Manual}
+\begin{itemize}
+\item To build from source on linux, run
+\begin{verbatim}    g++ -std=c++0x *.cpp -o aixi \end{verbatim}
 
-To build from source on linux, run ${\tt g++\ -std=c++0x *.cpp\ -o\ aixi}$ \textbf{TODO
-check}
+\item To run, invoke
+\begin{verbatim}    ./aixi <envname>.conf [<envname>.conf] \end{verbatim}
+If the second optional environment is specified, the program will run AIXI
+on the first environment, then the second environment and then finally the
+first environment again. The CTW is maintained across environments.
 
-To run, invoke ${\tt ./aixi\ \$ENVNAME.conf}$. 
+\item Program logging is written out to ${\tt log.log}$, a summarised log and
+${\tt log.csv}$, a verbose log.
 
+\item The summarised log per cycle is of the form:
+\begin{verbatim}
+    action: <action>
+    explored: <yes|no>
+    explore_rate_g: <rate>
+    cycle: <cycle no.> # cycles within an episode
+    global_cycle: <global cycle no.> # cycles across episodes
+    observation: <observation>
+    reward: <reward>
+    total reward: <total reward> # accumulated reward across episodes
+    average reward: <avg reward> # running average reward
+    Search tree size: <size> # the current size of the search tree
+    Global cycle number: <global cycle no.> # cycles across episodes
+\end{verbatim}
+
+\item The verbose log per cycle is of the form:
+\begin{verbatim}
+    glob_cycle, cycle, obs, reward, action, expl_on, explored, expl_rate_g,
+        tot_reward, avg_reward, end_of_game
+\end{verbatim}
+
+\end{itemize}
 
 \section{Files}
 
@@ -621,7 +650,26 @@ MC-AIXI-CTW-Grp3.zip
 
 \section{Plots}
 
-\bibliographystyle{unsrt}
-\bibliography{report}
+\begin{thebibliography}{widest entry}
+\bibitem[V+ 11]{veness-11}
+        {Author = {J. Veness, K. S. Ng, M. Hutter, W. Uther, D. Silver},
+	Date-Added = {2015-10-21 05:29:41 +0000},
+	Date-Modified = {2015-10-21 05:53:06 +0000},
+	Journal = {Journal of Artificial Intelligence Research},
+	Pages = {95-142},
+	Title = {A Monte-Carlo AIXI Approximation},
+	Volume = {40},
+	Year = {2011}}
+\bibitem[F+ 95]{frans-95}
+        {Author = {Frans M. J. Willems, Yuri M. Shtarkov, Tjalling J. Tjalkens},
+	Date-Added = {1995-05},
+	Journal = {IEEE Transactions on Information Theory},
+	Pages = {653-664},
+	Title = {The Context-Tree Weighting Method: Basic Properties},
+	Volume = {41},
+	Year = {1995}}
+\end{thebibliography}
+%\bibliographystyle{unsrt}
+%\bibliography{report}
 
 \end{document}
