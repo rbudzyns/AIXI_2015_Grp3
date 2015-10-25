@@ -79,15 +79,15 @@ public:
 	
 private:
 	//structure to represent the nodes
-	struct node{
+	struct node_t{
 		unsigned int percept;
-		node *next[4];
+		node_t *next[4];
 	};
 	
-	std::string maze_conf;
-	node *current_node;
-	node *cheese_node;
-	node *mouse_start;
+	std::string m_maze_conf;
+	node_t *m_current_node;
+	node_t *m_cheese_node;
+	node_t *m_mouse_start;
 };
 
 //Extented Tiger environment.It maps the location of tiger using a integer variable tiger.
@@ -120,9 +120,9 @@ public:
 
 
 private:
-	double p; //probability of listening correctly
-	bool tiger; //position of tiger
-	bool standing; //player is standing
+	double m_p; //probability of listening correctly
+	bool m_tiger; //position of tiger
+	bool m_standing; //player is standing
 };
 
 //Tic Tac Toe environment
@@ -142,26 +142,27 @@ public:
 	virtual bool isFinished() const;
 
 private:
-	int board[9];
-	bool finished;
-	int freeCells;
+	int m_board[9];
+	bool m_finished;
+	int m_freeCells;
 
+	//calculates the observation for the agent
 	percept_t calBoardVal()
 	{
 		std::bitset<18> boardVal;
 		for (int i = 0; i < 9; i++)
 		{
-			if (board[i] == 0)
+			if (m_board[i] == 0)
 			{
 				boardVal.set(i * 2, 0);
 				boardVal.set((i * 2) + 1, 0);
 			}
-			else if (board[i] == 1)
+			else if (m_board[i] == 1)
 			{
 				boardVal.set(i * 2, 0);
 				boardVal.set((i * 2) + 1, 1);
 			}
-			else if (board[i] == 2)
+			else if (m_board[i] == 2)
 			{
 				boardVal.set(i * 2, 1);
 				boardVal.set((i * 2) + 1, 0);
@@ -170,48 +171,51 @@ private:
 		return boardVal.to_ulong() & INT_MAX;
 	}
 
+	//some random move on the cell structure
 	void env_move()
 	{
-		int move = (int)(rand01() * freeCells);
+		int move = (int)(rand01() * m_freeCells);
 		int count = 0;
 		for (int i = 0; i < 9; i++)
 		{
-			if (board[i] == 0)
+			if (m_board[i] == 0)
 				if (count++ == move) {
-					board[i] = 1;
-					freeCells--;
+					m_board[i] = 1;
+					m_freeCells--;
 					return;
 				}
 		}
 	}
 
+	//returns 0 if there is no winner yet else returns the player number.
+	//player number is 1 for environment and 2 for agent
 	int check_winner()
 	{
-			if (board[0] != 0)
+			if (m_board[0] != 0)
 			{
-				if ((board[0] == board[1] && board[1] == board[2]) || (board[0] == board[3] && board[0] == board[6])
-					|| (board[0] == board[4] && board[4] == board[8]))
-					return board[0];
+				if ((m_board[0] == m_board[1] && m_board[1] == m_board[2]) || (m_board[0] == m_board[3] && m_board[0] == m_board[6])
+					|| (m_board[0] == m_board[4] && m_board[4] == m_board[8]))
+					return m_board[0];
 			}
-			else if (board[1] != 0)
+			else if (m_board[1] != 0)
 			{
-				if (board[1] == board[4] && board[4] == board[7])
-					return board[1];
+				if (m_board[1] == m_board[4] && m_board[4] == m_board[7])
+					return m_board[1];
 			}
-			else if (board[2] != 0)
+			else if (m_board[2] != 0)
 			{
-				if ((board[2] == board[5] && board[5] == board[8]) || (board[2] == board[4] && board[4] == board[6]))
-					return board[2];
+				if ((m_board[2] == m_board[5] && m_board[5] == m_board[8]) || (m_board[2] == m_board[4] && m_board[4] == m_board[6]))
+					return m_board[2];
 			}
-			else if (board[3] != 0)
+			else if (m_board[3] != 0)
 			{
-				if (board[3] == board[4] && board[4] == board[5])
-					return board[3];
+				if (m_board[3] == m_board[4] && m_board[4] == m_board[5])
+					return m_board[3];
 			}
-			else if (board[6] != 0)
+			else if (m_board[6] != 0)
 			{
-				if (board[6] == board[7] && board[7] == board[8])
-					return board[6];
+				if (m_board[6] == m_board[7] && m_board[7] == m_board[8])
+					return m_board[6];
 			}
 		return 0;
 	}
@@ -233,7 +237,7 @@ public:
 	virtual void performAction(action_t action);
 
 private:
-	unsigned int move;
+	unsigned int m_move;
 };
 
 /*Pacman environment
@@ -258,14 +262,41 @@ public:
 	virtual void envReset(void);
 
 private:
+	//cell represents each node of the pacman maze.
 	struct cell
 	{
-		unsigned int wall;
+		unsigned int wall; //stores the percept of the node which the agent will recieve as wall configuration.
 		bool isFreeCell;
-		int contents;
+		int contents; //0: empty, 1: foot pellet, 2: power pill
 	};
-	cell maze[21][19];
-	bool maze1[21][19];
+	cell m_maze[21][19]; 
+
+	//structure of the maze which will be read by the class variables during construction
+	bool maze1[21][19] = {
+		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+		{ 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0 },
+		{ 0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0 },
+		{ 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0 },
+		{ 0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0 },
+		{ 0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0 },
+		{ 0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0 },
+		{ 0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0 },
+		{ 0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0 },
+		{ 1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1 },
+		{ 0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0 },
+		{ 0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,0 },
+		{ 0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0 },
+		{ 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0 },
+		{ 0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0 },
+		{ 0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0 },
+		{ 0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0 },
+		{ 0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0 },
+		{ 0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0 },
+		{ 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0 },
+		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+	};
+
+	//a structure to maintain the position and state of various entities in the game.
 	struct pos
 	{
 		int x;
@@ -273,6 +304,7 @@ private:
 		bool state;
 	};
 
+	//represents the node of a graph which is used to find the shortest path.
 	struct node
 	{
 		pos cell;
@@ -281,36 +313,53 @@ private:
 		node* parent;
 	};
 
-	bool pacmanPowered;
+	//if the pacman is under the effect of the power pill
+	bool m_pacman_powered;
 
-	int ghost_follow_time;
+	//the number of moves for which the ghost will follow pacman
+	int m_ghost_follow_time = 5;
 
-	int ghost_timer[4];
+	//saves the number of moves for which the ghost has been following pacman
+	//or the number of moves for which the ghost has been actively not following.
+	int m_ghost_timer[4];
 
+	//position and state of each ghost
 	pos ghost[4];
-	pos pacman;
-	bool finished;
 
-	int power_pill_counter;
-	int power_pill_time;
+	//position and the state of pacman
+	pos m_pacman;
+
+	//if the game has finished
+	bool m_finished;
+
+	//counter to check how long pacman has been under the effect of the power pill
+	int m_power_pill_counter;
+
+	//How long pacman can be under the effect of power pill. Loaded from configuration file
+	int m_power_pill_time = 10;
 
 
 	//returns the bits for direction of ghost which are in line of sight
 	unsigned int seeGhost()
 	{
 		std::bitset<4> chk;
+		//checking in each direction
 		for(int i=0; i<4; i++)
 		{
 			chk.set(3-i, 0);
 			if(i == 0 || i == 2)
 			{
-				if(ghost[0].y == pacman.y || ghost[1].y == pacman.y || ghost[2].y == pacman.y || ghost[3].y == pacman.y)
+				//we only need to check if there exists a ghost which has the same y co-ordinate as the pacman
+				if(ghost[0].y == m_pacman.y || ghost[1].y == m_pacman.y || ghost[2].y == m_pacman.y || ghost[3].y == m_pacman.y)
 				{
-					for(int j = pacman.x; i==0?j>0:j<21; i==0?j--:j++)
+					//either looking in up direction or down depending on value of i
+					for(int j = m_pacman.x; i==0?j>0:j<21; i==0?j--:j++)
 					{
 						assert(0 < j && j < 21);
-						if(!maze[j][pacman.y].isFreeCell)
+						//if the loop encounters a wall then pacman cannot see the ghost, we break out of the loop
+						if(!m_maze[j][m_pacman.y].isFreeCell)
 							break;
+						//we do not need to check further once 1 ghost has been encountered
 						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
 						{
 							chk.set(3-i,1);
@@ -321,12 +370,14 @@ private:
 			}
 			else
 			{
-				if(ghost[0].x == pacman.x || ghost[1].x == pacman.x || ghost[2].x == pacman.x || ghost[3].x == pacman.x)
+				//checking in right and left direction
+				if(ghost[0].x == m_pacman.x || ghost[1].x == m_pacman.x || ghost[2].x == m_pacman.x || ghost[3].x == m_pacman.x)
 				{
-					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
+					//either checking in right or left direction depending on the value of i
+					for(int j = m_pacman.y; i==1?j>0:j<19; i==1?j--:j++)
 					{
 						assert(0 <= j && j < 19);
-						if(!maze[pacman.x][j].isFreeCell)
+						if(!m_maze[m_pacman.x][j].isFreeCell)
 							break;
 						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
 						{
@@ -338,26 +389,31 @@ private:
 			}
 
 		}
-
+		//converting the bitset to unsigned int.
 		return chk.to_ulong() & INT_MAX;
 	}
 
+	//function returns the observation indicating if there is a food pellet at a manhattan distance of 2,3 or 4 form the pacman
 	unsigned int smellFood()
 	{
 		std::bitset<3> smell;
 		//checking all cell at a man_dist of 1 to 4
 		for(int man_dist = 1; man_dist<=4 && !smell.test(std::max(man_dist-2, 0)); man_dist++)
 		{
-			for (int i = std::max(pacman.x - man_dist, 0); i <= std::min(pacman.x + man_dist, 20) && !smell.test(std::max(man_dist-2, 0)); i++)
+			//i here represents the possible shift in x co-ordinate we need to check.
+			//For a cell to be within a manhattan distance of man_dist from the pacman its x co-ordinate has be between as a distance of man_dist from the x co-ordinate of the pacman
+			//hence we only need to vary i from -|pacman.x - man_dist| to |pacman.x - man_dist|
+			for (int i = std::max(m_pacman.x - man_dist, 0); i <= std::min(m_pacman.x + man_dist, 20) && !smell.test(std::max(man_dist-2, 0)); i++)
 			{
-				assert(pacman.x - man_dist <= i && 0 <= i && pacman.x+ man_dist >= i &&  i <= 20);
+				assert(m_pacman.x - man_dist <= i && 0 <= i && m_pacman.x+ man_dist >= i &&  i <= 20);
+				//since |pacman.x-i| + |pacman.y-j| <= man_dist
 				//the range of j changes based on the value of i, such that the manhattan distance is bounded by man_dist.
-				for (int j = std::max(pacman.y - abs(abs(pacman.x - i) - man_dist), 0); j <= std::min(pacman.y + abs(abs(pacman.x - i) - man_dist), 18) &&
+				for (int j = std::max(m_pacman.y - abs(abs(m_pacman.x - i) - man_dist), 0); j <= std::min(m_pacman.y + abs(abs(m_pacman.x - i) - man_dist), 18) &&
 				!smell.test(std::max(man_dist-2,0)); j++)
 				{
-					assert(0 <= j && pacman.y - man_dist <= j && pacman.y + man_dist >= j && j <= 18);
-					assert(abs(pacman.x - i) + abs(pacman.y - j) <= man_dist);
-					if (maze[i][j].contents == 1)
+					assert(0 <= j && m_pacman.y - man_dist <= j && m_pacman.y + man_dist >= j && j <= 18);
+					assert(abs(m_pacman.x - i) + abs(m_pacman.y - j) <= man_dist);
+					if (m_maze[i][j].contents == 1)
 					{
 						for(int k = std::max(man_dist-2, 0); k<=2; k++)
 						{
@@ -370,6 +426,7 @@ private:
 		return smell.to_ulong() & INT_MAX;
 	}
 
+	//function returns if there is any food in line of sight
 	unsigned int seeFood()
 	{
 		std::bitset<4> sight;
@@ -378,18 +435,14 @@ private:
 			sight.set(3 - i, 0); //assuming there is no food in line of sight
 			if (i == 1 || i == 3)
 			{
-				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
+				//checking both left and right depending on value of i
+				for (int j = m_pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
 				{
-					if (0 > j || j >= 19)
-					{
-						std::cout << "Error in seeFood()" << std::endl;
-						std::cout << "direction: " << i << " j = " << j << std::endl;
-						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+					assert(0 <= j && j < 19);
+					//breaks on encounter either a wall of a food pellet
+					if (!m_maze[m_pacman.x][j].isFreeCell)
 						break;
-					}
-					if (!maze[pacman.x][j].isFreeCell)
-						break;
-					else if (maze[pacman.x][j].contents == 1)
+					else if (m_maze[m_pacman.x][j].contents == 1)
 					{
 						sight.set(3 - i, 1);
 						break;
@@ -398,18 +451,14 @@ private:
 			}
 			else if (i == 0 || i == 2)
 			{
-				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
+				//checking top and down dependin on the value of i
+				for (int j = m_pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
 				{
-					if (0 > j || j >= 21)
-					{
-						std::cout << "Error in seeFood()" << std::endl;
-						std::cout << "direction: " << i << " j = " << j << std::endl;
-						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+					assert(0 <= j && j < 21);
+					//breaks when the loop encounters either a wall or a food pellet
+					if (!m_maze[j][m_pacman.y].isFreeCell)
 						break;
-					}
-					if (!maze[j][pacman.y].isFreeCell)
-						break;
-					else if (maze[j][pacman.y].contents == 1)
+					else if (m_maze[j][m_pacman.y].contents == 1)
 					{
 						sight.set(3 - i, 1);
 						break;
@@ -425,12 +474,12 @@ private:
 
 		for(int i = 0; i<4; i++)
 		{
-			if((pacman.x == ghost[i].x) && (pacman.y == ghost[i].y))
+			if((m_pacman.x == ghost[i].x) && (m_pacman.y == ghost[i].y))
 			{
 				//ghost is active and pacman does not have power pill
-				if(ghost[i].state && !pacman.state)
+				if(ghost[i].state && !m_pacman.state)
 					return 1;
-				else if(pacman.state) //pacman under effect of power pill
+				else if(m_pacman.state) //pacman under effect of power pill
 					ghost[i].state = 0;
 			}
 		}
@@ -438,24 +487,34 @@ private:
 	}
 
 
-	//this method moves ghost when it is at a manhattan distance of less than 5 from the agent.
+	/*
+	This method moves ghost when it is at a manhattan distance of less than 5 from the agent.
+	The environment finds a path using A* algorithm
+	In case the ghost cannot find any path to its destination because it is blocked by other ghosts
+	it will not make a move.
+	*/
 	void manMove(int ghostNo)
 	{
+		//goal is either pacman or home in case the ghost was eaten
 		pos goal;
 		pos move= ghost[ghostNo];
 		node* min_node;
 		node* open_list[400];
 		node* closed_list[400];
 		bool path_found = false;
+		//size of each list since we do not need only check positions where we have a added a node
 		int open_list_size = 0;
 		int closed_list_size = 0;
+
+		//fix the goal based on the state
 		if (ghost[ghostNo].state)
 		{
-			goal.x = pacman.x;
-			goal.y = pacman.y;
+			goal.x = m_pacman.x;
+			goal.y = m_pacman.y;
 		}
 		else
 		{
+			//ghost has been eaten and is going home
 			goal.x = 8 + (int)(ghostNo / 2);
 			goal.y = 9 + (int)(ghostNo % 2);
 		}
@@ -464,6 +523,8 @@ private:
 		open_list[0]->parent = NULL;
 		open_list[0]->g_value = 0;
 		open_list[open_list_size++]->h_value = manhattan_dist(ghost[ghostNo], goal);
+
+		//if the size of the open list becomes 0 and we have not found the path yet that means all paths are blocked
 		while (open_list_size > 0)
 		{
 			min_node = open_list[0];
@@ -511,7 +572,7 @@ private:
 				{
 					yshift = -18;
 				}
-				if (maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
+				if (m_maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
 				{
 					bool conflict = false;
 					//check if this position is occupied by another ghost
@@ -524,6 +585,7 @@ private:
 					}
 					if(!conflict)
 					{
+						//the ghost can possibly move into this node in the future
 						pos possible_node;
 						possible_node.x = min_node->cell.x + xshift;
 						possible_node.y = min_node->cell.y + yshift;
@@ -575,7 +637,7 @@ private:
 			delete closed_list[i];
 		}
 
-		assert(maze[move.x][move.y].isFreeCell);
+		assert(m_maze[move.x][move.y].isFreeCell);
 
 		ghost[ghostNo].x = move.x;
 		ghost[ghostNo].y = move.y;
