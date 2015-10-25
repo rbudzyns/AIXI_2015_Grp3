@@ -71,8 +71,10 @@ public:
 	// to that of a previous time cycle, false on failure
 	bool modelRevert(const ModelUndo &mu);
 
+	// Get the Context tree depth
 	size_t maxTreeDepth(void);
 
+	// Calculate the probability of next symbol
 	double getProbNextSymbol(void);
 
 	// resets the agent
@@ -81,6 +83,7 @@ public:
 	// reset, but don't kill the CTW;
 	void newEpisode(void);
 
+	// Get the time out
 	double timeout(void);
 
 	// probability of selecting an action according to the
@@ -90,12 +93,17 @@ public:
 	// get the agent's probability of receiving a particular percept
 	double perceptProbability(percept_t observation, percept_t reward) const;
 
+	// Return context tree
 	ContextTree * contextTree();
 
+	// return the search tree
 	DecisionNode * searchTree();
 
+	// reset the search tree to a new root node
 	void searchTreeReset();
 
+	// prune the tree to the subtree of the root corresponding to
+	// the given action
 	void searchTreePrune(action_t action, obsrew_t obsrew);
 
 	void setOptions(options_t & options);
