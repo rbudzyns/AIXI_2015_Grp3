@@ -1,0 +1,7 @@
+global_cycle, cycle, observation, reward, action, explore_on, explored, explore_rate_g, total reward, average reward
+0, 1, 0, 100, 1, 1, 1, 0.99, 100, 50
+1, 2, 2, 99, 3, 1, 1, 0.99, 199, 66.3333
+2, 3, 2, 90, 0, 1, 1, 0.99, 289, 72.25
+3, 4, 2, 99, 1, 1, 1, 0.99, 388, 77.6
+4, 5, 2, 90, 3, 1, 1, 0.99, 478, 79.6667
+5, 6, 2, 130, 1, endgame, endgame, endgame, 608, 101.333
