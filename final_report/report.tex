@@ -237,7 +237,7 @@ Cheese Maze is an episodic, deterministic and partially observable game in which
 		\hline
 	\end{tabular}
 \end{center}
-The transformed rewards are now given by
+The transformed rewards are given by
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action effect} & \textbf{Reward} \\ \hline
@@ -289,12 +289,12 @@ The agent is penalised for performing illegal moves, or for opening the door wit
 \end{tabular}
 \end{center}
 
-Clearly the optimal strategy in Extended Tiger will be the sequence $\left(\tt{game\  start}\rightarrow\tt{listen}\ n\ times\rightarrow\tt{stand}\rightarrow\tt{open\ door}\right)$. To play optimally given a fixed false observation probability of $q=1-p$, it is sufficient to maximise our expected reward with respect to $n$ using this sequence of moves. Hence the expected average reward under the optimal policy is given by
-$$\mathbb{E}[r_{\text{avg}}]^* = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3}$$
-where the denominator is equal to the number of actions taken. For example, with $q=0.15$, the optimal $n$ is $2$.
+Clearly the optimal strategy in Extended Tiger will be the sequence $\left(\tt{game\  start}\rightarrow\tt{listen}\ n\ times\rightarrow\tt{stand}\rightarrow\tt{open\ door}\right)$. To play optimally given a fixed false observation probability of $q=1-p$, it is sufficient to maximise our expected reward with respect to $n$ using this sequence of moves. Hence the expected average reward under the optimal policy can be approximated by
+$$\mathbb{E}[r_{\text{avg}}]^* = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3},$$
+where the denominator is equal to the number of actions taken, and the numerator approximates the expected reward for opening the door signalled by the majority of observations. In case of ties, the agent would need to listen more to collect more data, but we omit this case for simplicity's sake, since we are interested in a loose upper bound with which to benchmark our performance. With a false observation probability of $q=0.15$, the optimal number of listen actions $n$ is $2$.
 
 \subsection{Tic-Tac-Toe}
-In this game, the agent plays games of TicTacToe against an opponent who makes random moves. The agent moves are coded as 0-8 referring to the different positions of the board.
+Tic-Tac-Toe is a fully observable adversarial game. In this environment, the agent plays numerous games of Tic-Tac-Toe against an opponent who plays randomly. The agent's moves are coded as 0-8 referring to the different positions of the board:
 \begin{center}
 	\begin{tabular}{c | c | c}
 	0 & 1 & 2 \\ \hline
@@ -302,15 +302,15 @@ In this game, the agent plays games of TicTacToe against an opponent who makes r
 	6 & 7 & 8 \\	
 	\end{tabular}
 \end{center}
-Observation completely describes the current state of the board using 2 bits for each cell of the board. 
+The agent's observations completely describe the current state of the board using 2 bits for each cell of the board:
 \begin{center}
 	\begin{tabular}{c | l}
 	00 & Cell empty \\
 	01 & Agent's cell \\
-	02 & Environment's cell \\
+	02 & Opponent's cell \\
 	\end{tabular}
 \end{center}
-The agent rewards are as follows:
+The agent's (additively transformed) rewards are as follows:
 \begin{center}
 	\begin{tabular}{c | c}
 	\textbf{Status} & \textbf{Reward} \\ \hline
@@ -321,10 +321,10 @@ The agent rewards are as follows:
 	\end{tabular}
 \end{center}
 
-In terms of an optimal agent strategy, an upper bound on reward per cycle is $0.5$ given that the minimu number of cycles required for the agent to win the game is $4$.
+In our setup, the agent has the first move. Under the optimal policy, and against a random opponent, the agent should win within 3 or 4 moves with high probability. Assuming no illegal moves are taken, the optimal strategy yields an average reward per cycle (loosely) upper bounded by $\frac{2}{3}$, since a win corresponds to a reward of $2$. Taking into account draws and longer games, we expect the true tighest upper bound to be somewhere in the range $[0.5,\frac{2}{3}]$.
 
 \subsection{Biased Rock-Paper-Scissors}
-The agent will play games of Rock-Paper-Scissors against an opponent who plays the same action every time it wins the game, and otherwise plays a random move. For this agent we encoded the actions of the agent and the environment as
+This is an adversarial, non-episodic game. The agent plays against an opponent who plays randomly, except when they win a round, in which case they will play the same move in the following round with probability $1$. We encode the actions of the agent and the environment as:
 \begin{center}
 	\begin{tabular}{c | c}
 	Rock & 0 \\
@@ -334,11 +334,12 @@ The agent will play games of Rock-Paper-Scissors against an opponent who plays t
 \end{center}
 The agent receives a reward of 1 for a win, 0 for a draw and -1 for a loss. \\
 
-In terms of an optimal agent strategy, an upper bound on reward per cycle for Biased Rock-Paper-Scissors is derived as follows.
-
-Let $X_t$ be a R.V. representing the outcome of cycle $t$. Under an optimal strategy, the agent will win after the environment won in cycle $t-1$ as the environments action in cycle $t$ is predictable. Otherwise, the agent plays randomly. As such we have
-$$P(X_t = \text{win}) = \sum_{X_{t-1}} P(X_t = \text{win}, X_{t-1}) = \sum_{X_{t-1}} P(X_t = \text{win}|X_{t-1})P(X_{t-1})$$
-which is a 1\textsuperscript{st} order Markov chain with the following right stochastic transition matrix
+In terms of an optimal agent strategy, an upper bound on reward per cycle for Biased Rock-Paper-Scissors is derived as follows. Let $X_t$ be a random variable representing the outcome of cycle $t$. Under an optimal strategy, the agent will win after the environment won in cycle $t-1$ as the environments action in cycle $t$ is predictable. Otherwise, the agent should play randomly. Now, the probability of the agent's winning at time $t$ is given by
+\begin{align*}
+P(X_t = \text{win})&= \sum_{X_{t-1}} P(X_t = \text{win}, X_{t-1})\\ 
+ &= \sum_{X_{t-1}} P(X_t = \text{win}|X_{t-1})P(X_{t-1}),
+\end{align*}
+which corresponds to a 1\textsuperscript{st} order Markov chain with the following right stochastic transition matrix
 
 \begin{align}
 \mat{P} = 
@@ -349,11 +350,14 @@ which is a 1\textsuperscript{st} order Markov chain with the following right sto
 \end{bmatrix}
 \end{align}
 
-Therefore, we want a steady state distribution for $\mat{P}$, i.e. a solution to $\vec{\pi} = \mat{P}\vec{\pi}$, which is an eigenvector $\vec{\pi^{*}}$. The average reward at time $t$ is then
-$$\mathbb{E}[r_{\text{avg}_t}] = 1 \cdot P(X_t = \text{win}) + 0 \cdot P(X_t =\text{draw}) - 1 \cdot P(X_t = \text{lose}) = \vec{\pi^{*}_0} - \vec{\pi^{*}_2} = 0.25$$
-
-\subsection{PacMan}
-This is game of PacMan in which the agent can only partially observe the environment unlike the classic game in which the entire game state is known to the player at any given time. The agent does not know the structure of the maze but only receives a 4 bit wall configuration of the node it is currently in. The agent also receives a 4 bit observation of the presence of any ghosts in its direct line of sight. The location of food pellets can change every episode as every free cell has a 50\% chance of having food in it. The agent receives a 3 bit observation indicating the presence of food within a Manhattan distance of 2, 3 or 4. It also receives a 4 bit string indicating food in its line of sight similar to the ghosts. The agent also knows when it is under the effect of the power pill.\\
+Therefore, we want a steady state distribution for $\mat{P}$, i.e. a solution to $\vec{\pi} = \mat{P}\vec{\pi}$. This is given by the eigenvector $\vec{\pi^{*}}$. The average reward at time $t$ is then
+\begin{align*}
+\mathbb{E}[r_{\text{avg}_t}] &= 1 \cdot P(X_t = \text{win}) + 0 \cdot P(X_t =\text{draw}) - 1 \cdot P(X_t = \text{lose})\\
+ &= \vec{\pi^{*}_\text{win}} - \vec{\pi^{*}_\text{lose}} \\
+ &= 0.25.
+\end{align*}
+\subsection{Partially Observable PacMan}
+In contrast to standard PacMan, our implementation is partially observable, which makes it more difficult to play optimally, but more tractable computationally. The agent does not know the structure of the maze but only receives a 4 bit wall configuration of the node it is currently in. The agent also receives a 4 bit observation of the presence of any ghosts in its direct line of sight. The location of food pellets can change every episode as every free cell has a 50\% chance of having food in it. The agent receives a 3 bit observation indicating the presence of food within a Manhattan distance of 2, 3 or 4. It also receives a 4 bit string indicating food in its line of sight similar to the ghosts. The agent also knows whether it is under the effect of the power pill.\\
 \begin{center}
 	\begin{tabular}{c | c}
 	\textbf{Action} & \textbf{Reward} \\ \hline
@@ -364,16 +368,22 @@ This is game of PacMan in which the agent can only partially observe the environ
 	Agent collects all the food & 100 \\
 	\end{tabular}
 \end{center}
-To calculate the actual reward, the rewards from the above table are added to 60. This is because the agent can potentially be affected by multiple rewards e.g. it can run into a wall and get caught by a ghost in the same turn.
+To obtain non-negative rewards for our agent, we transform this environment by adding $60$ to all reward percepts. This is because the agent can potentially be simultaneously caught by a ghost and run into a wall in the same cycle, resulting in the penalties being added.
 
-In terms of an optimal agent strategy, an upper bound on reward per cycle for Pacman is unknown.
+The optimal strategy for PacMan is unknown, and so an upper bound on agent performance is unknown. Given that this is the most complex and demanding of our five environments, we can assume that without long training times and finely tuned agent learning parameters, learning in this game will be very difficult.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experiments}
 
+
+
 \subsection{Experimental Setup}
+Having implemented the MC-AIXI-CTW agent and five game environments, we proceed to run simulations. Our primary objective here is to test the agent against each of the environments, with the agent having no prior knowledge. During each experiment, we run the agent-environment loop for a large number of cycles (typically in the range of $[5\times 10^3,3\times 10^4]$), while maintaining the state of the agent's context tree model betwene cycles and episodes. \\
+
+For each experiment, the agent's actions are controlled according to a training-evaluation schedule. During the training phase, the agent chooses a random action with probability $\epsilon$, and performs the normal Monte Carlo expectimax search otherwise. Over the course of the experiment, the exploration rate decays exponentially as $\epsilon_t = \epsilon_0 \gamma^t$. During evaluation cycles, the agent plans using the Monte Carlo tree search, and does no explicit exploration. We evaluate the agent's performance by plotting its average reward per cycle against \textit{evaluation} cycles. Typically, we alternate between $1000$ cycles of training, followed by $200$ cycles of evaluation, and repeat until the total allocated number of cycles is exhausted. 
+
 \subsection{Experiment Summary}
-Following is a complete summary of all experiments conducted \\
+Here we summarise the parameters used in our experiments.\\
 
 \begin{table}[H]
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
@@ -587,7 +597,7 @@ MC-AIXI-CTW-Grp3.zip
         tiger.conf
 \end{verbatim}
 
-\section{Graphs..}
+\section{Plots}
 
 \bibliographystyle{unsrt}
 \bibliography{report}
