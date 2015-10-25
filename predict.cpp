@@ -60,13 +60,11 @@ void CTNode::updateLogProbability(void) {
 		} else {
 			// Calculate weighted log probability with both children(sym 1 and sym 2)
 			m_log_prob_weighted = log2(
-					pow(2,
-							m_log_prob_est
-									- (m_child[0]->m_log_prob_weighted
-											+ m_child[1]->m_log_prob_weighted))
-							+ 1)
-					+ (m_child[0]->m_log_prob_weighted
-							+ m_child[1]->m_log_prob_weighted) - 1;
+					pow(2, m_log_prob_est
+							- (m_child[0]->m_log_prob_weighted
+											+ m_child[1]->m_log_prob_weighted)) + 1)
+							+ (m_child[0]->m_log_prob_weighted
+											+ m_child[1]->m_log_prob_weighted) - 1;
 		}
 	}
 
