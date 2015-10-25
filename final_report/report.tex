@@ -65,7 +65,6 @@ cycle $k$ are given by
 a_{k}^{\text{AIXI}}=\arg\max_{a_{k}}\sum_{o_{k}r_{k}}\cdots\max_{a_{m}}\sum_{o_{m}r_{m}}\left[r_{k}+\dots+r_{m}\right]\xi\left(o_{1}r_{1}\dots o_{m}r_{m}|a_{1}\dots a_{m}\right),
 \]
 
-
 where the $o_{n}$ and $r_{n}$ are the observation and reward provided
 by the environment at cycle $n$, and $\xi$ is a Bayesian mixture
 model for the environment. 
@@ -80,17 +79,9 @@ with implementations of a number of simple games: $\textsc{Pacman},\ $
 $\textsc{Tic-Tac-Toe}$, $\textsc{Biased Rock-Paper-Scissor}$, $\textsc{Extended-Tiger}$,
 and $\textsc{Cheesemaze}$.
 
-
-\section{User Manual}
-
-To build from source on linux, run ${\tt g++\ -std=c++0x *.cpp\ -o\ aixi}$ \textbf{TODO
-check}
-
-To run, invoke ${\tt ./aixi\ \$ENVNAME.conf}$. 
-
-
 \section{MC-AIXI-CTW Implementation}
 
+In this section we outline the implementation of the agent, and its interface with its environments. 
 
 \subsection{Agent-environment interaction loop}
 
@@ -230,9 +221,11 @@ similar search trees from similar positions.
 
 
 \section{Environments}
-To test the effectiveness of the agent we developed 5 environment simulations which range in complexity from the relatively simple cheese maze to the much more complicated partially observable pacman game. The details of these environments with respect to their behaviour and implementation is discussed below. For all environments to avoid negative rewards to the agent we have added a constant to all rewards such that the minimum reward received by the agent is 0. Since the difference between the rewards is the same this will not affect the behaviour of the agent in any way.
+To test the effectiveness of the agent we developed 5 environment simulations which range in complexity from the relatively simple cheese maze to the much more complicated partially observable pacman game. The details of these environments with respect to their behaviour and implementation is discussed below. For technical convenience, our agent only handles non-negative rewards; for this reason, our environments are all implemented so as to have their minimum reward set to zero. In this way, our implementations differ from the environment specifications. For the purpose of plotting and analysis of the results, and for optimality calculations, we transform all rewards back to their original specified ranges, so as to facilitate comparison with Veness's benchmark results. Note that this additive reward transformation has no effect on the agent's behavior. \\
+
+In all of the environments, the agent is given a static interface of possible actions it can perform. At any given game state, some (indeed many) of these actions may be illegal; in all games, illegal moves are punished with significant penalties.
 \subsection{Cheese Maze}
-This is a environment in which the agent is a mouse trying to find a piece of cheese in an two dimensional maze. The actions of the agent are:
+Cheese Maze is an episodic, deterministic and partially observable game in which the agent is a mouse trying to find a piece of cheese in a two dimensional maze. The objective is to find the cheese in the fewest amount of moves, while avoiding running into walls. The episode ends when the agent finds the cheese. The actions available to the agent are:
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action} & \textbf{Code} \\
@@ -244,10 +237,11 @@ This is a environment in which the agent is a mouse trying to find a piece of ch
 		\hline
 	\end{tabular}
 \end{center}
-The rewards have been adjusted as
+The transformed rewards are now given by
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action effect} & \textbf{Reward} \\ \hline
+		Game start & 0 \\
 		Agent bumps into wall & 0 \\
 		Agent moves into free cell & 9 \\
 		Agent finds cheese & 20 \\ \hline	
@@ -255,13 +249,13 @@ The rewards have been adjusted as
 \end{center}
 
 \par
-The details of the maze and the starting positions of the agent and the cheese are read from the configuration file. The maze is represented as the list of nodes as they would be visited by the depth first search algorithm. Mouse position and cheese position are simply the order of the node.\\
-Each node of the maze is a structure which stores the percept of that node and an array of pointers which point to its neighbours. In case there is a wall on a particular side of the node then that pointer will be NULL. \\
+The configuration of the maze and initial states of the agent and the cheese are read from the configuration file, and are identical to those specified in Figure 5 in Veness et al. The maze is represented as the list of nodes as they would be visited by the depth first search algorithm. Mouse position and cheese position are simply the order of the node.\\
+Each node of the maze is a structure which stores the percept corresponding to that node, along with an array of pointers to its neighbours. In case there is a wall on a particular side of the node then that pointer will be $\tt{NULL}$. \\
 
-In terms of an optimal agent strategy, an upper bound on reward per cycle for Cheesemaze is $2$ given that the best possible reward for an episode is $8$ and there are a minimum of $4$ moves (including the start) to reach the goal state.
+The optimal strategy in each episode of Cheese Maze is to perform the sequence of actions$\left(\tt{game\ start}\rightarrow \tt{right} \rightarrow \tt{down} \rightarrow \tt{down}\right)$. This yields a total reward of $8$ utils in $4$ cycles, giving an upper bound for the average reward per cycle of $2$. Average reward per cycle is the main metric with which we evaluate the agent's performance in this and all other environments.
 
 \subsection{Extended Tiger}
-This environment simulates two doors. At the start of each game the tiger is behind one of the doors with probability of 0.5 and behind the other door, there is a pot of gold. The agent begins sitting down and it can perform the following actions:
+Extended Tiger is an episodic stochastic game. This environment simulates two doors, behind one of which is a tiger, and the other a pot of gold. At the start of each episode the tiger is placed behind one of the doors with probability 0.5. The agent begins sitting down and it can perform the following actions:
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action} & \textbf{Code} \\ \hline
@@ -271,16 +265,17 @@ This environment simulates two doors. At the start of each game the tiger is beh
 		Open right door & 3 \\ \hline	
 	\end{tabular}
 \end{center}
-When the agent tries to listen the environment provides it with an observation which correctly describes where the tiger is with a probability as defined in the configuration file. Until the listen action is performed the observation remains 0.
+When the agent performs the $\tt{listen}$ action, the environment provides an observation that correctly identifies the location of the tiger with probability $p$ (parametrised in the configuration file). Otherwise, its observation is $0$:
+
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Observation} & \textbf{Code} \\ \hline
-		Agent has not performed listen action yes & 0 \\
+		Agent does not perform listen action & 0 \\
 		Tiger behind left door & 1 \\
 		Tiger behind right door & 2 \\ \hline
 	\end{tabular}
 \end{center}
-The rewards the agent receives in this environment are as follows
+The agent is penalised for performing illegal moves, or for opening the door with the tiger. The episode ends when one of the doors is opened. The transformed rewards the agent receives in this environment are as follows:
 \begin{center}
 \begin{tabular}{c | c | c}
 	\textbf{State} & \textbf{Action} & \textbf{Reward} \\ \hline
@@ -294,8 +289,8 @@ The rewards the agent receives in this environment are as follows
 \end{tabular}
 \end{center}
 
-In terms of an optimal agent strategy, an upper bound on reward per cycle for Extended Tiger is derived as follows. Firstly note that an optimal strategy will be to $\tt{start}$, $\tt{listen}$ $n$ times, $\tt{stand}$, $\tt{open}$. Letting a false observation probability be $q$, we wish to maximise the following w.r.t. $n$
-$$\mathbb{E}[r_{\text{avg}}] = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3}$$
+Clearly the optimal strategy in Extended Tiger will be the sequence $\left(\tt{game\  start}\rightarrow\tt{listen}\ n\ times\rightarrow\tt{stand}\rightarrow\tt{open\ door}\right)$. To play optimally given a fixed false observation probability of $q=1-p$, it is sufficient to maximise our expected reward with respect to $n$ using this sequence of moves. Hence the expected average reward under the optimal policy is given by
+$$\mathbb{E}[r_{\text{avg}}]^* = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3}$$
 where the denominator is equal to the number of actions taken. For example, with $q=0.15$, the optimal $n$ is $2$.
 
 \subsection{Tic-Tac-Toe}
@@ -537,19 +532,25 @@ $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewli
 \includegraphics[scale=0.4]{pacman_best} 
 \end{figure}
 
-\section{Cross Domain Simulation Results}
+\subsection{Cross Domain Simulation Results}
 \begin{itemize}
-\item Cheesemaze and Extended Tiger
+\item Cheesemaze and Biased Rock-Paper-Scissors
 \item Cross domain simulation on more difficult environments... 
-\item Separate CTW for Obs and Rews...
 \end{itemize}
 
-\section{Discussion and Conclusions}
-
+\section{Conclusion}
 
 \section*{Appendix}
 
 \appendix
+
+\section*{User Manual}
+
+To build from source on linux, run ${\tt g++\ -std=c++0x *.cpp\ -o\ aixi}$ \textbf{TODO
+check}
+
+To run, invoke ${\tt ./aixi\ \$ENVNAME.conf}$. 
+
 
 \section{Files}
 
