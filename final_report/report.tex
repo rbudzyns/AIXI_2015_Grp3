@@ -209,7 +209,7 @@ similar search trees from similar positions.
 
 
 \section{Environments}
-To test the effectiveness of the agent we developed 5 environment simulations which range in complexity from the relatively simple cheese maze to the much more complicated partially observable pacman game. The details of these environments with respect to their behaviour and implementation is discussed below. For all environments to avoid negative rewards to the agent we have added a constant to all rewards such that the minimum reward received by the agent is 0. Since the difference between the rewards is same this will not affect the behaviour of the agent in any way.
+To test the effectiveness of the agent we developed 5 environment simulations which range in complexity from the relatively simple cheese maze to the much more complicated partially observable pacman game. The details of these environments with respect to their behaviour and implementation is discussed below. For all environments to avoid negative rewards to the agent we have added a constant to all rewards such that the minimum reward received by the agent is 0. Since the difference between the rewards is the same this will not affect the behaviour of the agent in any way.
 \subsection{Cheese Maze}
 This is a environment in which the agent is a mouse trying to find a piece of cheese in an two dimensional maze. The actions of the agent are:
 \begin{center}
@@ -223,7 +223,7 @@ This is a environment in which the agent is a mouse trying to find a piece of ch
 		\hline
 	\end{tabular}
 \end{center}
-The rewards are have been adjusted as
+The rewards have been adjusted as
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action effect} & \textbf{Reward} \\ \hline
@@ -237,7 +237,7 @@ The rewards are have been adjusted as
 The details of the maze and the starting positions of the agent and the cheese are read from the configuration file. The maze is represented as the list of nodes as they would be visited by the depth first search algorithm. Mouse position and cheese position are simply the order of the node.\\
 Each node of the maze is a structure which stores the percept of that node and an array of pointers which point to its neighbours. In case there is a wall on a particular side of the node then that pointer will be NULL.
 \subsection{Extended Tiger}
-This environment simulates two doors. At the start of each game the tiger will placed behind one of the doors with probability of 0.5 and behind the other there is a pot of gold. The agent begins sittnd down and it can perform the following actions:
+This environment simulates two doors. At the start of each game the tiger will placed behind one of the doors with probability of 0.5 and behind the other there is a pot of gold. The agent begins sitting down and it can perform the following actions:
 \begin{center}
 	\begin{tabular}{c | c}
 		\textbf{Action} & \textbf{Code} \\ \hline
@@ -322,11 +322,8 @@ This is game of PacMan in which the agent can only partially observer the enviro
 	\end{tabular}
 \end{center}
 To calculate the actual reward the rewards from the above table are added to 60. This is because the agent can potentially be affected by multiple rewards e.g. it can run into a wall and get caught by a ghost in the same turn.
-\end{document}
-
 
 \section{Simulation Results}
-
 
 \subsection{Experiment Summary}
 Following is a complete summary of all experiments conducted \\
@@ -360,6 +357,8 @@ Extended Tiger & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $
 \hline
 Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tabularnewline
                & $26$ & $512$ & $20$ & $2$ & $4$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
+               & $26$ & $320$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.4$ \tabularnewline
+               & $26$ & $256$ & $10$ & $1$ & $6$ & $0.9999$ & $0.999769773$ & $1.4$ \tabularnewline
 \hline 
 \hline
 \end{tabular}
@@ -464,7 +463,7 @@ MC-AIXI-CTW-Grp3.zip
         tiger.conf
 \end{verbatim}
 
-\section{Grpahs..}
+\section{Graphs..}
 
 \bibliographystyle{unsrt}
 \bibliography{report}
