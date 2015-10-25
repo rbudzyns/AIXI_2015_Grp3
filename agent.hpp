@@ -98,6 +98,8 @@ public:
 
 	void searchTreePrune(action_t action, obsrew_t obsrew);
 
+	void setOptions(options_t & options);
+
 private:
 	// action sanity check
 	bool isActionOk(action_t action) const;

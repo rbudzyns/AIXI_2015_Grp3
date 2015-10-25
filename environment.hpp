@@ -308,7 +308,7 @@ private:
 				{
 					for(int j = pacman.x; i==0?j>0:j<21; i==0?j--:j++)
 					{
-						assert(0 < j && j <= 21);
+						assert(0 < j && j < 21);
 						if(!maze[j][pacman.y].isFreeCell)
 							break;
 						else if(ghost[0].x == j || ghost[1].x == j || ghost[2].x == j || ghost[3].x == j)
@@ -325,7 +325,7 @@ private:
 				{
 					for(int j = pacman.y; i==1?j>0:j<19; i==1?j--:j++)
 					{
-						assert(0 < j && j < 19);
+						assert(0 <= j && j < 19);
 						if(!maze[pacman.x][j].isFreeCell)
 							break;
 						else if(ghost[0].y == j || ghost[1].y == j || ghost[2].y == j || ghost[3].y == j)
@@ -380,7 +380,13 @@ private:
 			{
 				for (int j = pacman.y; i == 3 ? j > 0:j < 19; i == 3 ? j-- : j++)
 				{
-					assert(0 < j && j < 19);
+					if (0 > j || j >= 19)
+					{
+						std::cout << "Error in seeFood()" << std::endl;
+						std::cout << "direction: " << i << " j = " << j << std::endl;
+						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+						break;
+					}
 					if (!maze[pacman.x][j].isFreeCell)
 						break;
 					else if (maze[pacman.x][j].contents == 1)
@@ -394,7 +400,13 @@ private:
 			{
 				for (int j = pacman.x; i == 0 ? j > 0:j < 21; i == 0 ? j-- : j++)
 				{
-					assert(0 < j && j < 21);
+					if (0 > j || j >= 21)
+					{
+						std::cout << "Error in seeFood()" << std::endl;
+						std::cout << "direction: " << i << " j = " << j << std::endl;
+						std::cout << "pacman positon= " << pacman.x << pacman.y << std::endl;
+						break;
+					}
 					if (!maze[j][pacman.y].isFreeCell)
 						break;
 					else if (maze[j][pacman.y].contents == 1)
@@ -430,10 +442,11 @@ private:
 	void manMove(int ghostNo)
 	{
 		pos goal;
-		pos move;
+		pos move= ghost[ghostNo];
 		node* min_node;
 		node* open_list[400];
 		node* closed_list[400];
+		bool path_found = false;
 		int open_list_size = 0;
 		int closed_list_size = 0;
 		if (ghost[ghostNo].state)
@@ -451,7 +464,7 @@ private:
 		open_list[0]->parent = NULL;
 		open_list[0]->g_value = 0;
 		open_list[open_list_size++]->h_value = manhattan_dist(ghost[ghostNo], goal);
-		while (true)
+		while (open_list_size > 0)
 		{
 			min_node = open_list[0];
 			int min_node_index = 0;
@@ -474,6 +487,7 @@ private:
 			//check if the node is the goal
 			if (min_node->cell.x == goal.x && min_node->cell.y == goal.y)
 			{
+				path_found = true;
 				break;
 			}
 
@@ -488,13 +502,22 @@ private:
 				int yshift = (j - 1) % 2;
 				assert(yshift == 0 || yshift == -1 || yshift == 1);
 				assert(xshift == 0 ? yshift != 0 : yshift == 0);
+				//adding condition for loop back in row 9
+				if(min_node->cell.x == 9 && min_node->cell.y == 0 && yshift == -1)
+				{
+					yshift = 18;
+				}
+				else if(min_node->cell.x == 9 && min_node->cell.y == 18 && yshift == 1)
+				{
+					yshift = -18;
+				}
 				if (maze[min_node->cell.x + xshift][min_node->cell.y + yshift].isFreeCell)
 				{
 					bool conflict = false;
 					//check if this position is occupied by another ghost
 					for (int i = 0; i < 4; i++)
 					{
-						if ((ghost[i].x == min_node->cell.x + xshift) && (ghost[i].y == min_node->cell.y + yshift) && (!ghost[i].state || !ghost[ghostNo].state))
+						if ((ghost[i].x == min_node->cell.x + xshift) && (ghost[i].y == min_node->cell.y + yshift) /*&& (!ghost[i].state || !ghost[ghostNo].state)*/)
 						{
 							conflict = true;
 						}
@@ -518,6 +541,13 @@ private:
 								}
 							}
 						}
+						for (int k = 0; k < closed_list_size; k++)
+						{
+							if (closed_list[k]->cell.x == possible_node.x && closed_list[k]->cell.y == possible_node.y)
+							{
+								check = false;
+							}
+						}
 						if(check)
 						{
 							open_list[open_list_size] = new node;
@@ -531,7 +561,7 @@ private:
 			}
 		}
 		//find the move in the path
-		while (min_node->parent != NULL)
+		while (min_node->parent != NULL && path_found)
 		{
 			move = min_node->cell;
 			min_node = min_node->parent;

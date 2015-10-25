@@ -10,6 +10,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{tablefootnote}
 
 \makeatletter
 
@@ -134,11 +135,23 @@ notion of state; instead, we only have a history of actions and percepts
 $h=\left(a_{1}o_{1}r_{1}\dots a_{n}o_{n}r_{n}\right)$. For the purposes
 of choosing the optimal action, we treat each possible (hypothetical)
 history as a node in the search tree, with the root being the tip
-of the current (realised) history. Each node is labelled by its history.
+of the current (realised) history. \\
+
+The search tree is comprised of alternate layers of decision nodes and
+chance nodes with the root being a decision node. The maximum branching
+possible from decision nodes is the number of available actions in the given
+environment while the maximum branching possible from chance nodes is equal
+to the number of possible observations times the number of possible rewards.
+We do however restrict branching in general to $100$ to avoid memory issues.
+This number is configurable in ${\tt search.cpp}$. \\
+
+Each node is implicitly labelled by its history as chance nodes record the
+hypothetical action taken while decision nodes record the hypothetical
+observation and reward from the environment.
 The expected value of each node in the search tree is equal to the
 expected total (non-discounted) reward that would be accumulated from
 that node, where the expectation is under the agent's current policy
-and the agent's current model for the behavior of the environment. 
+and the agent's current model for the behavior of the environment. \\
 
 Thus, for each node we keep a value estimate $\hat{V}$, and a count
 of the number of times $T$ that node has been visited in search.
@@ -149,18 +162,16 @@ for all actions)
 a_{\text{UCB}}=\arg\max_{a\in\mathcal{A}}\left\{ \frac{1}{m\left(\beta-\alpha\right)}\hat{V}\left(ha\right)+C\sqrt{\frac{\log T\left(h\right)}{T\left(ha\right)}}\right\} ,
 \]
 
-
 where $\mathcal{A}$ is the set of all permissible actions, $m$ is
 the search horizon, $\beta-\alpha$ is the difference between the
 minimal and maximal instantaneous reward, and $C$ is a parameter
 controlling the propensity of the agent to explore less frequently-seen
-histories. 
+histories. \\
 
 Note that the expectimax is a stochastic, partially observable game
 between the agent and its environment. In the following, call nodes
 corresponding to agent moves `decision nodes', and nodes corresponding
-to Nature's moves `chance nodes'.
-
+to Nature's moves `chance nodes'. \\
 
 \subsubsection{Class structure}
 
@@ -170,7 +181,6 @@ and DecisionNode each have a ${\tt sample}$ method defined on them;
 each of these methods is mutually recursive. For a given node $n$,
 we keep its children in a dictionary keyed on the action or (observation,reward)
 used to generate each child.
-
 
 \subsubsection{Code snippets}
 
@@ -198,50 +208,187 @@ similar search trees from similar positions.
 \subsubsection{Efficiency/performance}
 
 
-\subsection{Environments}
+\section{Environments}
+To test the effectiveness of the agent we developed 5 environment simulations which range in complexity from the relatively simple cheese maze to the much more complicated partially observable pacman game. The details of these environments with respect to their behaviour and implementation is discussed below. For all environments to avoid negative rewards to the agent we have added a constant to all rewards such that the minimum reward received by the agent is 0. Since the difference between the rewards is the same this will not affect the behaviour of the agent in any way.
+\subsection{Cheese Maze}
+This is a environment in which the agent is a mouse trying to find a piece of cheese in an two dimensional maze. The actions of the agent are:
+\begin{center}
+	\begin{tabular}{c | c}
+		\textbf{Action} & \textbf{Code} \\
+		\hline
+		Move Up & 0 \\
+		Move Right & 1 \\
+		Move Left & 2 \\
+		Move Down & 3 \\
+		\hline
+	\end{tabular}
+\end{center}
+The rewards have been adjusted as
+\begin{center}
+	\begin{tabular}{c | c}
+		\textbf{Action effect} & \textbf{Reward} \\ \hline
+		Agent bumps into wall & 0 \\
+		Agent moves into free cell & 9 \\
+		Agent finds cheese & 20 \\ \hline	
+	\end{tabular}
+\end{center}
 
+\par
+The details of the maze and the starting positions of the agent and the cheese are read from the configuration file. The maze is represented as the list of nodes as they would be visited by the depth first search algorithm. Mouse position and cheese position are simply the order of the node.\\
+Each node of the maze is a structure which stores the percept of that node and an array of pointers which point to its neighbours. In case there is a wall on a particular side of the node then that pointer will be NULL.
+\subsection{Extended Tiger}
+This environment simulates two doors. At the start of each game the tiger will placed behind one of the doors with probability of 0.5 and behind the other there is a pot of gold. The agent begins sitting down and it can perform the following actions:
+\begin{center}
+	\begin{tabular}{c | c}
+		\textbf{Action} & \textbf{Code} \\ \hline
+		Stand & 0 \\
+		Listen & 1 \\
+		Open left door & 2 \\
+		Open right door & 3 \\ \hline	
+	\end{tabular}
+\end{center}
+When the agent tries to listen the environment provides it with an observation which correctly describes where the tiger is with a probability as defined in the configuration file. Until the listen action is performed the observation remains 0.
+\begin{center}
+	\begin{tabular}{c | c}
+		\textbf{Observation} & \textbf{Code} \\ \hline
+		Agent has not performed listen action yes & 0 \\
+		Tiger behind left door & 1 \\
+		Tiger behind right door & 2 \\ \hline
+	\end{tabular}
+\end{center}
+The rewards the agent receives in this environment are as follows
+\begin{center}
+\begin{tabular}{c | c | c}
+	\textbf{State} & \textbf{Action} & \textbf{Reward} \\ \hline
+	sitting & stand & 99 \\
+	sitting & open door & 90 \\
+	sitting & listen & 99 \\
+	standing & stand & 90 \\
+	standing & open door with tiger & 0 \\
+	standing & open door with gold & 30 \\
+	standing & listen & 90 \\ \hline
+\end{tabular}
+\end{center}
 
-\subsubsection{Cheesemaze}
+\subsection{TicTacToe}
+In this the agent plays games of TicTacToe against an opponent who makes random moves. The agent moves are coded as 0-8 referring to the different positions of the board.
+\begin{center}
+	\begin{tabular}{c | c | c}
+	0 & 1 & 2 \\ \hline
+	3 & 4 & 5 \\ \hline
+	6 & 7 & 8 \\	
+	\end{tabular}
+\end{center}
+Observation completely describes the current state of the board using 2 bits for each cell of the board. 
+\begin{center}
+	\begin{tabular}{c | l}
+	00 & Cell empty \\
+	01 & Agent's cell \\
+	02 & Environment's cell \\
+	\end{tabular}
+\end{center}
+The agent rewards are as follows:
+\begin{center}
+	\begin{tabular}{c | c}
+	\textbf{Status} & \textbf{Reward} \\ \hline
+	Illegal move & 0 \\
+	Game is a draw & 4 \\
+	Game won by agent & 5 \\
+	Agent lost & 1 \\
+	\end{tabular}
+\end{center}
 
+\subsection{Biased Rock-Paper-Scissors}
+The agent will play games of Rock-Paper-Scissors against an opponent who plays the same action every time it wins the game, and otherwise plays a random move. For this agent we encoded the actions of the agent and the environment as
+\begin{center}
+	\begin{tabular}{c | c}
+	Rock & 0 \\
+	Paper & 1 \\
+	Scissors & 2 \\
+	\end{tabular}
+\end{center}
+The agent receives a reward of 1 for a win, 0 for a draw and -1 for a loss.
 
-\subsubsection{Extended Tiger}
-
-
-\subsubsection{Biased Rock-Paper-Scissor}
-
-
-\subsubsection{Tic-Tac-Toe}
-
-
-\subsubsection{Pacman}
-
+\subsection{PacMan}
+This is game of PacMan in which the agent can only partially observer the environment unlike the classic game in which the entire game state is known to the player at any given time. The agent does not know the structure of the maze but only receives a 4 bit wall configuration of the node it is currently in. The agent also receives a 4 bit observation of the presence of any ghosts in its direct line of sight. The location of food pellets can change every episode as very free cell has a 50\% chance of having food in it. The agent receives 3 bit observation indicating the presence of food within a Manhattan distance of 2, 3 or 4. It also receives a 4 bit string indicating food in its line of sight similar to the ghosts. The agent also knows when it is under the effect of the power pill.\\
+\begin{center}
+	\begin{tabular}{c | c}
+	\textbf{Action} & \textbf{Reward} \\ \hline
+	Agent runs into a wall & -10 \\
+	Agent caught by a ghost & -50 \\
+	Agent moves into empty cell & -1 \\
+	Agent eats a food pellet & 10 \\
+	Agent collects all the food & 100 \\
+	\end{tabular}
+\end{center}
+To calculate the actual reward the rewards from the above table are added to 60. This is because the agent can potentially be affected by multiple rewards e.g. it can run into a wall and get caught by a ghost in the same turn.
 
 \section{Simulation Results}
 
+\subsection{Experiment Summary}
+Following is a complete summary of all experiments conducted \\
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline 
+ & Bits\tablefootnote{total bit length of an \tt{ora} cycle} & CT-depth & Cycles & Timeout\tablefootnote{timeout value for each select action} & Horizon & Exp. Rate & Exp.-Decay & UCB-weight\tablefootnote{the $C$ parameter from Veness et. al.} \tabularnewline
+\hline 
+Cheesemaze & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+           & $11$ & $96$ & $10$ & $1.6$ & $6$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+           & $11$ & $144$ & $2.5$ & $3$ & $8$ & $0.999$ & $0.9990795899$ & $1.4$ \tabularnewline
+           & $11$ & $48$ & $10$ & $0.1$ & $4$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+           & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
+Biased Rock-Paper-Scissors & $6$ & $32$ & $10$ & $2.5$ & $4$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+                           & $6$ & $48$ & $5$ & $5$ & $8$ & $0.999$ & $0.999539689$ & $1.4$ \tabularnewline
+                           & $6$ & $96$ & $4.5$ & $4$ & $4$ & $0.999$ & $0.9994885564$ & $1.4$ \tabularnewline
+                           & $6$ & $96$ & $10$ & $0.5$ & $4$ & $0.999$ & $0.999$ & $1.4$ \tabularnewline
+\hline
+Extended Tiger & $13$ & $96$ & $16$ & $2.5$ & $6$ & $0.999$ & $0.99985613$ & $1.4$ \tabularnewline
+               & $13$ & $96$ & $2.5$ & $12$ & $4$ & $0.999$ & $0.9990795899$ & $1.4$ \tabularnewline
+               & $13$ & $96$ & $25$ & $0.8$ & $4$ & $0.999$ & $0.9999079208$ & $1.4$ \tabularnewline
+               & $13$ & $52$ & $5$ & $8$ & $4$ & $0.999$ & $0.999539689$ & $1.4$ \tabularnewline
+\hline
+Extended Tiger & $25$ & $96$ & $4.5$ & $4$ & $9$ & $0.9999$ & $0.9994884564$ & $1.4$ \tabularnewline
+               & $25$ & $192$ & $5$ & $8$ & $9$ & $0.9999$ & $0.999539599$ & $1.4$ \tabularnewline
+               & $25$ & $256$ & $20$ & $8$ & $9$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
+               & $25$ & $512$ & $25$ & $3$ & $9$ & $0.9999$ & $0.9999079028$ & $1.4$ \tabularnewline
+               & $25$ & $512$ & $30$ & $2$ & $9$ & $0.9999$ & $0.9999232518$ & $1.4$ \tabularnewline
+\hline
+Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tabularnewline
+               & $26$ & $512$ & $20$ & $2$ & $4$ & $0.9999$ & $0.9998848799$ & $1.4$ \tabularnewline
+               & $26$ & $320$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.4$ \tabularnewline
+               & $26$ & $256$ & $10$ & $1$ & $6$ & $0.9999$ & $0.999769773$ & $1.4$ \tabularnewline
+\hline 
+\hline
+\end{tabular}
+\caption{MC-AIXI-CTW Experiments}
+\end{table}
 
 \subsection{Cheesemaze}
-\begin{itemize}
-\item Experimental setup ... \\
- Any simulation provided should include detailed description of experimental
-setup; selected parameters of algorithms and examples; and concise
-interpretations of obtained simulation results. \\
+Here we present the environmental setup and learning rate of our best results
+training AIXI on the Cheesemaze environment. \\
 
+Interpreting the results, we conclude that ... \\
 
-
-\begin{tabular}{|l|l|l|}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline 
-Environment  & MCTS  & CTW \tabularnewline
+Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-1  & $m=100$  & $\text{ct-depth}=96$ \tabularnewline
-\hline 
- & $C=\sqrt{2}$  & \tabularnewline
-\hline 
+$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.999769818$ & $1.4$ \tabularnewline
+\hline
 \end{tabular}
+\caption{Environment Setup}
+\end{table}
 
-\item Plots ... \\
- \includegraphics[scale=0.4]{cheesemaze_01} 
-\item Interpretation of Results 
-\end{itemize}
+\begin{figure}[h!]
+\centering
+\caption{Learning Rate}
+\includegraphics[scale=0.4]{cheesemaze_best} 
+\end{figure}
+
 
 \subsection{Extended Tiger}
 
@@ -315,6 +462,9 @@ MC-AIXI-CTW-Grp3.zip
         coinflip.conf
         tiger.conf
 \end{verbatim}
+
+\section{Graphs..}
+
 \bibliographystyle{unsrt}
 \bibliography{report}
 
