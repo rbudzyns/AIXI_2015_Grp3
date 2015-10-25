@@ -50,11 +50,12 @@ void DecisionNode::print() const {
 	std::cout << "    Children: " << m_children.size() << std::endl;
 }
 
+// getter method for a decision node's observation/reward
 obsrew_t DecisionNode::obsRew(void) const {
 	return m_obsrew;
 }
 
-// add a new child node
+// add a new child chance node
 bool DecisionNode::addChild(ChanceNode* child) {
 	if (m_children.size() >= MaxBranchFactor) {
 		return false;
@@ -65,10 +66,13 @@ bool DecisionNode::addChild(ChanceNode* child) {
 	return true;
 }
 
+// getter method for a decision node's child corresponding to a given action
 ChanceNode * DecisionNode::getChild(action_t action) {
 	return m_children.count(action) ? m_children[action] : 0;
 }
 
+// count the number of nodes contained with the subtree starting at
+// the decision node
 int DecisionNode::getDecisionNodeInfo(void) {
 	int n_nodes = 0;
 	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
@@ -99,8 +103,7 @@ reward_t DecisionNode::sample(Agent &agent, unsigned int dfr) {
 // determine the next action to play
 action_t DecisionNode::selectAction(Agent &agent) {
 	action_t a;
-	if (m_children.size() != agent.numActions()) {
-		// then U != {}
+	if (m_children.size() != agent.numActions()) { // then U != {}
 		std::vector < action_t > U;
 		int N = agent.numActions() - m_children.size();
 
@@ -185,7 +188,6 @@ ChanceNode::ChanceNode(action_t action) :
 }
 
 ChanceNode::~ChanceNode() {
-	//std::cout << "ChanceNode::~ChanceNode" << std::endl;
 	for (decision_map_t::iterator i = m_children.begin(); i != m_children.end();
 			i++) {
 		delete i->second;
@@ -193,6 +195,7 @@ ChanceNode::~ChanceNode() {
 	m_children.clear();
 }
 
+// getter method for the action corresponding to a chance node
 action_t ChanceNode::action(void) const {
 	return m_action;
 }
@@ -222,6 +225,8 @@ void ChanceNode::pruneAllBut(obsrew_t obsrew) {
 	}
 }
 
+// count the number of nodes contained with the subtree starting at
+// the chance node
 int ChanceNode::getChanceNodeInfo(void) {
 	int n_nodes = 0;
 	for (auto it = m_children.begin(); it != m_children.end(); ++it) {
@@ -230,6 +235,8 @@ int ChanceNode::getChanceNodeInfo(void) {
 	return n_nodes;
 }
 
+// getter method for a chance node's child corresponding to a given observation/
+// reward
 DecisionNode * ChanceNode::getChild(obsrew_t o_r) {
 	return m_children.count(o_r) ? m_children[o_r] : 0;
 }
