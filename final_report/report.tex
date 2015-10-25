@@ -524,7 +524,7 @@ Here we summarise the parameters used in our experiments.\\
  & $b$& $D$ & $n_\text{cycles}$& $t_\text{max}$ & $m$ & $\epsilon_0$  & $\gamma$ & $w_\text{UCB}$  \tabularnewline
 \hline 
 Cheesemaze & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
-           & $11$ & $96$ & $10$ & $1.6$ & $6$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
+           & $11$ & $96$ & $20$ & $1.6$ & $6$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
            & $11$ & $144$ & $2.5$ & $3$ & $8$ & $0.999$ & $0.99908$ & $1.4$ \tabularnewline
            & $11$ & $48$ & $10$ & $0.1$ & $4$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
            & $11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
@@ -552,15 +552,11 @@ Pacman         & $26$ & $256$ & $10$ & $4$ & $8$ & $0.99$ & $0.999$ & $1.5$ \tab
 \hline 
 \hline
 \end{tabular}
-\caption{MC-AIXI-CTW Experiments. Here, $b$ is the total bit length of an $(o,r,a)$ tuple, $D$ is the depth of the context tree, $n_\text{cycles}$ is the maximum number of global cycles allowed in the experiment, $t_\text{max}$ is the search time allowed per cycle, $m$ is the search horizon, $\epsilon_0$ is the initial exploration rate, $\gamma$ is the exploration decay rate, and $w_\text{UCB}$ is the UCB exploration bias parameter.}
+\caption{MC-AIXI-CTW Experiments. Here, $b$ is the total bit length of an $(o,r,a)$ tuple, $D$ is the depth of the context tree, $n_\text{cycles}$ is the maximum number of training cycles (1000's) allowed in the experiment, $t_\text{max}$ is the search time allowed per cycle, $m$ is the search horizon, $\epsilon_0$ is the initial exploration rate, $\gamma$ is the exploration decay rate, and $w_\text{UCB}$ is the UCB exploration bias parameter.}
 \end{table}
 
 \subsection{Cheesemaze}
-Here we present the environmental setup and learning rate of our best results
-training AIXI on the Cheesemaze environment. \\
-
-Interpreting the results, we conclude that ... \\
-
+In this cheesemaze run, we chose a very short timeout (0.5 seconds)
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -591,7 +587,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
+$13$ & $52$ & $5$ & $8$ & $4$ & $0.999$ & $0.99954$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -639,7 +635,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
+$25$ & $512$ & $30$ & $2$ & $9$ & $0.9999$ & $0.99992$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
@@ -664,7 +660,7 @@ Interpreting the results, we conclude that ... \\
 \hline 
 Bits & CT-depth & Cycles & Timeout & Horizon & Exp. Rate & Exp.-Decay & UCB-weight \tabularnewline
 \hline 
-$11$ & $96$ & $10$ & $0.5$ & $8$ & $0.999$ & $0.99977$ & $1.4$ \tabularnewline
+$26$ & $256$ & $10$ & $2$ & $8$ & $0.9999$ & $0.99977$ & $1.4$ \tabularnewline
 \hline
 \end{tabular}
 \caption{Environment Setup}
