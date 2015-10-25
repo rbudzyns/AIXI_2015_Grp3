@@ -290,7 +290,7 @@ The agent is penalised for performing illegal moves, or for opening the door wit
 \end{center}
 
 Clearly the optimal strategy in Extended Tiger will be the sequence $\left(\tt{game\  start}\rightarrow\tt{listen}\ n\ times\rightarrow\tt{stand}\rightarrow\tt{open\ door}\right)$. To play optimally given a fixed false observation probability of $q=1-p$, it is sufficient to maximise our expected reward with respect to $n$ using this sequence of moves. Hence the expected average reward under the optimal policy can be approximated by
-$$\mathbb{E}[r_{\text{avg}}]^* = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3},$$
+$$\mathbb{E}[r_{\text{avg}}] = \frac{30(1-q)^n - 100(1-(1-q)^n)-n-1}{n+3},$$
 where the denominator is equal to the number of actions taken, and the numerator approximates the expected reward for opening the door signalled by the majority of observations. In case of ties, the agent would need to listen more to collect more data, but we omit this case for simplicity's sake, since we are interested in a loose upper bound with which to benchmark our performance. With a false observation probability of $q=0.15$, the optimal number of listen actions $n$ is $2$.
 
 \subsection{Tic-Tac-Toe}
@@ -375,8 +375,6 @@ The optimal strategy for PacMan is unknown, and so an upper bound on agent perfo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experiments}
 
-
-
 \subsection{Experimental Setup}
 Having implemented the MC-AIXI-CTW agent and five game environments, we proceed to run simulations. Our primary objective here is to test the agent against each of the environments, with the agent having no prior knowledge. During each experiment, we run the agent-environment loop for a large number of cycles (typically in the range of $[5\times 10^3,3\times 10^4]$), while maintaining the state of the agent's context tree model betwene cycles and episodes. \\
 
@@ -385,8 +383,8 @@ For each experiment, the agent's actions are controlled according to a training-
 In all of the following plots, we report the \textit{running} average reward per cycle $\bar{R}$, and the \textit{rolling} average reward per cycle $\tilde{R}$, which are defined as 
 
 \begin{align*}
-\bar{R}_t = \frac{1}{t}\sum_{i=1}^{t}{R_i} 
-\bar{R}^w_t = \frac{1}{w}\sum_{i=t-w}^{t}{R_i}
+\bar{R}_t = \frac{1}{t}\sum_{i=1}^{t}{R_i}\\ 
+\bar{R}^w_t = \frac{1}{w}\sum_{i=t-w}^{t}{R_i}.
 \end{align*}
 
 \subsection{Experiment Summary}
