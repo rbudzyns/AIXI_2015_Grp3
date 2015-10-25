@@ -204,7 +204,7 @@ similar search trees from similar positions.
 
 
 \subsection{Modelling using the Context Tree Weighting Method (CTW)}
-The Context-Tree-Weighting Method (CTW) is a sequential universal data compression procedure for binary tree sources \cite{Willems-95}. Its computational and storage complexity are both linear in the source sequence length, making it an extremely efficient method for doing sequential binary sequence prediction. Utilising the CT data structure in the agent setting - i.e. as a mixture environment model - places two restrictions on the generality of our agent. The first is trivial, arguably no restriction at all: percepts must be encoded as binary strings, and each bit in that string must be processed sequentially. The second is more severe. The CTW algorithm performs Bayesian model averaging over all prediction suffix trees $M$ of maximum depth $D$. Hence it effectively assumes the true environment is in the class of $D$-order Markov processes. This is an enormous class, but is nonetheless much smaller than the class considered by AIXI (the class of all computable distributions). \\
+The Context-Tree-Weighting Method (CTW) is a sequential universal data compression procedure for binary tree sources \cite{frans-95}. Its computational and storage complexity are both linear in the source sequence length, making it an extremely efficient method for doing sequential binary sequence prediction. Utilising the CT data structure in the agent setting - i.e. as a mixture environment model - places two restrictions on the generality of our agent. The first is trivial, arguably no restriction at all: percepts must be encoded as binary strings, and each bit in that string must be processed sequentially. The second is more severe. The CTW algorithm performs Bayesian model averaging over all prediction suffix trees $M$ of maximum depth $D$. Hence it effectively assumes the true environment is in the class of $D$-order Markov processes. This is an enormous class, but is nonetheless much smaller than the class considered by AIXI (the class of all computable distributions). \\
 
 Each node $n$ in the CT data structure represents a context; a suffix of the agent's history (of maximum length $D$ bits). A count is maintained for each $n$, of the number of $0$s and $1$s that have been seen from context $n$. Using these counts we recursively maintain a Krichevsky-Trofimov (KT) estimate $P_{kt}^{n}$ of the probability of the subsequence of the history seen from context $n$ to date. In our implementation we use the following update formula in terms of log probabilities for numerical reasons, (where $0_s$ and $1_s$ are the current counts): 
 $$ \log{P_{kt}^n(0_s+1,1_s)} = \log{P_{kt}^n(0_s,1_s)} + \log{\frac{0_s + 0.5}{0_s + 1_s + 1}} $$
@@ -219,7 +219,7 @@ For each $n$ we also calculate $P_w^{n}$; which is effectively a weighted mixtur
 \newline
 The last expression above, though ugly, is necessary for numerical reasons (discussed below). All this labour culminates in the computation of $P_w^{\epsilon}$, which is the weighted mixture mentioned above. Formally:
 $$ P(x_{1:t}|a_{1:t}) \approx P_w^{\epsilon} = \sum_M{Pr(M)Pr(x_{1:t}|a_{1:t})} = \sum_M{2^{-\Gamma_D(M)}Pr(x_{1:t}|a_{1:t})}$$
-where the prior probability of each suffix tree model $M$ is approximated using a cost $\Gamma_D(M)$, roughly the length of its code. Hence $M$'s with shorter description lengths are given greater weight, and thus the mixture imposes an Ockham-like penalty on complex models \cite{Veness-11} and serves as an approximation to the Solomonoff prior used by AIXI ($\sum_{q:U(q,a_{1:t}) = x_{1:t}}{2^{-l(p)}}$).
+where the prior probability of each suffix tree model $M$ is approximated using a cost $\Gamma_D(M)$, roughly the length of its code. Hence $M$'s with shorter description lengths are given greater weight, and thus the mixture imposes an Ockham-like penalty on complex models \cite{veness-11} and serves as an approximation to the Solomonoff prior used by AIXI ($\sum_{q:U(q,a_{1:t}) = x_{1:t}}{2^{-l(p)}}$).
 
 \subsubsection{High level description of algorithm}
 Our implementation of the CTW has three main components: 
@@ -785,14 +785,7 @@ MC-AIXI-CTW-Grp3.zip
 \begin{thebibliography}{widest entry}
 \bibitem[V+ 11]{veness-11} J. Veness, K. S. Ng, M. Hutter, W. Uther, D. Silver, A Monte-Carlo AIXI Approximation,Journal of Artificial Intelligence Research 40 (2011), pp. 95-142.
 
-\bibitem[F+ 95]{frans-95}
-        {Author = {Frans M. J. Willems, Yuri M. Shtarkov, Tjalling J. Tjalkens},
-	Date-Added = {1995-05},
-	Journal = {IEEE Transactions on Information Theory},
-	Pages = {653-664},
-	Title = {The Context-Tree Weighting Method: Basic Properties},
-	Volume = {41},
-	Year = {1995}}
+\bibitem[F+ 95]{frans-95} Frans M. J. Willems, Yuri M. Shtarkov, Tjalling J. Tjalkens, The Context-Tree Weighting Method: Basic Properties, IEEE Transactions on Information Theory 41 (1995), pp. 653-664.
 \end{thebibliography}
 %\bibliographystyle{unsrt}
 %\bibliography{report}
