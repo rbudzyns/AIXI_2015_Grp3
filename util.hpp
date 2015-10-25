@@ -20,15 +20,15 @@ int randRange(int start, int end);
 // Extract a value from a string
 template<typename T>
 void strExtract(std::string &str, T &val) {
-	std::istringstream iss(str);
-	iss >> val;
+    std::istringstream iss(str);
+    iss >> val;
 }
 
 template<typename T>
 T strExtract(std::string &str) {
-	T val;
-	strExtract(str, val);
-	return val;
+    T val;
+    strExtract(str, val);
+    return val;
 }
 
 // encode/decode values to/from symbol lists
