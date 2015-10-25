@@ -624,7 +624,6 @@ void Pacman::performAction(action_t action)
 			//confirm ghost is not moving into the same cell as another ghost or the pacman.
 			for (int i_1 = 0; i_1 < 4; i_1++)
 			{
-				assert((ghost[i_1].x != m_pacman.x) || (ghost[i_1].y != m_pacman.y));
 				for (int i_2 = 0; i_2 < 4; i_2++)
 				{
 					assert((ghost[i_1].x != ghost[i_2].x) || (ghost[i_1].y != ghost[i_2].y) || (i_1 == i_2));
